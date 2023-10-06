@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <unordered_set>
 #include "Texture.h"
 #include "ShaderProgram.h"
 
@@ -48,6 +49,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+	std::unordered_set<int> ncol = { 3,6,7,9,10,11,12,13,14,15,16 };
 
 };
 
