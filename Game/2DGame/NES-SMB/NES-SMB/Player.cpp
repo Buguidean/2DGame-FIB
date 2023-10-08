@@ -21,6 +21,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	Moving = false;
+	v = 0.f;
 	spritesheet.loadFromFile("images/mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
@@ -68,30 +69,52 @@ void Player::update(int deltaTime)
 
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
+		
+		if (v > -5.f) {
+			v -= 0.01f * deltaTime;
+		}
 
-		posPlayer.x -= 2;
+		int dv = int(v);
+		
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64)))
 		{
-			posPlayer.x += 2;
+			posPlayer.x -= dv;
+			v = 0.f;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 
+		posPlayer.x += dv;
 	}
+
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
+
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
 
-		posPlayer.x += 2;
+		if (v < 5.f) {
+			v += 0.01f * deltaTime;
+		}
+		
+		int dv = int(v);
+		
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64)))
 		{
-			posPlayer.x -= 2;
+			posPlayer.x -= dv;
+			v = 0.f;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
+
+		posPlayer.x += dv;
 	}
 
 	else
 	{
+		if (v > 0.f)
+			v -= 0.01f * deltaTime;
+		else
+			v = 0.f;
+
 		if(sprite->animation() == MOVE_LEFT)
 			sprite->changeAnimation(STAND_LEFT);
 		else if(sprite->animation() == MOVE_RIGHT)
