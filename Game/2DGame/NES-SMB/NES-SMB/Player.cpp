@@ -20,6 +20,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
+	Moving = false;
 	spritesheet.loadFromFile("images/mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
@@ -55,17 +56,19 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	
+	oldPlayer = posPlayer;
 }
 
 void Player::update(int deltaTime)
 {
+	oldPlayer = posPlayer;
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
+
 		posPlayer.x -= 2;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
@@ -78,6 +81,7 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
+
 		posPlayer.x += 2;
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
@@ -152,6 +156,12 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+glm::ivec2 Player::getPosition()
+{
+	return posPlayer;
+}
 
-
-
+bool Player::moving()
+{
+	return oldPlayer.x < posPlayer.x;
+}

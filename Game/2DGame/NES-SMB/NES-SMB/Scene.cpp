@@ -9,7 +9,7 @@
 #define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 4
-#define INIT_PLAYER_Y_TILES 4
+#define INIT_PLAYER_Y_TILES 10
 
 
 Scene::Scene()
@@ -39,6 +39,7 @@ void Scene::init()
 	currentTime = 0.0f;
 }
 
+
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
@@ -48,8 +49,13 @@ void Scene::update(int deltaTime)
 void Scene::render()
 {
 	glm::mat4 modelview;
-
 	texProgram.use();
+
+	glm::ivec2 pos = player->getPosition();
+	if (player->moving()) {
+			projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
+	}
+
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
