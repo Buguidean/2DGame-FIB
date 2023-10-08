@@ -32,7 +32,10 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
-	float delta = 2.f;
+	float delta = 0.5f;
+	float camDif;
+	int velP;
+	glm::ivec2 posP;
 };
 
 

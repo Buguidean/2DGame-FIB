@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
+#define JUMP_HEIGHT 100
 #define FALL_STEP 4
 
 
@@ -64,6 +64,7 @@ void Player::update(int deltaTime)
 {
 	oldPlayer = posPlayer;
 	sprite->update(deltaTime);
+
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 
@@ -76,9 +77,9 @@ void Player::update(int deltaTime)
 
 		int dv = int(v);
 		
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64)))
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64), &posPlayer.x))
 		{
-			posPlayer.x -= dv;
+			// posPlayer.x -= dv;
 			v = 0.f;
 			sprite->changeAnimation(STAND_LEFT);
 		}
@@ -98,9 +99,9 @@ void Player::update(int deltaTime)
 		
 		int dv = int(v);
 		
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64)))
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64), &posPlayer.x))
 		{
-			posPlayer.x -= dv;
+			// posPlayer.x -= dv;
 			v = 0.f;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
@@ -136,7 +137,8 @@ void Player::update(int deltaTime)
 		}
 		else
 		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+			bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
 			if(jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
 		}
@@ -182,6 +184,11 @@ void Player::setPosition(const glm::vec2 &pos)
 glm::ivec2 Player::getPosition()
 {
 	return posPlayer;
+}
+
+int Player::getVelocity()
+{
+	return int(v);
 }
 
 bool Player::moving()
