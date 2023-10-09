@@ -23,10 +23,12 @@ public:
 	glm::ivec2 getPosition();
 	int getVelocity();
 	bool moving();
+	void margin(bool value);
 	
 private:
 	bool bJumping;
 	bool Moving;
+	bool marg;
 	float v;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;

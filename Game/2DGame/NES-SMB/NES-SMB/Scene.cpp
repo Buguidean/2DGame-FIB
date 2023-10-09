@@ -37,6 +37,7 @@ void Scene::init()
 	player->setTileMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 128.f), float(SCREEN_HEIGHT - 16.f), 0.f);
 	currentTime = 0.0f;
+	centerCam = 320.f;
 }
 
 
@@ -44,17 +45,31 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+	glm::ivec2 pos = player->getPosition();
+	int v = player->getVelocity();
+
+	if (player->moving()) {
+		int icenter = int(centerCam);
+		if ((icenter - pos.x) >= 320) {
+			player->margin(true);
+		}
+
+		else if ((icenter - pos.x) <= 100) {
+			projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
+			centerCam += v;
+		}
+		else if ((icenter - pos.x) <= 200) {
+			projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
+			centerCam += delta;
+		}
+	}
 }
 
 void Scene::render()
 {
 	glm::mat4 modelview;
 	texProgram.use();
-
-	glm::ivec2 pos = player->getPosition();
-	if (player->moving()) {
-			projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
-	}
 
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);

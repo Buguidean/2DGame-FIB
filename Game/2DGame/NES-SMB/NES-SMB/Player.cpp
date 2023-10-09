@@ -21,6 +21,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	Moving = false;
+	marg = false;
 	v = 0.f;
 	spritesheet.loadFromFile("images/mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
@@ -77,7 +78,7 @@ void Player::update(int deltaTime)
 
 		int dv = int(v);
 		
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64), &posPlayer.x))
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64), &posPlayer.x, marg))
 		{
 			// posPlayer.x -= dv;
 			v = 0.f;
@@ -112,7 +113,7 @@ void Player::update(int deltaTime)
 	else
 	{
 		if (v > 0.f)
-			v -= 0.01f * deltaTime;
+			v -= 0.1f * deltaTime;
 		else
 			v = 0.f;
 
@@ -194,4 +195,9 @@ int Player::getVelocity()
 bool Player::moving()
 {
 	return oldPlayer.x < posPlayer.x;
+}
+
+void Player::margin(bool value)
+{
+	marg = value;
 }
