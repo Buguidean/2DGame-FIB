@@ -128,6 +128,7 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_RIGHT);
 	}
 
+	//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 	if (v >= 0.f) {
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
 			v = 0.f;
@@ -141,7 +142,8 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
-	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
 	if(bJumping)
 	{
 		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)

@@ -37,7 +37,7 @@ void Scene::init()
 	player->setTileMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
-	centerCam = 320.f;
+	centerCam = 256.f;
 }
 
 
@@ -51,15 +51,14 @@ void Scene::update(int deltaTime)
 
 	if (player->moving()) {
 		int icenter = int(centerCam);
-		if ((icenter - pos.x) >= 320) {
-			player->margin(true);
-		}
+		int diff = icenter - pos.x;
 
-		else if ((icenter - pos.x) <= 100) {
+		if (diff <= 15) {
 			projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
 			centerCam += v;
 		}
-		else if ((icenter - pos.x) <= 200) {
+
+		else if (diff <= 85) {
 			projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
 			centerCam += delta;
 		}
