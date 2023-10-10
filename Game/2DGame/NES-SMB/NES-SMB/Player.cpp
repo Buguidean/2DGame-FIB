@@ -23,8 +23,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	Moving = false;
 	marg = false;
 	v = 0.f;
-	spritesheet.loadFromFile("images/mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
+	spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.5f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
 	
 		sprite->setAnimationSpeed(STAND_LEFT, 8);
@@ -63,8 +63,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 void Player::update(int deltaTime)
 {
-	oldPlayer = posPlayer;
 	sprite->update(deltaTime);
+	oldPlayer = posPlayer;
+
 
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
@@ -78,12 +79,14 @@ void Player::update(int deltaTime)
 
 		int dv = int(v);
 		
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64), &posPlayer.x, marg))
+		/*
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x))
 		{
 			// posPlayer.x -= dv;
 			v = 0.f;
 			sprite->changeAnimation(STAND_LEFT);
 		}
+		*/
 
 		posPlayer.x += dv;
 	}
@@ -100,12 +103,14 @@ void Player::update(int deltaTime)
 		
 		int dv = int(v);
 		
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64), &posPlayer.x))
+		/*
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x))
 		{
 			// posPlayer.x -= dv;
 			v = 0.f;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
+		*/
 
 		posPlayer.x += dv;
 	}
@@ -121,6 +126,20 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_LEFT);
 		else if(sprite->animation() == MOVE_RIGHT)
 			sprite->changeAnimation(STAND_RIGHT);
+	}
+
+	if (v >= 0.f) {
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
+			v = 0.f;
+			sprite->changeAnimation(STAND_RIGHT);
+		}
+	}
+
+	else {
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
+			v = 0.f;
+			sprite->changeAnimation(STAND_LEFT);
+		}
 	}
 	
 	if(bJumping)
@@ -139,15 +158,15 @@ void Player::update(int deltaTime)
 		else
 		{
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+			bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
+		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 		{
 			if (sprite->animation() == JUMP_LEFT)
 				sprite->changeAnimation(STAND_LEFT);
@@ -195,6 +214,11 @@ int Player::getVelocity()
 bool Player::moving()
 {
 	return oldPlayer.x < posPlayer.x;
+}
+
+bool Player::moving_up()
+{
+	return oldPlayer.y > posPlayer.y;
 }
 
 void Player::margin(bool value)

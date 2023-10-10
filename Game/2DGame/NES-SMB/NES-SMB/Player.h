@@ -23,6 +23,7 @@ public:
 	glm::ivec2 getPosition();
 	int getVelocity();
 	bool moving();
+	bool moving_up();
 	void margin(bool value);
 	
 private:

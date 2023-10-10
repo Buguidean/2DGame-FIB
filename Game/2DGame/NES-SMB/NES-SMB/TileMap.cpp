@@ -118,8 +118,8 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
 				texCoordTile[0] = glm::vec2(float((tile-1)%tilesheetSize.x) / tilesheetSize.x, float((tile-1)/tilesheetSize.x) / tilesheetSize.y);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
-				texCoordTile[0] += halfTexel;
-				texCoordTile[1] -= halfTexel;
+				// texCoordTile[0] += halfTexel;
+				// texCoordTile[1] -= halfTexel;
 				// First triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
@@ -151,7 +151,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX, bool m) const
+bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const
 {
 	int x, y0, y1;
 	
@@ -160,9 +160,9 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if ((ncol.find(map[y*mapSize.x + x]) == ncol.end()) || m)
+		if (ncol.find(map[y*mapSize.x + x]) == ncol.end())
 		{
-			if ((*posX - tileSize * x - size.x <= 5) || m)
+			if (*posX - tileSize * x - size.x <= 5)
 			{
 				*posX = tileSize * x + size.x;
 				return true;
@@ -177,7 +177,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 {
 	int x, y0, y1;
 	
-	x = (pos.x + size.x + 1) / tileSize;
+	x = (pos.x + size.x) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
@@ -223,14 +223,14 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + 4) / tileSize;
+	y = (pos.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		if (ncol.find(map[y*mapSize.x + x]) == ncol.end())
 		{
 			if (*posY - tileSize * y - size.y <= 5)
 			{
-				*posY = tileSize * y;
+				*posY = tileSize * y + size.y;
 				return true;
 			}
 		}
