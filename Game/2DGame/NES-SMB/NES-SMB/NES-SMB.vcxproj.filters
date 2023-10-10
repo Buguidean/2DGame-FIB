@@ -28,6 +28,9 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -55,6 +58,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="TileMap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

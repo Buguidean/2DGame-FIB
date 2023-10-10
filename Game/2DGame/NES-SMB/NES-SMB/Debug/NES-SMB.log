@@ -1,10 +1,10 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (02-Bubble.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  TileMap.cpp
-d:\vj\2dgame-fib\game\2dgame\nes-smb\nes-smb\tilemap.cpp(54): warning C4101: 'tile': unreferenced local variable
+  Enemy.cpp
+d:\vj\2dgame-fib\game\2dgame\nes-smb\nes-smb\enemy.cpp(54): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   Scene.cpp
-  Player.cpp
   Generating Code...
   Compiling...
+  Player.cpp
   main.cpp
   Game.cpp
   Generating Code...

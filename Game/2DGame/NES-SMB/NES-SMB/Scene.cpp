@@ -16,6 +16,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	enemy = NULL;
 }
 
 Scene::~Scene()
@@ -23,6 +24,8 @@ Scene::~Scene()
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
+		delete player;
+	if(enemy != NULL)
 		delete player;
 }
 
