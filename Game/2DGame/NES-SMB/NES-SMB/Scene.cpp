@@ -9,7 +9,10 @@
 #define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 3
-#define INIT_PLAYER_Y_TILES 11
+#define INIT_PLAYER_Y_TILES 12
+
+#define INIT_ENEMY_X_TILES 5
+#define INIT_ENEMY_Y_TILES 12
 
 
 Scene::Scene()
@@ -34,10 +37,17 @@ void Scene::init()
 {
 	initShaders();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+
+	enemy = new Enemy();
+	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	enemy->setPosition(glm::vec2(INIT_ENEMY_X_TILES * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+	enemy->setTileMap(map);
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	centerCam = 256.f;
@@ -48,6 +58,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	enemy->update(deltaTime);
 
 	glm::ivec2 pos = player->getPosition();
 	int v = player->getVelocity();
@@ -84,6 +95,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	enemy->render();
 }
 
 void Scene::initShaders()
