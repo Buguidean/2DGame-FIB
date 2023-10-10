@@ -57,28 +57,44 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+
+	if (enemy != NULL) {
+		enemy->update(deltaTime);
+	}
+	if (enemy != NULL && enemy->killed())
+		enemy = NULL;
+
 	player->update(deltaTime);
-	enemy->update(deltaTime);
-
-	glm::ivec2 pos = player->getPosition();
-	int v = player->getVelocity();
-	int icenter = int(centerCam);
-	int diff = icenter - pos.x;
-
-	if (diff >= 256) {
-		player->margin(true,icenter);
+	if (enemy != NULL && enemy->playerKilled()) {
+		player->killAnimation();
+		// player = NULL;
 	}
 
-	else if (player->moving()) {
-		player->margin(false,icenter);
-		if (diff <= 15) {
-			projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
-			centerCam += v;
+	else {
+		glm::ivec2 pos = player->getPosition();
+		if (enemy != NULL) {
+			enemy->obtainPosPlayer(pos);
 		}
 
-		else if (diff <= 85) {
-			projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
-			centerCam += delta;
+		int v = player->getVelocity();
+		int icenter = int(centerCam);
+		int diff = icenter - pos.x;
+
+		if (diff >= 256) {
+			player->margin(true, icenter);
+		}
+
+		else if (player->moving()) {
+			player->margin(false, icenter);
+			if (diff <= 15) {
+				projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
+				centerCam += v;
+			}
+
+			else if (diff <= 85) {
+				projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
+				centerCam += delta;
+			}
 		}
 	}
 }
@@ -94,8 +110,10 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
+	// if (!enemy->playerKilled())
 	player->render();
-	enemy->render();
+	if (enemy!=NULL) 
+		enemy->render();
 }
 
 void Scene::initShaders()

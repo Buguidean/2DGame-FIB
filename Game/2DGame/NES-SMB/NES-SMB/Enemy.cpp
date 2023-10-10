@@ -2,6 +2,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include "Player.h"
 #include "Enemy.h"
 #include "Game.h"
 
@@ -36,6 +37,9 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 	oldEnemy = posEnemy;
+	playerPos = glm::ivec2(64,352);
+	dead = false;
+	dead_player = false;
 }
 
 void Enemy::update(int deltaTime)
@@ -45,7 +49,25 @@ void Enemy::update(int deltaTime)
 	if (sprite->animation() != GOOMBA_MOVE) {
 		sprite->changeAnimation(GOOMBA_MOVE);
 	}
-	posEnemy.x -= v;
+
+	int state = map->collisionMarioEnemy(playerPos, glm::ivec2(32, 32), posEnemy, glm::ivec2(32, 32));
+
+	switch (state)
+	{
+		case 0:
+			posEnemy.x -= int(v);
+			dead_player = true;
+			break;
+		case 1:
+			v = 0.f;
+			sprite->changeAnimation(GOOMBA_DEATH);
+			dead = true;
+			break;
+		case -1:
+			posEnemy.x -= int(v);
+			break;
+	}
+		
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 }
 
@@ -68,4 +90,19 @@ void Enemy::setPosition(const glm::vec2 &pos)
 glm::ivec2 Enemy::getPosition()
 {
 	return posEnemy;
+}
+
+bool Enemy::killed()
+{
+	return dead;
+}
+
+bool Enemy::playerKilled()
+{
+	return dead_player;
+}
+
+void Enemy::obtainPosPlayer(const glm::ivec2 &pos) 
+{
+	playerPos = pos;
 }

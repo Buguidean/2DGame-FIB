@@ -26,6 +26,7 @@ public:
 	bool moving();
 	bool moving_up();
 	void margin(bool value, int center);
+	void killAnimation();
 	
 private:
 	bool bJumping;

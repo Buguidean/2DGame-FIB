@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, TURN_LEFT, TURN_RIGHT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, TURN_LEFT, TURN_RIGHT, DEATH
 };
 
 
@@ -25,7 +25,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	v = 0.f;
 	spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.5f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(8);
+	sprite->setNumberAnimations(9);
 	
 		sprite->setAnimationSpeed(STAND_LEFT, 8);
 		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
@@ -54,6 +54,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 		sprite->setAnimationSpeed(TURN_RIGHT, 8);
 		sprite->addKeyframe(TURN_RIGHT, glm::vec2(0.5f, 0.f));
+
+		sprite->setAnimationSpeed(DEATH, 8);
+		sprite->addKeyframe(DEATH, glm::vec2(0.75f, 0.f));
 		
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -242,4 +245,8 @@ void Player::margin(bool value, int center)
 {
 	marg = value;
 	ic = center;
+}
+
+void Player::killAnimation() {
+	sprite->changeAnimation(DEATH);
 }

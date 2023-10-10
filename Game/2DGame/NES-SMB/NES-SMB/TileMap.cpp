@@ -51,7 +51,6 @@ bool TileMap::loadLevel(const string &levelFile)
 	ifstream fin;
 	string line, tilesheetFile;
 	stringstream sstream;
-	char tile;
 
 	fin.open(levelFile.c_str());
 	if (!fin.is_open())
@@ -242,4 +241,36 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	}
 
 	return false;
+}
+
+int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
+{
+	int min_xM, min_yM, max_xM, max_yM;
+	int min_xE, min_yE, max_xE, max_yE;
+
+	glm::ivec2 center_M, center_E;
+
+	min_xM = posM.x;
+	max_xM = posM.x + sizeM.x;
+	min_yM = posM.y;
+	max_yM = posM.y + sizeM.y;
+
+	min_xE = posE.x;
+	max_xE = posE.x + sizeE.x;
+	min_yE = posE.y;
+	max_yE = posE.y + sizeE.y;
+
+	center_M = glm::ivec2(posM.x + sizeM.x / 2, posM.y + sizeM.y / 2);
+	center_E = glm::ivec2(posE.x + sizeE.x / 2, posE.y + sizeE.y / 2);
+
+	if ((min_xM < max_xE) && (min_xE < max_xM) && (min_yM < max_yE) && (min_yE < max_yM)) {
+		glm::ivec2 diff = center_E - center_M;
+		
+		if (diff.y > 0) {
+			return 1;
+		}
+		else return 0;
+		
+	}
+	return -1;
 }

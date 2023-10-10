@@ -20,13 +20,18 @@ public:
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+	void obtainPosPlayer(const glm::ivec2 &pos);
+	bool killed();
+	bool playerKilled();
 	glm::ivec2 getPosition();
 
 
 private:
 
 	float v;
-	glm::ivec2 tileMapDispl, posEnemy, oldEnemy;
+	bool dead;
+	bool dead_player;
+	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
