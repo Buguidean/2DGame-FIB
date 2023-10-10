@@ -66,13 +66,15 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	oldPlayer = posPlayer;
 
+	/*
 	if (marg) {
-		posPlayer.x -= int(v);
 		v = 0.f;
 		sprite->changeAnimation(STAND_LEFT);
 	}
+	*/
+	
 
-	else {
+	//else {
 
 		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
@@ -144,7 +146,7 @@ void Player::update(int deltaTime)
 		}
 
 		else {
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x, marg, ic)) {
 				v = 0.f;
 				sprite->changeAnimation(STAND_LEFT);
 			}
@@ -190,7 +192,7 @@ void Player::update(int deltaTime)
 				}
 			}
 		}
-	}
+	//}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
@@ -236,7 +238,8 @@ void Player::setVelocity()
 	v = 0.f;
 }
 
-void Player::margin(bool value)
+void Player::margin(bool value, int center)
 {
 	marg = value;
+	ic = center;
 }

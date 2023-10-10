@@ -25,13 +25,14 @@ public:
 	void setVelocity();
 	bool moving();
 	bool moving_up();
-	void margin(bool value);
+	void margin(bool value, int center);
 	
 private:
 	bool bJumping;
 	bool Moving;
 	bool marg;
 	float v;
+	int ic;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
 	Texture spritesheet;
