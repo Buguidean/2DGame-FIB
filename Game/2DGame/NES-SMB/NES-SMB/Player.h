@@ -22,6 +22,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::ivec2 getPosition();
 	int getVelocity();
+	void setVelocity();
 	bool moving();
 	bool moving_up();
 	void margin(bool value);

@@ -48,11 +48,15 @@ void Scene::update(int deltaTime)
 
 	glm::ivec2 pos = player->getPosition();
 	int v = player->getVelocity();
+	int icenter = int(centerCam);
+	int diff = icenter - pos.x;
 
-	if (player->moving()) {
-		int icenter = int(centerCam);
-		int diff = icenter - pos.x;
+	if (diff >= 256) {
+		player->margin(true);
+	}
 
+	else if (player->moving()) {
+		player->margin(false);
 		if (diff <= 15) {
 			projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
 			centerCam += v;
