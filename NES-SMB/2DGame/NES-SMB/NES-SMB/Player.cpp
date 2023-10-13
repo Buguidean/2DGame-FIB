@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 100
+#define JUMP_HEIGHT 134
 #define FALL_STEP 4
 
 
@@ -69,133 +69,152 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	oldPlayer = posPlayer;
 
-	/*
-	if (marg) {
-		v = 0.f;
-		sprite->changeAnimation(STAND_LEFT);
-	}
-	*/
-	
-
-	//else {
-
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-		{
-
+	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+	{
+		if (v < -2.90f)
+			sprite->setAnimationSpeed(MOVE_LEFT, 14);
+		else
+			sprite->setAnimationSpeed(MOVE_LEFT, 8);
+		if (v <= 0) {
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
-
-			if (v > -5.f) {
-				v -= 0.01f * deltaTime;
-			}
-
-			int dv = int(v);
-
-			/*
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x))
-			{
-				// posPlayer.x -= dv;
-				v = 0.f;
-				sprite->changeAnimation(STAND_LEFT);
-			}
-			*/
-
-			posPlayer.x += dv;
-		}
-
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-		{
-
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
-
-			if (v < 5.f) {
-				v += 0.01f * deltaTime;
-			}
-
-			int dv = int(v);
-
-			/*
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x))
-			{
-				// posPlayer.x -= dv;
-				v = 0.f;
-				sprite->changeAnimation(STAND_RIGHT);
-			}
-			*/
-
-			posPlayer.x += dv;
-		}
-
-		else
-		{
-			if (v > 0.f)
-				v -= 0.1f * deltaTime;
-			else
-				v = 0.f;
-
-			if (sprite->animation() == MOVE_LEFT)
-				sprite->changeAnimation(STAND_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT)
-				sprite->changeAnimation(STAND_RIGHT);
-		}
-
-		//////////////// Collision Left/Right /////////////////////////////////////////////////////////
-		if (v >= 0.f) {
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
-				v = 0.f;
-				sprite->changeAnimation(STAND_RIGHT);
-			}
 		}
 
 		else {
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x, marg, ic)) {
-				v = 0.f;
-				sprite->changeAnimation(STAND_LEFT);
+			posPlayer.x += int(v);
+			sprite->changeAnimation(TURN_LEFT);
+		}
+
+		if (v > -3.f) {
+			if (bJumping)
+				v -= 0.03f * deltaTime / 5.f;
+			else
+				v -= 0.01f * deltaTime;
+		}
+
+		int dv = int(v);
+		posPlayer.x += dv;
+	}
+
+	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+	{
+		if (v > 2.90f)
+			sprite->setAnimationSpeed(MOVE_RIGHT, 14);
+		else
+			sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+		if (v >= 0) {
+			if (sprite->animation() != MOVE_RIGHT)
+				sprite->changeAnimation(MOVE_RIGHT);
+		}
+		else {
+			posPlayer.x += int(v);
+			sprite->changeAnimation(TURN_RIGHT);
+		}
+
+		if (v < 3.f) {
+			if (bJumping)
+				v += 0.03f * deltaTime / 5.f;
+			else
+				v += 0.01f * deltaTime;
+		}
+
+		int dv = int(v);
+		posPlayer.x += dv;
+	}
+
+	else
+	{
+		posPlayer.x += int(v);
+		if (v < 2.0f)
+			sprite->setAnimationSpeed(MOVE_RIGHT, 4); 
+		if (v > -2.0f)
+			sprite->setAnimationSpeed(MOVE_LEFT, 4);
+		if ((sprite->animation() == MOVE_LEFT) && v==0.0f)
+			sprite->changeAnimation(STAND_LEFT);
+		else if ((sprite->animation() == MOVE_RIGHT) && v == 0.0f)
+			sprite->changeAnimation(STAND_RIGHT);
+	}
+
+	if (std::abs(v) > 0.01f) {
+		// Simulate friction by reducing the velocity
+		if (v > 0.0f) {
+			if (bJumping)
+				v -= 0.01f * deltaTime / 10.f;
+			else
+				v -= 0.004f * deltaTime;
+			if (v < 0.0f) {
+				v = 0.0f;
 			}
 		}
-		////////////////////////////////////////////////////////////////////////////////////////////////
-
-		if (bJumping)
-		{
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
-				sprite->changeAnimation(JUMP_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-				sprite->changeAnimation(JUMP_RIGHT);
-
-			jumpAngle += JUMP_ANGLE_STEP;
-			if (jumpAngle == 180)
-			{
-				bJumping = false;
-				posPlayer.y = startY;
-			}
+		else if (v < 0.0f) {
+			if (bJumping)
+				v += 0.01f * deltaTime / 10.f;
 			else
-			{
-				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-				bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-				if (jumpAngle > 90)
-					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+				v += 0.004f * deltaTime;
+			if (v > 0.0f) {
+				v = 0.0f;
 			}
+		}
+	}
+	else {
+		v = 0.0f;
+	}
+
+	//////////////// Collision Left/Right /////////////////////////////////////////////////////////
+	if (v >= 0.f) {
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
+			v = 0.f;
+			sprite->changeAnimation(STAND_RIGHT);
+		}
+	}
+
+	else {
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x, marg, ic)) {
+			v = 0.f;
+			sprite->changeAnimation(STAND_LEFT);
+		}
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	if (bJumping)
+	{
+		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+			sprite->changeAnimation(JUMP_LEFT);
+		else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+			sprite->changeAnimation(JUMP_RIGHT);
+
+		jumpAngle += JUMP_ANGLE_STEP;
+		if (jumpAngle == 180)
+		{
+			bJumping = false;
+			posPlayer.y = startY;
 		}
 		else
 		{
-			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
-			{
-				if (sprite->animation() == JUMP_LEFT)
-					sprite->changeAnimation(STAND_LEFT);
-				else if (sprite->animation() == JUMP_RIGHT)
-					sprite->changeAnimation(STAND_RIGHT);
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+			bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+			if (jumpAngle > 90)
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+		}
+	}
+	else
+	{
+		posPlayer.y += FALL_STEP;
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+		{
+			if (sprite->animation() == JUMP_LEFT)
+				sprite->changeAnimation(STAND_LEFT);
+			else if (sprite->animation() == JUMP_RIGHT)
+				sprite->changeAnimation(STAND_RIGHT);
 
-				if (Game::instance().getSpecialKey(GLUT_KEY_UP))
-				{
-					bJumping = true;
-					jumpAngle = 0;
-					startY = posPlayer.y;
-				}
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+			{
+				bJumping = true;
+				jumpAngle = 0;
+				startY = posPlayer.y;
 			}
 		}
-	//}
+	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
@@ -221,9 +240,9 @@ glm::ivec2 Player::getPosition()
 	return posPlayer;
 }
 
-int Player::getVelocity()
+float Player::getVelocity()
 {
-	return int(v);
+	return v;
 }
 
 bool Player::moving()

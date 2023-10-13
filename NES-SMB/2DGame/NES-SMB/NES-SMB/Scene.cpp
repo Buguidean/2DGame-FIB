@@ -76,7 +76,7 @@ void Scene::update(int deltaTime)
 			enemy->obtainPosPlayer(pos);
 		}
 
-		int v = player->getVelocity();
+		float v = player->getVelocity();
 		int icenter = int(centerCam);
 		int diff = icenter - pos.x;
 
@@ -86,14 +86,14 @@ void Scene::update(int deltaTime)
 
 		else if (player->moving()) {
 			player->margin(false, icenter);
-			if (diff <= 15) {
+			if (diff <= 16) {
 				projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
 				centerCam += v;
 			}
 
-			else if (diff <= 85) {
-				projection = glm::translate(projection, glm::vec3(-delta, 0.f, 0.f));
-				centerCam += delta;
+			else if (diff <= 105) {
+				projection = glm::translate(projection, glm::vec3(-(v/3.f), 0.f, 0.f));
+				centerCam += (v/3.f);
 			}
 		}
 	}
