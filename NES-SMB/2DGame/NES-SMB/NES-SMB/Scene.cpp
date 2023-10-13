@@ -86,14 +86,14 @@ void Scene::update(int deltaTime)
 
 		else if (player->moving()) {
 			player->margin(false, icenter);
-			if (diff <= 16) {
+			if (diff <= 20) {
 				projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
 				centerCam += v;
 			}
 
-			else if (diff <= 105) {
-				projection = glm::translate(projection, glm::vec3(-(v/3.f), 0.f, 0.f));
-				centerCam += (v/3.f);
+			else if (diff <= 130) {
+				projection = glm::translate(projection, glm::vec3(-(v/2.f), 0.f, 0.f));
+				centerCam += (v/2.f);
 			}
 		}
 	}
