@@ -51,7 +51,8 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
-	std::unordered_set<int> ncol = { 3,6,7,9,10,11,12,13,14,15,16 };
+	std::unordered_set<int> ncol = { 71, 353, 354, 355, 323, 357, 289, 290, 291,
+									  641, 673, 643, 674, 675, 642, 103, 361 };
 
 };
 

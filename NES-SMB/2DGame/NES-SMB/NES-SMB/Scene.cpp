@@ -36,7 +36,7 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -84,7 +84,7 @@ void Scene::update(int deltaTime)
 			player->margin(true, icenter);
 		}
 
-		else if (player->moving()) {
+		else if (player->moving() && (centerCam + 256.f <= 6751.f)) {
 			player->margin(false, icenter);
 			if (diff <= 20) {
 				projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
