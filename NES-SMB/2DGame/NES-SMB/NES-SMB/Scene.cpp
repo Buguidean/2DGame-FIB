@@ -11,7 +11,7 @@
 #define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 12
 
-#define INIT_ENEMY_X_TILES 5
+#define INIT_ENEMY_X_TILES 7
 #define INIT_ENEMY_Y_TILES 12
 
 
@@ -43,10 +43,10 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	enemy = new Enemy();
-	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	enemy->setPosition(glm::vec2(INIT_ENEMY_X_TILES * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
-	enemy->setTileMap(map);
+	goomba = new Goomba();
+	goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	goomba->setPosition(glm::vec2(INIT_ENEMY_X_TILES * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+	goomba->setTileMap(map);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
@@ -58,22 +58,22 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 
-	if (enemy != NULL) {
-		enemy->update(deltaTime);
+	if (goomba != NULL) {
+		goomba->update(deltaTime);
 	}
-	if (enemy != NULL && enemy->killed())
-		enemy = NULL;
+	if (goomba != NULL && goomba->killed())
+		goomba = NULL;
 
 	player->update(deltaTime);
-	if (enemy != NULL && enemy->playerKilled()) {
+	if (goomba != NULL && goomba->playerKilled()) {
 		player->killAnimation();
 		// player = NULL;
 	}
 
 	else {
 		glm::ivec2 pos = player->getPosition();
-		if (enemy != NULL) {
-			enemy->obtainPosPlayer(pos);
+		if (goomba != NULL) {
+			goomba->obtainPosPlayer(pos);
 		}
 
 		float v = player->getVelocity();
@@ -112,8 +112,8 @@ void Scene::render()
 	map->render();
 	// if (!enemy->playerKilled())
 	player->render();
-	if (enemy!=NULL) 
-		enemy->render();
+	if (goomba !=NULL)
+		goomba->render();
 }
 
 void Scene::initShaders()
