@@ -11,7 +11,7 @@
 #define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 12
 
-#define INIT_ENEMY_X_TILES 7
+#define INIT_ENEMY_X_TILES 37
 #define INIT_ENEMY_Y_TILES 12
 
 
@@ -48,6 +48,11 @@ void Scene::init()
 	goomba->setPosition(glm::vec2(INIT_ENEMY_X_TILES * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
 	goomba->setTileMap(map);
 
+	koopa = new Koopa();
+	koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	koopa->setPosition(glm::vec2(INIT_ENEMY_X_TILES * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+	koopa->setTileMap(map);
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	centerCam = 256.f;
@@ -61,8 +66,14 @@ void Scene::update(int deltaTime)
 	if (goomba != NULL) {
 		goomba->update(deltaTime);
 	}
+	if (koopa != NULL) {
+		koopa->update(deltaTime);
+	}
+
 	if (goomba != NULL && goomba->killed())
 		goomba = NULL;
+	if (koopa != NULL && koopa->killed())
+		koopa = NULL;
 
 	player->update(deltaTime);
 	if (goomba != NULL && goomba->playerKilled()) {
@@ -114,6 +125,9 @@ void Scene::render()
 	player->render();
 	if (goomba !=NULL)
 		goomba->render();
+	// if (koopa != NULL)
+		// koopa->render();
+
 }
 
 void Scene::initShaders()

@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Goomba.h"
+#include "Koopa.h"
 
 
 // Scene contains all the entities of our game.
@@ -33,6 +34,7 @@ private:
 	Player *player;
 	Enemy *enemy;
 	Goomba *goomba;
+	Koopa *koopa;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

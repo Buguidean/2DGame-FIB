@@ -28,8 +28,7 @@ public:
 protected:
 
 	float v;
-	bool dead;
-	bool dead_player;
+	bool dead, dead_player, dying;
 	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
 	Texture spritesheet;
 	Sprite *sprite;
