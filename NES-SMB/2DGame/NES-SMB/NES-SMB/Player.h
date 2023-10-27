@@ -32,7 +32,9 @@ private:
 	bool bJumping;
 	bool Moving;
 	bool marg;
-	float v;
+	float vx;
+	float vy;
+	bool apex;
 	int ic;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;

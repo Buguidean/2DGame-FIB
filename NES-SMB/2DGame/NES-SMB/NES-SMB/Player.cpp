@@ -22,7 +22,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	Moving = false;
 	marg = false;
-	v = 0.f;
+	apex = false;
+	vx = 0.f;
+	vy = 0.f;
 	spritesheet.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.5f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(9);
@@ -71,106 +73,106 @@ void Player::update(int deltaTime)
 
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (v < -2.90f)
+		if (vx < -2.90f)
 			sprite->setAnimationSpeed(MOVE_LEFT, 14);
 		else
 			sprite->setAnimationSpeed(MOVE_LEFT, 8);
-		if (v <= 0) {
+		if (vx <= 0) {
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
 		}
 
 		else {
-			posPlayer.x += int(v);
+			posPlayer.x += int(vx);
 			sprite->changeAnimation(TURN_LEFT);
 		}
 
-		if (v > -3.f) {
+		if (vx > -3.f) {
 			if (bJumping)
-				v -= 0.03f * deltaTime / 5.f;
+				vx -= 0.03f * deltaTime / 5.f;
 			else
-				v -= 0.01f * deltaTime;
+				vx -= 0.01f * deltaTime;
 		}
 
-		int dv = int(v);
+		int dv = int(vx);
 		posPlayer.x += dv;
 	}
 
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (v > 2.90f)
+		if (vx > 2.90f)
 			sprite->setAnimationSpeed(MOVE_RIGHT, 14);
 		else
 			sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-		if (v >= 0) {
+		if (vx >= 0) {
 			if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
 		}
 		else {
-			posPlayer.x += int(v);
+			posPlayer.x += int(vx);
 			sprite->changeAnimation(TURN_RIGHT);
 		}
 
-		if (v < 3.f) {
+		if (vx < 3.f) {
 			if (bJumping)
-				v += 0.03f * deltaTime / 5.f;
+				vx += 0.03f * deltaTime / 5.f;
 			else
-				v += 0.01f * deltaTime;
+				vx += 0.01f * deltaTime;
 		}
 
-		int dv = int(v);
+		int dv = int(vx);
 		posPlayer.x += dv;
 	}
 
 	else
 	{
-		posPlayer.x += int(v);
-		if (v < 2.0f)
+		posPlayer.x += int(vx);
+		if (vx < 2.0f)
 			sprite->setAnimationSpeed(MOVE_RIGHT, 4); 
-		if (v > -2.0f)
+		if (vx > -2.0f)
 			sprite->setAnimationSpeed(MOVE_LEFT, 4);
-		if ((sprite->animation() == MOVE_LEFT) && v==0.0f)
+		if ((sprite->animation() == MOVE_LEFT) && vx == 0.0f)
 			sprite->changeAnimation(STAND_LEFT);
-		else if ((sprite->animation() == MOVE_RIGHT) && v == 0.0f)
+		else if ((sprite->animation() == MOVE_RIGHT) && vx == 0.0f)
 			sprite->changeAnimation(STAND_RIGHT);
 	}
 
-	if (std::abs(v) > 0.01f) {
+	if (std::abs(vx) > 0.01f) {
 		// Simulate friction by reducing the velocity
-		if (v > 0.0f) {
+		if (vx > 0.0f) {
 			if (bJumping)
-				v -= 0.01f * deltaTime / 10.f;
+				vx -= 0.01f * deltaTime / 10.f;
 			else
-				v -= 0.004f * deltaTime;
-			if (v < 0.0f) {
-				v = 0.0f;
+				vx -= 0.004f * deltaTime;
+			if (vx < 0.0f) {
+				vx = 0.0f;
 			}
 		}
-		else if (v < 0.0f) {
+		else if (vx < 0.0f) {
 			if (bJumping)
-				v += 0.01f * deltaTime / 10.f;
+				vx += 0.01f * deltaTime / 10.f;
 			else
-				v += 0.004f * deltaTime;
-			if (v > 0.0f) {
-				v = 0.0f;
+				vx += 0.004f * deltaTime;
+			if (vx > 0.0f) {
+				vx = 0.0f;
 			}
 		}
 	}
 	else {
-		v = 0.0f;
+		vx = 0.0f;
 	}
 
 	//////////////// Collision Left/Right /////////////////////////////////////////////////////////
-	if (v >= 0.f) {
+	if (vx >= 0.f) {
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
-			v = 0.f;
+			vx = 0.0f;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
 
 	else {
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x, marg, ic)) {
-			v = 0.f;
+			vx = 0.0f;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -183,22 +185,52 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
 			sprite->changeAnimation(JUMP_RIGHT);
 
-		jumpAngle += JUMP_ANGLE_STEP;
-		if (jumpAngle == 180)
-		{
-			bJumping = false;
-			posPlayer.y = startY;
+		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+			/*
+			jumpAngle += JUMP_ANGLE_STEP;
+			if (jumpAngle == 180)
+			{
+				bJumping = false;
+				posPlayer.y = startY;
+			}
+			*/
+
+			if (!apex) {
+				if (abs(startY - posPlayer.y) >= 130)
+					apex = true;
+				if (vy < 3.6f)
+					vy += 0.4f * deltaTime;
+
+			}
+			else if (apex && vy > -5.f) {
+				vy -= 0.08f * deltaTime;
+			}
+
+			int dv = int(vy);
+			posPlayer.y -= dv;
+
+			if (vy > 0.f)
+				bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+			else
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 		}
-		else
-		{
-			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-			if (jumpAngle > 90)
+		else {
+			apex = true;
+			if (abs(startY - posPlayer.y) >= 60)
+				if (vy > -5.f)
+					vy -= 0.08f * deltaTime;
+			int dv = int(vy);
+			posPlayer.y -= dv;
+			if (vy > 0.f)
+				bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+			else
 				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 		}
 	}
 	else
 	{
+		apex = false;
+		vy = 0.f;
 		posPlayer.y += FALL_STEP;
 		if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 		{
@@ -242,7 +274,7 @@ glm::ivec2 Player::getPosition()
 
 float Player::getVelocity()
 {
-	return v;
+	return vx;
 }
 
 bool Player::moving()
@@ -257,7 +289,7 @@ bool Player::moving_up()
 
 void Player::setVelocity()
 {
-	v = 0.f;
+	vx = 0.f;
 }
 
 void Player::margin(bool value, int center)
