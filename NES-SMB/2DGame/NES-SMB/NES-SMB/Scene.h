@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Goomba.h"
+#include "Text.h"
 
 
 // Scene contains all the entities of our game.
@@ -29,6 +30,7 @@ private:
 	void initShaders();
 
 private:
+	std::vector<Text> timer;
 	TileMap *map;
 	Player *player;
 	Enemy *enemy;

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
@@ -37,6 +38,14 @@ void Scene::init()
 {
 	initShaders();
 	map = TileMap::createTileMap("levels/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	timer.resize(3);
+	timer[0].init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[0].setPosition(glm::vec2(12 * map->getTileSize(), 2 * map->getTileSize()));
+	timer[1].init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[1].setPosition(glm::vec2(13 * map->getTileSize(), 2 * map->getTileSize()));
+	timer[2].init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[2].setPosition(glm::vec2(14 * map->getTileSize(), 2 * map->getTileSize()));
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -112,6 +121,7 @@ void Scene::render()
 	map->render();
 	// if (!enemy->playerKilled())
 	player->render();
+	timer[0].render();
 	if (goomba !=NULL)
 		goomba->render();
 }

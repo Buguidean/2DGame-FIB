@@ -18,23 +18,11 @@ public:
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+	void setNumber(int num);
 	glm::ivec2 getPosition();
-	float getVelocity();
-	void setVelocity();
-	bool moving();
-	bool moving_up();
-	void margin(bool value, int center);
-	void killAnimation();
 
 private:
-	bool bJumping;
-	bool Moving;
-	bool marg;
-	float vx;
-	float vy;
-	bool apex;
-	int ic;
-	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
+	glm::ivec2 tileMapDispl, posText;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
