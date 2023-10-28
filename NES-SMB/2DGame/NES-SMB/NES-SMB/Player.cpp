@@ -19,6 +19,7 @@ enum PlayerAnims
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+	engine = irrklang::createIrrKlangDevice();
 	bJumping = false;
 	Moving = false;
 	marg = false;
@@ -64,6 +65,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	oldPlayer = posPlayer;
+	engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
+	
 }
 
 void Player::update(int deltaTime)

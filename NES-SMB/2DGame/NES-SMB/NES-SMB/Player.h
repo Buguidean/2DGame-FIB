@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include <irrklang.h>
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -39,6 +40,7 @@ private:
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
 	Texture spritesheet;
+	irrklang::ISoundEngine* engine;
 	Sprite *sprite;
 	TileMap *map;
 
@@ -46,5 +48,3 @@ private:
 
 
 #endif // _PLAYER_INCLUDE
-
-
