@@ -34,6 +34,9 @@
     <ClCompile Include="Goomba.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -67,6 +70,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
