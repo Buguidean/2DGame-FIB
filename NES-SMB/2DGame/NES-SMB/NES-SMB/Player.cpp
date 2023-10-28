@@ -165,15 +165,29 @@ void Player::update(int deltaTime)
 	//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 	if (vx >= 0.f) {
 		if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32), &posPlayer.x)) {
-			vx = 0.0f;
-			sprite->changeAnimation(STAND_RIGHT);
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+				vx = 0.0f;
+				sprite->changeAnimation(STAND_LEFT);
+			}
+			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+				vx = 0.5f;
+				sprite->changeAnimation(STAND_RIGHT);
+
+			}
 		}
 	}
 
 	else {
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32), &posPlayer.x, marg, ic)) {
-			vx = 0.0f;
-			sprite->changeAnimation(STAND_LEFT);
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+				vx = -0.5f;
+				sprite->changeAnimation(STAND_LEFT);
+			}
+			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+				vx = 0.0f;
+				sprite->changeAnimation(STAND_RIGHT);
+
+			}
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +210,7 @@ void Player::update(int deltaTime)
 			*/
 
 			if (!apex) {
-				if (abs(startY - posPlayer.y) >= 130)
+				if (abs(startY - posPlayer.y) >= 128)
 					apex = true;
 				if (vy < 3.6f)
 					vy += 0.4f * deltaTime;
