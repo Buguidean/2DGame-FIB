@@ -19,10 +19,10 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	void setNumber(int num);
-	glm::ivec2 getPosition();
+	glm::fvec2 getPosition();
 
 private:
-	glm::ivec2 tileMapDispl, posText;
+	glm::fvec2 tileMapDispl, posText;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;

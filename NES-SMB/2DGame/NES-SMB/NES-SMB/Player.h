@@ -22,14 +22,27 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::ivec2 getPosition();
+	glm::ivec2 getMarioSpriteSize();
 	float getVelocity();
 	void setVelocity();
 	bool moving();
 	bool moving_up();
 	void margin(bool value, int center);
 	void killAnimation();
+
+	bool isStarMario();
+	void setInFlag();
+	bool getFinalAnimation();
+	void hit();
 	
 private:
+	void flagTreatment();
+	void getOut(int deltaTime);
+
+	void setMarioSprite();
+	void setSuperMarioSprite();
+	void setStarMarioSprite();
+
 	bool bJumping;
 	bool Moving;
 	bool marg;
@@ -37,12 +50,20 @@ private:
 	float vy;
 	bool apex;
 	int ic;
+
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Texture spritesheet;
-	irrklang::ISoundEngine* engine;
-	Sprite *sprite;
+	Texture spritesheetM, spritesheetSM, spritesheetStM;
+	Sprite *spriteM, *spriteSM, *spriteStM, *sprite;
 	TileMap *map;
+
+	bool inFlag;
+	int countAnimation;
+	bool finalAnimation;
+
+	bool superMario;
+	bool starMario;
+	glm::ivec2 spriteSize;
 
 };
 

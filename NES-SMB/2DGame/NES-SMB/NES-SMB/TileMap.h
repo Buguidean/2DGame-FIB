@@ -35,7 +35,7 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	int collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const;
+	int collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE, int& way) const;
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -51,7 +51,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
-	std::unordered_set<int> ncol = { 71, 353, 354, 355, 323, 357, 289, 290, 291,
+	std::unordered_set<int> ncol = { 0, 71, 353, 354, 355, 323, 357, 289, 290, 291,
 									  641, 673, 643, 674, 675, 642, 103, 361 };
 
 };

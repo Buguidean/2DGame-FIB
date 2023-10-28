@@ -234,7 +234,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 		{
 			if (*posY - tileSize * y - size.y <= 5)
 			{
-				*posY = tileSize * y + size.y;
+				*posY = tileSize * y + 32;
 				return true;
 			}
 		}
@@ -243,8 +243,9 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	return false;
 }
 
-int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
+int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE, int& way) const
 {
+	way = -1;// not usefoul value
 	int min_xM, min_yM, max_xM, max_yM;
 	int min_xE, min_yE, max_xE, max_yE;
 
@@ -265,12 +266,25 @@ int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	if ((min_xM < max_xE) && (min_xE < max_xM) && (min_yM < max_yE) && (min_yE < max_yM)) {
 		glm::ivec2 diff = center_E - center_M;
-		
+
+		if (sizeM.y > sizeE.y)
+			diff.y -= 16;
+		else if (sizeM.y < sizeE.y)
+			diff.y += 16;
+		else if (sizeM.y == 64)
+			diff.y -= 32;
+
 		if (diff.y > 0) {
 			return 1;
 		}
-		else return 0;
-		
+		else {
+			if (diff.x > 0) way = 1;// Mario hits from the enemy left side 
+			else if (diff.x < 0) way = 0; // Mario hits from the enemy right side
+			return 0;
+		}
+
 	}
-	return -1;
+	/*}
+	else if(sizeM > sizeE)
+	*/return -1;
 }

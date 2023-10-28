@@ -23,17 +23,25 @@ public:
 	bool killed();
 	bool playerKilled();
 	glm::ivec2 getPosition();
-
+	void setMarioSpriteSize(glm::ivec2 &size);
+	void setStarMario(bool s);
+	bool isHit();
+	void setHit();
 
 protected:
 
 	float v;
 	bool dead;
 	bool dead_player;
+	bool starMario;
+	bool hit;
+
 	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+	glm::ivec2 marioSpriteSize;
+
 
 };
 

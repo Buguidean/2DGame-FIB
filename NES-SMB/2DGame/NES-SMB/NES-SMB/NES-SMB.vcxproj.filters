@@ -10,9 +10,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
@@ -37,6 +34,27 @@
     <ClCompile Include="Text.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditScene.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionScene.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopa.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Flag.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScene.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -46,9 +64,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
@@ -73,6 +88,27 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScene.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

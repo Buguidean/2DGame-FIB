@@ -1,40 +1,50 @@
-#ifndef _SCENE_INCLUDE
-#define _SCENE_INCLUDE
+#ifndef _PLAY_SCENE_INCLUDE
+#define _PLAY_SCENE_INCLUDE
 
+#include "GameScene.h"
 
 #include <glm/glm.hpp>
+#include <vector>
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Goomba.h"
+#include "Koopa.h"
+#include "Flag.h"
 #include "Text.h"
+#include <irrklang.h>
 
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene
+class PlayScene :
+	protected GameScene
 {
-
 public:
-	Scene();
-	~Scene();
+	PlayScene();
+	~PlayScene();
 
 	void init();
-	void update(int deltaTime);
+	int update(int deltaTime);
 	void render();
 
 private:
 	void initShaders();
 
 private:
-	std::vector<Text> timer;
+
+	float ticks;
+
+	std::vector<Text*> timer;
 	TileMap *map;
+	TileMap *back;
 	Player *player;
-	Enemy *enemy;
 	Goomba *goomba;
+	Koopa *koopa;
+	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
@@ -43,8 +53,9 @@ private:
 	int velP;
 	glm::ivec2 posP;
 	float centerCam;
+	irrklang::ISoundEngine* engine;
 };
 
 
-#endif // _SCENE_INCLUDE
+#endif // _PLAY_SCENE_INCLUDE
 

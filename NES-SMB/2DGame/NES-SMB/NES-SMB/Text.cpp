@@ -16,7 +16,7 @@ void Text::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 
 	spritesheet.loadFromFile("images/text_tileset.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.0625f, 0.125f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.0625f, 0.125f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(10);
 
 	sprite->setAnimationSpeed(ZERO, 8);
@@ -57,8 +57,6 @@ void Text::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Text::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	
-
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posText.x), float(tileMapDispl.y + posText.y)));
 }
 
@@ -78,7 +76,7 @@ void Text::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posText.x), float(tileMapDispl.y + posText.y)));
 }
 
-glm::ivec2 Text::getPosition()
+glm::fvec2 Text::getPosition()
 {
 	return posText;
 }

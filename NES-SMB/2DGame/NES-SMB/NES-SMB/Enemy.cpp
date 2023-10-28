@@ -46,3 +46,19 @@ void Enemy::obtainPosPlayer(const glm::ivec2 &pos)
 {
 	playerPos = pos;
 }
+
+void Enemy::setMarioSpriteSize(glm::ivec2 &size) {
+	marioSpriteSize = size;
+}
+
+bool Enemy::isHit() {
+	return hit;
+}
+
+void Enemy::setHit() {
+	hit = false;
+	//marioSpriteSize.y = 32;
+}
+void Enemy::setStarMario(bool s) {
+	starMario = s;
+}
