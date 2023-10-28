@@ -331,14 +331,15 @@ void Player::update(int deltaTime)
 				sprite->setAnimationSpeed(MOVE_LEFT, 14);
 			else
 				sprite->setAnimationSpeed(MOVE_LEFT, 8);
-			if (vx <= 0) {
-				if (sprite->animation() != MOVE_LEFT)
+			if (vx <= 0.f) {
+				if (sprite->animation() != MOVE_LEFT && !bJumping && vx < 0.f)
 					sprite->changeAnimation(MOVE_LEFT);
 			}
 
 			else {
 				posPlayer.x += int(vx);
-				sprite->changeAnimation(TURN_LEFT);
+				if (!bJumping && vx > 0.f)
+					sprite->changeAnimation(TURN_LEFT);
 			}
 
 			if (vx > -3.f) {
@@ -358,13 +359,14 @@ void Player::update(int deltaTime)
 				sprite->setAnimationSpeed(MOVE_RIGHT, 14);
 			else
 				sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-			if (vx >= 0) {
-				if (sprite->animation() != MOVE_RIGHT)
+			if (vx >= 0.f) {
+				if (sprite->animation() != MOVE_RIGHT && !bJumping && vx > 0.f)
 					sprite->changeAnimation(MOVE_RIGHT);
 			}
 			else {
 				posPlayer.x += int(vx);
-				sprite->changeAnimation(TURN_RIGHT);
+				if (!bJumping && vx < 0.f)
+					sprite->changeAnimation(TURN_RIGHT);
 			}
 
 			if (vx < 3.f) {
@@ -418,7 +420,7 @@ void Player::update(int deltaTime)
 
 		//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 		if (vx >= 0.f) {
-			if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x)) {
+			if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
 				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
 					vx = 0.0f;
 					sprite->changeAnimation(STAND_LEFT);
@@ -432,7 +434,7 @@ void Player::update(int deltaTime)
 		}
 
 		else {
-			if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic)) {
+			if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic) && !bJumping) {
 				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
 					vx = -0.5f;
 					sprite->changeAnimation(STAND_LEFT);
