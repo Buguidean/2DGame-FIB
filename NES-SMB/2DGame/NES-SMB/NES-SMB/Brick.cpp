@@ -59,24 +59,3 @@ void Brick::update(int deltaTime)
 	sprite->update(deltaTime);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
 }
-
-void Brick::render()
-{
-	sprite->render();
-}
-
-void Brick::setTileMap(TileMap *tileMap)
-{
-	map = tileMap;
-}
-
-void Brick::setPosition(const glm::vec2 &pos)
-{
-	posBlock = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
-}
-
-glm::fvec2 Brick::getPosition()
-{
-	return posBlock;
-}

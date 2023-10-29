@@ -312,3 +312,8 @@ int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	return -1;
 }
+
+int* TileMap::getMap()
+{
+	return map;
+}

@@ -6,6 +6,9 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "ShaderProgram.h"
+#include "BlockSprite.h"
+#include "Question.h"
+#include "Brick.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -39,6 +42,7 @@ private:
 	float ticks;
 
 	std::vector<Text*> timer;
+	std::vector<BlockSprite*> blocks;
 	TileMap *map;
 	TileMap *back;
 	TileMap *sprites;

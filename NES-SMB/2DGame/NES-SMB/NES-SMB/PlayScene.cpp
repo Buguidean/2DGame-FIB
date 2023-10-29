@@ -55,13 +55,28 @@ PlayScene::~PlayScene()
 
 void PlayScene::init()
 {
+
+
 	ticks = 400.0f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvl.mp3", true, false, true);
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);	
+
+	int* map_sprites = sprites->getMap();
+
+	for (int j = 0 ; j < 15 ; ++j) {
+		for (int i = 0; i < 211; ++i) {
+			if (map_sprites[j * 211 + i] == 19) {
+				Question* aux = new Question();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				blocks.push_back(aux);
+			}
+		}
+	}
 
 	for (auto & digit : timer) {
 		digit = new Text();
@@ -115,6 +130,9 @@ int PlayScene::update(int deltaTime)
 	timer[0]->setNumber(cen);
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
+
+	for (auto & block : blocks)
+		block->update(deltaTime);	
 
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
@@ -237,6 +255,9 @@ void PlayScene::render()
 	timer[0]->render();
 	timer[1]->render();
 	timer[2]->render();
+
+	for (auto & block : blocks)
+		block->render();
 
 	if (goomba != NULL)
 		goomba->render();

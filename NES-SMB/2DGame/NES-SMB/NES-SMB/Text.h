@@ -23,7 +23,6 @@ public:
 
 private:
 	glm::fvec2 tileMapDispl, posText;
-	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;

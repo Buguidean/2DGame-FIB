@@ -61,6 +61,9 @@
     <ClCompile Include="Question.cpp">
       <Filter>Implementation\BlockSprites</Filter>
     </ClCompile>
+    <ClCompile Include="BlockSprite.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -121,6 +124,9 @@
       <Filter>Headers\BlockSprites</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockSprite.h">
       <Filter>Headers\BlockSprites</Filter>
     </ClInclude>
   </ItemGroup>

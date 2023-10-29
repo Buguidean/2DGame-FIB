@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
+    <ClInclude Include="BlockSprite.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="CreditScene.h" />
     <ClInclude Include="Enemy.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BlockSprite.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="CreditScene.cpp" />
     <ClCompile Include="Flag.cpp" />
