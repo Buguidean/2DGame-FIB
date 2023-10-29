@@ -11,7 +11,7 @@ enum GoombaAnims
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 
-	v = 1.f;
+	v = -1.f;
 	spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -50,7 +50,7 @@ void Goomba::update(int deltaTime)
 	case 0:
 	case 2:
 	case 3:
-		posEnemy.x -= int(v);
+		posEnemy.x += int(v);
 		if (starMario) {
 			dead = true;
 			v = 0.f;
@@ -70,7 +70,7 @@ void Goomba::update(int deltaTime)
 		dead = true;
 		break;
 	case -1:
-		posEnemy.x -= int(v);
+		posEnemy.x += int(v);
 		break;
 	}
 

@@ -34,6 +34,7 @@ public:
 	void setInFlag();
 	bool getFinalAnimation();
 	void hit();
+	void set_small_jump();
 	
 private:
 	void flagTreatment();
@@ -44,6 +45,8 @@ private:
 	void setStarMarioSprite();
 
 	bool bJumping;
+	bool small_jump;
+	int start_small_jump;
 	bool Moving;
 	bool marg;
 	float vx;

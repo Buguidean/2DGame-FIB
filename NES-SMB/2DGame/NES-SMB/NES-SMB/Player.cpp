@@ -19,6 +19,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, ir
 {
 	engine = enginePS;
 	bJumping = false;
+	small_jump = false;
 	Moving = false;
 	marg = false;
 	apex = false;
@@ -476,87 +477,104 @@ void Player::update(int deltaTime)
 			}
 		}
 		////////////////////////////////////////////////////////////////////////////////////////////////
-
-		if (bJumping)
-		{
-			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
-				sprite->changeAnimation(JUMP_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-				sprite->changeAnimation(JUMP_RIGHT);
-
-			if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-				/*
-				jumpAngle += JUMP_ANGLE_STEP;
-				if (jumpAngle == 180)
-				{
-					bJumping = false;
-					posPlayer.y = startY;
+		
+		if (small_jump) {
+			if ((start_small_jump - posPlayer.y) >= 20) {
+				if (vy > -5.f) {
+					vy -= 0.1f * deltaTime;
 				}
-				*/
-				// Jump Sound
-				if (vy > 0.f) {
-					if((superMario || starMario)){
-						if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
-							engine->play2D("sounds/jump_super.wav", false, false, true);
+			}
+			int dv = int(vy);
+			posPlayer.y -= dv;
+			if (vy > 0.f)
+				small_jump = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+			else
+				small_jump = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+		}
+
+		else {
+			if (bJumping)
+			{
+				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+					sprite->changeAnimation(JUMP_LEFT);
+				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+					sprite->changeAnimation(JUMP_RIGHT);
+
+				if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+					/*
+					jumpAngle += JUMP_ANGLE_STEP;
+					if (jumpAngle == 180)
+					{
+						bJumping = false;
+						posPlayer.y = startY;
+					}
+					*/
+					// Jump Sound
+					if (vy > 0.f) {
+						if ((superMario || starMario)) {
+							if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
+								engine->play2D("sounds/jump_super.wav", false, false, true);
+							}
+						}
+						else if (!(engine->isCurrentlyPlaying("sounds/jump_small.wav"))) {
+							engine->play2D("sounds/jump_small.wav", false, false, true);
 						}
 					}
-					else if (!(engine->isCurrentlyPlaying("sounds/jump_small.wav"))) {
-						engine->play2D("sounds/jump_small.wav", false, false, true);
+
+					if (!apex) {
+						if (abs(startY - posPlayer.y) >= 128)
+							apex = true;
+						if (vy < 3.6f)
+							vy += 0.4f * deltaTime;
+
+					}
+					else if (apex && vy > -5.f) {
+						vy -= 0.08f * deltaTime;
+					}
+
+					int dv = int(vy);
+					posPlayer.y -= dv;
+
+					if (vy > 0.f)
+						bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+					else
+						bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+				}
+				else {
+					apex = true;
+					if (abs(startY - posPlayer.y) >= 60)
+						if (vy > -5.f)
+							vy -= 0.08f * deltaTime;
+					int dv = int(vy);
+					posPlayer.y -= dv;
+					if (vy > 0.f)
+						bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+					else
+						bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+				}
+			}
+			else
+			{
+				apex = false;
+				vy = 0.f;
+				posPlayer.y += FALL_STEP;
+				if (map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y))
+				{
+					if (sprite->animation() == JUMP_LEFT)
+						sprite->changeAnimation(STAND_LEFT);
+					else if (sprite->animation() == JUMP_RIGHT)
+						sprite->changeAnimation(STAND_RIGHT);
+
+					if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+					{
+						bJumping = true;
+						jumpAngle = 0;
+						startY = posPlayer.y;
 					}
 				}
-
-				if (!apex) {
-					if (abs(startY - posPlayer.y) >= 128)
-						apex = true;
-					if (vy < 3.6f)
-						vy += 0.4f * deltaTime;
-
-				}
-				else if (apex && vy > -5.f) {
-					vy -= 0.08f * deltaTime;
-				}
-
-				int dv = int(vy);
-				posPlayer.y -= dv;
-
-				if (vy > 0.f)
-					bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
-				else
-					bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
-			}
-			else {
-				apex = true;
-				if (abs(startY - posPlayer.y) >= 60)
-					if (vy > -5.f)
-						vy -= 0.08f * deltaTime;
-				int dv = int(vy);
-				posPlayer.y -= dv;
-				if (vy > 0.f)
-					bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
-				else
-					bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
 			}
 		}
-		else
-		{
-			apex = false;
-			vy = 0.f;
-			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y))
-			{
-				if (sprite->animation() == JUMP_LEFT)
-					sprite->changeAnimation(STAND_LEFT);
-				else if (sprite->animation() == JUMP_RIGHT)
-					sprite->changeAnimation(STAND_RIGHT);
 
-				if (Game::instance().getSpecialKey(GLUT_KEY_UP))
-				{
-					bJumping = true;
-					jumpAngle = 0;
-					startY = posPlayer.y;
-				}
-			}
-		}
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 	// MIRAR SI HACE FALTA
@@ -632,4 +650,10 @@ bool Player::isStarMario() {
 
 void Player::hit() {
 	setMarioSprite();
+}
+
+void Player::set_small_jump() {
+	vy = 5.0f;
+	start_small_jump = posPlayer.y;
+	small_jump = true;
 }

@@ -86,7 +86,7 @@ void PlayScene::init()
 
 	koopa = new Koopa();
 	koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES-10) * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+	koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES-25) * map->getTileSize(), (INIT_ENEMY_Y_TILES-1) * map->getTileSize()));
 	koopa->setTileMap(map);
 
 	flag = new Flag();
@@ -134,11 +134,20 @@ int PlayScene::update(int deltaTime)
 		koopa->update(deltaTime);
 	}
 
-	if (goomba != NULL && goomba->killed())
+	if (goomba != NULL && goomba->killed()) {
+		player->set_small_jump();
 		goomba = NULL;
+	}
 
-	if (koopa != NULL && koopa->killed())
+	if (koopa != NULL && koopa->hitted()) {
+		player->set_small_jump();
+		koopa->disable_hitted();
+	}
+
+	if (koopa != NULL && koopa->killed()) {
+		player->set_small_jump();
 		koopa = NULL;
+	}
 
 	player->update(deltaTime);
 

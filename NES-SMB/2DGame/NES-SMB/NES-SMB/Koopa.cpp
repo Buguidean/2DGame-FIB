@@ -1,42 +1,60 @@
 #include "Koopa.h"
 
+#define FALL_STEP 4
+
 enum KoopaAnims
 {
-	SHIELD, MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
+	LIVE_SHELL, SHELL, MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
 };
 
+void Koopa::normal_sprite() {
+	sprite = spriteN;
+	sprite_size = glm::ivec2(32, 64);
+}
+
+void Koopa::shell_sprite() {
+	sprite = spriteC;
+	sprite_size = glm::ivec2(32, 32);
+}
 
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 
-	v = 1.f;
-	spritesheet.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.25f, 0.5f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(5);
+	v = -1.f;
+	spritesheetN.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spriteN = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.25f, 1.0f), &spritesheetN, &shaderProgram);
+	spriteN->setNumberAnimations(4);
 
-	sprite->setAnimationSpeed(SHIELD, 4);
-	sprite->addKeyframe(SHIELD, glm::vec2(0.25f, 0.5f));
+	spriteN->setAnimationSpeed(MOVE_LEFT, 4);
+	spriteN->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.0f));
+	spriteN->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.0f));
 
-	sprite->setAnimationSpeed(MOVE_LEFT, 4);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75f, 0.0f));
+	spriteN->setAnimationSpeed(MOVE_RIGHT, 4);
+	spriteN->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.0f));
+	spriteN->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.0f));
+	
+	spriteN->setAnimationSpeed(STAND_LEFT, 4);
+	spriteN->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
 
-	sprite->setAnimationSpeed(MOVE_RIGHT, 4);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.0f));
+	spriteN->setAnimationSpeed(STAND_RIGHT, 4);
+	spriteN->addKeyframe(STAND_RIGHT, glm::vec2(0.75f, 0.0f));
 
-	sprite->setAnimationSpeed(STAND_LEFT, 4);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.25f, 0.0f));
+	spriteN->changeAnimation(MOVE_LEFT);
 
-	sprite->setAnimationSpeed(STAND_RIGHT, 4);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.5f, 0.0f));
+	spritesheetC.loadFromFile("images/koopa_shell.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spriteC = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheetC, &shaderProgram);
+	spriteC->setNumberAnimations(2);
 
-	sprite->changeAnimation(MOVE_LEFT);
+	spriteC->setAnimationSpeed(SHELL, 1);
+	spriteC->addKeyframe(SHELL, glm::vec2(0.0f, 0.0f));
 
+	spriteC->setAnimationSpeed(LIVE_SHELL, 1);
+	spriteC->addKeyframe(LIVE_SHELL, glm::vec2(0.5f, 0.0f));
+
+	spriteC->changeAnimation(SHELL);
+
+	sprite = spriteN;
 	tileMapDispl = tileMapPos;
-	int y = posEnemy.y + 32;
-	int x = posEnemy.x;
-	posEnemy = glm::ivec2(x, y);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 
 	oldEnemy = posEnemy;
@@ -52,7 +70,8 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	transitionState = true;
 	hit = false;
 	starMario = false;
-
+	first_hit = false;
+	sprite_size = glm::ivec2(32, 64);
 }
 
 
@@ -66,8 +85,7 @@ void Koopa::update(int deltaTime)
 		dead = true;
 	}
 	else if (shield) {
-		if (sprite->animation() != SHIELD)
-			sprite->changeAnimation(SHIELD);
+		// POR AHORA SE QUEDA ASI
 	}
 	else if (shieldState == 7) {
 		dead = true;
@@ -91,7 +109,7 @@ void Koopa::update(int deltaTime)
 	case 0:
 	case 2:
 	case 3:
-		posEnemy.x -= int(v);
+		posEnemy.x += int(v);
 		if (starMario) {
 			dying = true;
 		}
@@ -99,15 +117,16 @@ void Koopa::update(int deltaTime)
 			if (((!shield) || shieldState == 4) && (!dead || !dying)) {
 				if (marioSpriteSize.y == 64 && (!dead || !dying)) {
 					hit = true;
+					// marioSpriteSize = glm::ivec2(32, 32);
 				}
 				else if (!dead || !dying)
 					dead_player = true;
 			}
 			else if (shield && shieldState == 2 && (!dead || !dying)) {
 				if (state == 2)
-					v = -2.f;
+					v = 3.f;
 				else if (state == 3)
-					v = 2.f;
+					v = -3.f;
 
 				shieldState = 3;
 				shieldCount = 0;
@@ -130,7 +149,10 @@ void Koopa::update(int deltaTime)
 				}
 			}
 			else {
+				first_hit = true;
 				shield = true;
+				shell_sprite();
+				posEnemy.y += 32;
 				shieldState = 1;
 
 			}
@@ -139,7 +161,7 @@ void Koopa::update(int deltaTime)
 
 		break;
 	case -1:
-		posEnemy.x -= int(v);
+		posEnemy.x += int(v);
 		transitionState = true;
 		if (shield && (v == 0.f || v == -0.f)) {
 			shieldState = 2;
@@ -150,11 +172,23 @@ void Koopa::update(int deltaTime)
 		break;
 	}
 
-	if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x))
+	posEnemy.y += FALL_STEP;
+	map->collisionMoveDown(posEnemy, sprite_size, &posEnemy.y);
+
+	if (map->collisionMoveRight(posEnemy, sprite_size, &posEnemy.x))
 		v = -v;
 	// El 2 es un "placeholder"
-	if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2))
+	if (map->collisionMoveLeft(posEnemy, sprite_size, &posEnemy.x, false, 2))
 		v = -v;
+	
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y - 32)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
+}
+
+bool Koopa::hitted() {
+	return first_hit;
+}
+
+void Koopa::disable_hitted() {
+	first_hit = false;
 }
