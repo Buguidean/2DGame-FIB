@@ -16,7 +16,7 @@ private:
 	int shieldCount;
 	bool transitionState;
 
-	//shieldState = 0: No shield (se usa shield)
+	// shieldState = 0: No shield (se usa shield)
 	// shieldState = 1: saltas dentro de Koopa y se pone el caparazon
 	// shieldState = 2: sales fuera del caparazón
 	// shieldState = 3: le pegas por un lateral al caparazón estas dentro

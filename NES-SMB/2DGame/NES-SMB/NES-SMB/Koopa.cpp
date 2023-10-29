@@ -85,10 +85,12 @@ void Koopa::update(int deltaTime)
 	glm::ivec2 koopaColision = glm::ivec2(32, 64);
 	if (shield)
 		koopaColision = glm::ivec2(32, 32);
-	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision, left);
+	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision);
 	switch (state)
 	{
 	case 0:
+	case 2:
+	case 3:
 		posEnemy.x -= int(v);
 		if (starMario) {
 			dying = true;
@@ -102,10 +104,10 @@ void Koopa::update(int deltaTime)
 					dead_player = true;
 			}
 			else if (shield && shieldState == 2 && (!dead || !dying)) {
-				if (left == 0)
-					v = 1.f;
-				else if (left == 1)
-					v = -1.f;
+				if (state == 2)
+					v = 2.f;
+				else if (state == 3)
+					v = -2.f;
 
 				shieldState = 3;
 				shieldCount = 0;

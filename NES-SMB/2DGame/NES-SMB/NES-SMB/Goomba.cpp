@@ -1,5 +1,8 @@
 #include "Goomba.h"
 
+
+#define FALL_STEP 4
+
 enum GoombaAnims
 {
 	GOOMBA_MOVE, GOOMBA_DEATH
@@ -40,12 +43,13 @@ void Goomba::update(int deltaTime)
 		sprite->changeAnimation(GOOMBA_MOVE);
 	}
 
-	int left = -1;
-	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32), left);
+	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32));
 
 	switch (state)
 	{
 	case 0:
+	case 2:
+	case 3:
 		posEnemy.x -= int(v);
 		if (starMario) {
 			dead = true;
@@ -54,6 +58,7 @@ void Goomba::update(int deltaTime)
 		}
 		else if (marioSpriteSize.y == 64 && !dead) {
 			hit = true;
+			// marioSpriteSize = glm::ivec2(32, 32);
 		}
 		else if (!dead) {
 			dead_player = true;
@@ -69,10 +74,16 @@ void Goomba::update(int deltaTime)
 		break;
 	}
 
-	if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x))
+	posEnemy.y += FALL_STEP;
+	map->collisionMoveDown(posEnemy, glm::ivec2(32, 32), &posEnemy.y);
+
+	if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
 		v = -v;
+	}
 	// El 2 es un "placeholder"
-	if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2))
+	if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2)) {
 		v = -v;
+	}
+	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 }

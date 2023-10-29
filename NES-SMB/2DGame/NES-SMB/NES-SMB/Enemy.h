@@ -35,6 +35,7 @@ protected:
 	bool dead_player;
 	bool starMario;
 	bool hit;
+	int startY;
 
 	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
 	Texture spritesheet;

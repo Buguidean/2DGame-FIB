@@ -140,6 +140,7 @@ int PlayScene::update(int deltaTime)
 		koopa = NULL;
 
 	player->update(deltaTime);
+
 	if (goomba != NULL && goomba->playerKilled()) {
 		player->killAnimation();
 		// player = NULL;

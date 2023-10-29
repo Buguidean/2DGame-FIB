@@ -55,6 +55,12 @@
     <ClCompile Include="Koopa.cpp">
       <Filter>Implementation\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Question.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -111,6 +117,12 @@
     <ClInclude Include="Goomba.h">
       <Filter>Headers\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Question.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -130,6 +142,12 @@
     </Filter>
     <Filter Include="Implementation\Enemies">
       <UniqueIdentifier>{da83e694-11b6-4826-9168-665d8420d359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\BlockSprites">
+      <UniqueIdentifier>{11edb4ca-76e2-41ab-9019-8b57a0736d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\BlockSprites">
+      <UniqueIdentifier>{397d259c-f3a6-40dc-8c7d-af98cc59d10b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

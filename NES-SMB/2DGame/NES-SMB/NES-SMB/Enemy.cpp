@@ -57,7 +57,7 @@ bool Enemy::isHit() {
 
 void Enemy::setHit() {
 	hit = false;
-	//marioSpriteSize.y = 32;
+	marioSpriteSize.y = 32;
 }
 void Enemy::setStarMario(bool s) {
 	starMario = s;
