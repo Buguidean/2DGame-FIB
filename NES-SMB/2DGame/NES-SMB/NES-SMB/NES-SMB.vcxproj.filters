@@ -25,35 +25,35 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="Goomba.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="CreditScene.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="InstructionScene.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="MainScene.cpp">
-      <Filter>Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="Koopa.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
     <ClCompile Include="Flag.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="CreditScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="PlayScene.cpp">
-      <Filter>Implementation</Filter>
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Implementation\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Implementation\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopa.cpp">
+      <Filter>Implementation\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,35 +81,35 @@
     <ClInclude Include="TileMap.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Goomba.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CreditScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="InstructionScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="MainScene.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Koopa.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Flag.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="CreditScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="PlayScene.h">
-      <Filter>Headers</Filter>
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Headers\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Headers\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Headers\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +118,18 @@
     </Filter>
     <Filter Include="Implementation">
       <UniqueIdentifier>{94af0729-1518-4f87-97ef-776b633a0a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Scenes">
+      <UniqueIdentifier>{357f6740-4642-48fc-9d09-6789837872d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Enemies">
+      <UniqueIdentifier>{c8c5b9aa-ced0-47aa-865f-3424682a293f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\Scenes">
+      <UniqueIdentifier>{694d24e8-f5c5-4715-a6fc-142533f42e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\Enemies">
+      <UniqueIdentifier>{da83e694-11b6-4826-9168-665d8420d359}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
