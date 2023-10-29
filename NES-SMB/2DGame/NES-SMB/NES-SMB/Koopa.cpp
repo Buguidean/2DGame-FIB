@@ -124,9 +124,9 @@ void Koopa::update(int deltaTime)
 			}
 			else if (shield && shieldState == 2 && (!dead || !dying)) {
 				if (state == 2)
-					v = 3.f;
+					v = 5.f;
 				else if (state == 3)
-					v = -3.f;
+					v = -5.f;
 
 				shieldState = 3;
 				shieldCount = 0;

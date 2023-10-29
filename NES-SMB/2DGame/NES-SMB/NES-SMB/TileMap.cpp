@@ -7,7 +7,7 @@
 #include "TileMap.h"
 
 
-#define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846f
 
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -258,7 +258,12 @@ int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	min_xE = posE.x + 2;
 	max_xE = posE.x + sizeE.x - 2;
-	min_yE = posE.y + 2;
+
+	if (sizeE.y == 64)
+		min_yE = posE.y + 18;
+	else
+		min_yE = posE.y + 2;
+
 	max_yE = posE.y + sizeE.y -2;
 
 
