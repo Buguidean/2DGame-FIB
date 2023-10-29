@@ -15,7 +15,7 @@ class Player
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, irrklang::ISoundEngine*& engine);
 	void update(int deltaTime);
 	void render();
 	
@@ -64,6 +64,7 @@ private:
 	bool superMario;
 	bool starMario;
 	glm::ivec2 spriteSize;
+	irrklang::ISoundEngine* engine;
 
 };
 

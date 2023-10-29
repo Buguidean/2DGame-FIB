@@ -15,8 +15,9 @@ enum PlayerAnims
 };
 
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, irrklang::ISoundEngine* & enginePS)
 {
+	engine = enginePS;
 	bJumping = false;
 	Moving = false;
 	marg = false;
@@ -200,6 +201,11 @@ void Player::flagTreatment()
 		maxDown = 10 * 32;
 
 	if (posPlayer.y < maxDown) {
+		//sound
+		if (!(engine->isCurrentlyPlaying("sounds/flagpole.wav"))) {
+			engine->play2D("sounds/flagpole.wav", false, false, true);
+		}
+
 		posPlayer.y = posPlayer.y + 2;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
@@ -268,6 +274,12 @@ void Player::setMarioSprite() {
 }
 
 void Player::setSuperMarioSprite() {
+	if (!starMario && !superMario) {
+		if (!(engine->isCurrentlyPlaying("sounds/getPowerup.wav"))) {
+			engine->play2D("sounds/getPowerup.wav", false, false, true);
+		}
+	}
+
 	int animation = sprite->animation();
 	superMario = true;
 	starMario = false;
@@ -284,6 +296,12 @@ void Player::setSuperMarioSprite() {
 }
 
 void Player::setStarMarioSprite() {
+	if (!starMario && !superMario) {
+		if (!(engine->isCurrentlyPlaying("sounds/getPowerup.wav"))) {
+			engine->play2D("sounds/getPowerup.wav", false, false, true);
+		}
+	}
+
 	int animation = sprite->animation();
 	starMario = true;
 	superMario = false;
@@ -338,7 +356,7 @@ void Player::update(int deltaTime)
 
 			else {
 				posPlayer.x += int(vx);
-				if (!bJumping && vx > 0.f)
+				if (!bJumping && vx > 0.f && sprite->animation() != TURN_LEFT)
 					sprite->changeAnimation(TURN_LEFT);
 			}
 
@@ -365,9 +383,10 @@ void Player::update(int deltaTime)
 			}
 			else {
 				posPlayer.x += int(vx);
-				if (!bJumping && vx < 0.f)
+				if (!bJumping && vx < 0.f && sprite->animation() != TURN_RIGHT)
 					sprite->changeAnimation(TURN_RIGHT);
 			}
+
 
 			if (vx < 3.f) {
 				if (bJumping)
@@ -393,6 +412,15 @@ void Player::update(int deltaTime)
 				sprite->changeAnimation(STAND_RIGHT);
 		}
 
+		//
+		if (vx == 0.f && sprite->animation() == TURN_LEFT) {
+			sprite->changeAnimation(STAND_LEFT);
+		}
+		else if (vx == 0.f && sprite->animation() == TURN_RIGHT) {
+			sprite->changeAnimation(STAND_RIGHT);
+		}
+		//
+
 		if (std::abs(vx) > 0.01f) {
 			// Simulate friction by reducing the velocity
 			if (vx > 0.0f) {
@@ -417,6 +445,7 @@ void Player::update(int deltaTime)
 		else {
 			vx = 0.0f;
 		}
+
 
 		//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 		if (vx >= 0.f) {
@@ -464,6 +493,17 @@ void Player::update(int deltaTime)
 					posPlayer.y = startY;
 				}
 				*/
+				// Jump Sound
+				if (vy > 0.f) {
+					if((superMario || starMario)){
+						if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
+							engine->play2D("sounds/jump_super.wav", false, false, true);
+						}
+					}
+					else if (!(engine->isCurrentlyPlaying("sounds/jump_small.wav"))) {
+						engine->play2D("sounds/jump_small.wav", false, false, true);
+					}
+				}
 
 				if (!apex) {
 					if (abs(startY - posPlayer.y) >= 128)
