@@ -19,6 +19,7 @@ PlayScene::PlayScene()
 {
 	map = NULL;
 	back = NULL;
+	sprites = NULL;
 	timer.resize(3, nullptr);
 	player = NULL;
 	goomba = NULL;
@@ -33,6 +34,8 @@ PlayScene::~PlayScene()
 		delete map;
 	if (back != NULL)
 		delete back;
+	if (sprites != NULL)
+		delete sprites;
 	if (player != NULL)
 		delete player;
 	if (goomba != NULL)
@@ -57,6 +60,7 @@ void PlayScene::init()
 	engine = irrklang::createIrrKlangDevice();
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	for (auto & digit : timer) {
 		digit = new Text();

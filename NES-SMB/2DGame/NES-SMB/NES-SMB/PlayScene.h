@@ -41,6 +41,7 @@ private:
 	std::vector<Text*> timer;
 	TileMap *map;
 	TileMap *back;
+	TileMap *sprites;
 	Player *player;
 	Goomba *goomba;
 	Koopa *koopa;
