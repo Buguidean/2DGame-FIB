@@ -96,14 +96,20 @@ void PlayScene::init()
 int PlayScene::update(int deltaTime)
 {
 	if (ticks > 0.f)
-		ticks -= deltaTime;
+		ticks -= deltaTime/1000.f;
 
-	/*
-	for (auto & digit : timer) {
-		ticks
-		digit->
-	}
-	*/
+	if (ticks < 0.f || ticks < 0.005f)
+		ticks = 0.f;
+
+	// DIGITS OF THE TIMER
+	int cen = (int(ticks) / 100) % 10;
+	int des = (int(ticks) / 10) % 10;
+	int uni = int(ticks) % 10;
+	
+	// TIMER ACTUALIZATION
+	timer[0]->setNumber(cen);
+	timer[1]->setNumber(des);
+	timer[2]->setNumber(uni);
 
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);

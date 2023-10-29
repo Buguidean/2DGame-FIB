@@ -86,34 +86,34 @@ void Text::setNumber(int num)
 	switch (num)
 	{
 	case 0:
-		sprite->changeAnimation(ZERO);
+		sprite->changeAnimation(0);
 		break;
 	case 1:
-		sprite->changeAnimation(ONE);
+		sprite->changeAnimation(1);
 		break;
 	case 2:
-		sprite->changeAnimation(TWO);
+		sprite->changeAnimation(2);
 		break;
 	case 3:
-		sprite->changeAnimation(THREE);
+		sprite->changeAnimation(3);
 		break;
 	case 4:
-		sprite->changeAnimation(FOUR);
+		sprite->changeAnimation(4);
 		break;
 	case 5:
-		sprite->changeAnimation(FIVE);
+		sprite->changeAnimation(5);
 		break;
 	case 6:
-		sprite->changeAnimation(SIX);
+		sprite->changeAnimation(6);
 		break;
 	case 7:
-		sprite->changeAnimation(SEVEN);
+		sprite->changeAnimation(7);
 		break;
 	case 8:
-		sprite->changeAnimation(EIGHT);
+		sprite->changeAnimation(8);
 		break;
 	case 9:
-		sprite->changeAnimation(NINE);
+		sprite->changeAnimation(9);
 		break;
 	}
 }
