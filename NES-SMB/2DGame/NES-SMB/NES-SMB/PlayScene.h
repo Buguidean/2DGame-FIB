@@ -40,7 +40,8 @@ private:
 private:
 
 	float ticks;
-
+	bool active;
+	int animated_block;
 	std::vector<Text*> timer;
 	std::vector<BlockSprite*> blocks;
 	TileMap *map;

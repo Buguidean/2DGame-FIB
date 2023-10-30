@@ -14,6 +14,8 @@ class BlockSprite
 public:
 	virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	virtual void update(int deltaTime);
+	virtual bool not_bumping();
+	virtual void sprite_update(int deltaTime);
 	void render();
 
 	void setTileMap(TileMap *tileMap);

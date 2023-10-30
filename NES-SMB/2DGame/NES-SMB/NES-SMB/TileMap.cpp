@@ -226,7 +226,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 {
 	int x0, x1, y;
 
-	x0 = pos.x / tileSize;
+	x0 = (pos.x + 1) / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = (pos.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
@@ -251,13 +251,13 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	glm::ivec2 center_M, center_E;
 
-	min_xM = posM.x;
-	max_xM = posM.x + sizeM.x;
+	min_xM = posM.x + 8;
+	max_xM = (posM.x + sizeM.x) - 8;
 	min_yM = posM.y;
 	max_yM = posM.y + sizeM.y;
 
-	min_xE = posE.x - 1;
-	max_xE = posE.x + sizeE.x + 1;
+	min_xE = posE.x;
+	max_xE = posE.x + sizeE.x;
 
 	min_yE = posE.y - 1;
 	max_yE = posE.y + sizeE.y + 1;
@@ -274,15 +274,8 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 		float angle = std::atan2(unitary_direction.y, unitary_direction.x);
 		float angle_degrees = angle * 180.0f / M_PI;
 
-		if (angle_degrees >= 45.f && angle_degrees <= 135.f)
-			return 1; // UP
-		else if (angle_degrees < 0.f)
+		if (angle_degrees < 0.f)
 			return 0; // DOWN
-		else if (angle_degrees >= 0.f && angle_degrees < 45.f)
-			return 2; // LEFT
-		else if (angle_degrees > 135.f && angle_degrees <= 180.f)
-			return 3; // RIGHT
-
 	}
 
 	return -1;

@@ -55,8 +55,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::init()
 {
-
-
+	active = false;
 	ticks = 400.0f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
@@ -71,6 +70,13 @@ void PlayScene::init()
 		for (int i = 0; i < 211; ++i) {
 			if (map_sprites[j * 211 + i] == 19) {
 				Question* aux = new Question();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+				blocks.push_back(aux);
+			}
+			else if (map_sprites[j * 211 + i] == 2) {
+				Brick* aux = new Brick();
 				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
@@ -136,12 +142,26 @@ int PlayScene::update(int deltaTime)
 	timer[2]->setNumber(uni);
 
 	// ANIMATED BLOCKS ACTUALIZATION
-	glm::ivec2 pos = player->getPosition();
 	for (auto & block : blocks) {
-		block->update(deltaTime);
-		block->obtainPosPlayer(pos);
+		block->obtainPosPlayer(player->getPosition());
 		block->setMarioSpriteSize(player->getMarioSpriteSize());
+		block->sprite_update(deltaTime);
 	}
+
+	for (int i = blocks.size() - 1 ; (i >=0 ) && !active ; --i) {
+		blocks[i]->update(deltaTime);
+		active = !blocks[i]->not_bumping();
+		if (active)
+			animated_block = i;
+	}
+
+	if (active) {
+		blocks[animated_block]->update(deltaTime);
+		if (blocks[animated_block]->not_bumping()) {
+			active = false;
+		}
+	}
+
 
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);

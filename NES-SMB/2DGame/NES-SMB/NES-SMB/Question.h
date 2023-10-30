@@ -13,6 +13,9 @@ class Question:
 	public:
 		void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
 		void update(int deltaTime) override;
+		bool not_bumping() override;
+		void sprite_update(int deltaTime) override;
+
 
 	private:
 		float vy;

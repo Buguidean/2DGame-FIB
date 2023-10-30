@@ -39,9 +39,12 @@ void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	startY = posBlock.y;
 }
 
+void Question::sprite_update(int deltaTime) {
+	sprite->update(deltaTime);
+}
+
 void Question::update(int deltaTime)
 {
-	sprite->update(deltaTime);
 	int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));
 
 	if (bumping) {
@@ -71,4 +74,9 @@ void Question::update(int deltaTime)
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
+}
+
+bool Question::not_bumping()
+{
+	return !bumping;
 }
