@@ -30,3 +30,13 @@ glm::fvec2 BlockSprite::getPosition()
 {
 	return posBlock;
 }
+
+void BlockSprite::obtainPosPlayer(const glm::ivec2 &pos)
+{
+	playerPos = pos;
+}
+
+void BlockSprite::setMarioSpriteSize(glm::ivec2 &size) 
+{
+	marioSpriteSize = size;
+}

@@ -20,7 +20,11 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::fvec2 getPosition();
 
+	void obtainPosPlayer(const glm::ivec2 &pos);
+	void setMarioSpriteSize(glm::ivec2 &size);
+
 protected:
+	glm::ivec2 marioSpriteSize, playerPos;
 	glm::fvec2 tileMapDispl, posBlock;
 	Texture spritesheet;
 	Sprite *sprite;

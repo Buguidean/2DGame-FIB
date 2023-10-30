@@ -244,6 +244,50 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	return false;
 }
 
+int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
+{
+	int min_xM, min_yM, max_xM, max_yM;
+	int min_xE, min_yE, max_xE, max_yE;
+
+	glm::ivec2 center_M, center_E;
+
+	min_xM = posM.x;
+	max_xM = posM.x + sizeM.x;
+	min_yM = posM.y;
+	max_yM = posM.y + sizeM.y;
+
+	min_xE = posE.x - 1;
+	max_xE = posE.x + sizeE.x + 1;
+
+	min_yE = posE.y - 1;
+	max_yE = posE.y + sizeE.y + 1;
+
+
+	if ((min_xM < max_xE) && (min_xE < max_xM) && (min_yM < max_yE) && (min_yE < max_yM)) {
+
+		center_M = glm::vec2(posM.x + sizeM.x / 2, posM.y + sizeM.y / 2);
+		center_E = glm::vec2(posE.x + sizeE.x / 2, posE.y + sizeE.y / 2);
+
+		glm::vec2 direction = center_E - center_M;
+		float module = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+		glm::vec2 unitary_direction = glm::vec2(direction.x / module, direction.y / module);
+		float angle = std::atan2(unitary_direction.y, unitary_direction.x);
+		float angle_degrees = angle * 180.0f / M_PI;
+
+		if (angle_degrees >= 45.f && angle_degrees <= 135.f)
+			return 1; // UP
+		else if (angle_degrees < 0.f)
+			return 0; // DOWN
+		else if (angle_degrees >= 0.f && angle_degrees < 45.f)
+			return 2; // LEFT
+		else if (angle_degrees > 135.f && angle_degrees <= 180.f)
+			return 3; // RIGHT
+
+	}
+
+	return -1;
+}
+
 int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
 {
 	int min_xM, min_yM, max_xM, max_yM;
@@ -286,27 +330,6 @@ int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 			return 2; // LEFT
 		else if (angle_degrees > 135.f && angle_degrees <= 180.f)
 			return 3; // RIGHT
-
-		/*
-		if (sizeM.y > sizeE.y)
-			diff.y -= 16;
-		else if (sizeM.y < sizeE.y)
-			diff.y += 16;
-		else if (sizeM.y == 64)
-			diff.y -= 32;
-		
-		
-
-		if (diff.y > ) {
-			return 1;
-		}
-
-		else {
-			if (diff.x > 0) way = 1;// Mario hits from the enemy left side 
-			else if (diff.x < 0) way = 0; // Mario hits from the enemy right side
-			return 0;
-		}
-		*/
 
 	}
 

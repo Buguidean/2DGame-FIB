@@ -73,6 +73,7 @@ void PlayScene::init()
 				Question* aux = new Question();
 				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
 				blocks.push_back(aux);
 			}
 		}
@@ -115,8 +116,11 @@ void PlayScene::init()
 
 int PlayScene::update(int deltaTime)
 {
+	currentTime += deltaTime;
+	player->update(deltaTime);
+
 	if (ticks > 0.f)
-		ticks -= deltaTime/1000.f;
+		ticks -= deltaTime/400.f;
 
 	if (ticks < 0.f || ticks < 0.005f)
 		ticks = 0.f;
@@ -131,8 +135,13 @@ int PlayScene::update(int deltaTime)
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
 
-	for (auto & block : blocks)
-		block->update(deltaTime);	
+	// ANIMATED BLOCKS ACTUALIZATION
+	glm::ivec2 pos = player->getPosition();
+	for (auto & block : blocks) {
+		block->update(deltaTime);
+		block->obtainPosPlayer(pos);
+		block->setMarioSpriteSize(player->getMarioSpriteSize());
+	}
 
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
@@ -142,8 +151,6 @@ int PlayScene::update(int deltaTime)
 		engine->stopAllSounds();
 		return 1;
 	}
-
-	currentTime += deltaTime;
 
 	if (goomba != NULL) {
 		goomba->update(deltaTime);
@@ -166,8 +173,6 @@ int PlayScene::update(int deltaTime)
 		player->set_small_jump();
 		koopa = NULL;
 	}
-
-	player->update(deltaTime);
 
 	if (goomba != NULL && goomba->playerKilled()) {
 		player->killAnimation();
