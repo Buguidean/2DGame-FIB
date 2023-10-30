@@ -19,10 +19,14 @@ void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.0625f, 0.0625f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
 
-	sprite->setAnimationSpeed(ACTIVE, 5);
+	sprite->setAnimationSpeed(ACTIVE, 6);
 	sprite->addKeyframe(ACTIVE, glm::vec2(0.f, 0.f));
+	sprite->addKeyframe(ACTIVE, glm::vec2(0.f, 0.f));
+	sprite->addKeyframe(ACTIVE, glm::vec2(0.f, 0.f));
+	sprite->setAnimationSpeed(ACTIVE, 8);
 	sprite->addKeyframe(ACTIVE, glm::vec2(0.0625f, 0.f));
 	sprite->addKeyframe(ACTIVE, glm::vec2(0.125f, 0.f));
+	sprite->addKeyframe(ACTIVE, glm::vec2(0.0625f, 0.f));
 
 	sprite->setAnimationSpeed(INACTIVE, 5);
 	sprite->addKeyframe(INACTIVE, glm::vec2(0.1875f, 0.f));
