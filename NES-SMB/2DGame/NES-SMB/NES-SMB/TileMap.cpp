@@ -251,8 +251,8 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	glm::ivec2 center_M, center_E;
 
-	min_xM = posM.x + 8;
-	max_xM = (posM.x + sizeM.x) - 8;
+	min_xM = posM.x;
+	max_xM = (posM.x + sizeM.x);
 	min_yM = posM.y;
 	max_yM = posM.y + sizeM.y;
 

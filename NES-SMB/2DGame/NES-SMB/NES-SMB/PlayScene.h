@@ -42,6 +42,8 @@ private:
 	float ticks;
 	bool active;
 	int animated_block;
+	std::vector<int> blocks_in_motion;
+	std::vector<float> distances;
 	std::vector<Text*> timer;
 	std::vector<BlockSprite*> blocks;
 	TileMap *map;

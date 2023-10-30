@@ -15,6 +15,7 @@ class Question:
 		void update(int deltaTime) override;
 		bool not_bumping() override;
 		void sprite_update(int deltaTime) override;
+		bool check_colision() override;
 
 
 	private:

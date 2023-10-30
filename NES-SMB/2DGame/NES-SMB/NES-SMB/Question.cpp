@@ -39,6 +39,14 @@ void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	startY = posBlock.y;
 }
 
+bool Question::check_colision() {
+	int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));
+	if (state == 0)
+		return true;
+	else
+		return false;
+}
+
 void Question::sprite_update(int deltaTime) {
 	sprite->update(deltaTime);
 }

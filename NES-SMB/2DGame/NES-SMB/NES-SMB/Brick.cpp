@@ -34,6 +34,14 @@ void Brick::sprite_update(int deltaTime) {
 	sprite->update(deltaTime);
 }
 
+bool Brick::check_colision() {
+	int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));
+	if (state == 0)
+		return true;
+	else
+		return false;
+}
+
 void Brick::update(int deltaTime)
 {
 	int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));

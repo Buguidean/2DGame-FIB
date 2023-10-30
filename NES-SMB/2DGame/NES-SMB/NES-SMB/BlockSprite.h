@@ -16,6 +16,7 @@ public:
 	virtual void update(int deltaTime);
 	virtual bool not_bumping();
 	virtual void sprite_update(int deltaTime);
+	virtual bool check_colision();
 	void render();
 
 	void setTileMap(TileMap *tileMap);

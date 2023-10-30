@@ -148,20 +148,43 @@ int PlayScene::update(int deltaTime)
 		block->sprite_update(deltaTime);
 	}
 
-	for (int i = blocks.size() - 1 ; (i >=0 ) && !active ; --i) {
-		blocks[i]->update(deltaTime);
-		active = !blocks[i]->not_bumping();
-		if (active)
-			animated_block = i;
-	}
-
-	if (active) {
-		blocks[animated_block]->update(deltaTime);
-		if (blocks[animated_block]->not_bumping()) {
-			active = false;
+	for (int i = blocks.size() - 1 ; (i >=0) && !active ; --i) {
+		if (blocks[i]->check_colision()) {
+			blocks_in_motion.push_back(i);
+			float dist = abs( ((blocks[i]->getPosition().x) + 16.f) - ((player->getPosition().x) + 16.f));
+			distances.push_back(dist);
 		}
 	}
 
+	if (blocks_in_motion.size() == 2) {
+		active = true;
+		if (distances[0] <= distances[1]) {
+			blocks[blocks_in_motion[0]]->update(deltaTime);
+			if (blocks[blocks_in_motion[0]]->not_bumping()) {
+				blocks_in_motion.clear();
+				distances.clear();
+				active = false;
+			}
+		}
+		else {
+			blocks[blocks_in_motion[1]]->update(deltaTime);
+			if (blocks[blocks_in_motion[1]]->not_bumping()) {
+				blocks_in_motion.clear();
+				distances.clear();
+				active = false;
+			}
+		}
+	}
+	
+	else if (blocks_in_motion.size() == 1) {
+		active = true;
+		blocks[blocks_in_motion[0]]->update(deltaTime);
+		if (blocks[blocks_in_motion[0]]->not_bumping()) {
+			blocks_in_motion.clear();
+			distances.clear();
+			active = false;
+		}
+	}
 
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
