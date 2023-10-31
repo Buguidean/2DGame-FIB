@@ -49,6 +49,7 @@ public:
 private:
 	bool bPlay;                       // Continue to play game?
 	int type;
+	int prev_type;
 	PlayScene sceneP;                 // Scene to render
 	MainScene sceneM;
 	bool keys[256], specialKeys[256]; // Store key states so that 

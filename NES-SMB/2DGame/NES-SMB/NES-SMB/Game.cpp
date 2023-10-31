@@ -7,6 +7,7 @@ void Game::init()
 {
 	bPlay = true;
 	type = 0;
+	prev_type = 0;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	sceneM.init();
 	sceneP.init();
@@ -14,10 +15,21 @@ void Game::init()
 
 bool Game::update(int deltaTime)
 {
-	if (type == 0)
+	if (type == 0 && prev_type == 0)
 		type = sceneP.update(deltaTime);
-	else if (type == 1)
+
+	else if (type == 0 && prev_type == 1) {
+		sceneP.init();
+		type, prev_type = sceneP.update(deltaTime);
+	}
+
+	else if (type == 1 && prev_type == 1)
 		type = sceneM.update(deltaTime);
+
+	else if (type == 1 && prev_type == 0) {
+		sceneM.init();
+		type, prev_type = sceneM.update(deltaTime);
+	}
 
 	return bPlay;
 }
