@@ -28,10 +28,13 @@ public:
 	bool isHit();
 	void setHit();
 	float* getVelocity();
+	bool get_player_murderer();
+	void set_player_murderer(const bool &state);
 
 protected:
 
 	float v;
+	bool player_murderer;
 	bool dead;
 	bool dead_player;
 	bool starMario;

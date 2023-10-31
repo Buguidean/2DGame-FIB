@@ -38,6 +38,7 @@ void Koopa::reset()
 
 	sprite = spriteN;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
+	player_murderer = true;
 	shield = false;
 	dying = false;
 	dead = false;
@@ -103,6 +104,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hit = false;
 	starMario = false;
 	first_hit = false;
+	player_murderer = true;
 	sprite_size = glm::ivec2(32, 64);
 }
 
@@ -178,6 +180,8 @@ void Koopa::update(int deltaTime)
 				}
 				else if (shieldState == 4) {
 					shieldState = 1;
+					first_hit = true;
+					
 				}
 			}
 			else {

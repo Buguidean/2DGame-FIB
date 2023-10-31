@@ -274,7 +274,12 @@ int PlayScene::update(int deltaTime)
 		if (goomba != NULL) {
 			goomba->update(deltaTime);
 			if (goomba->killed()) {
-				player->set_small_jump();
+				if (!goomba->get_player_murderer()) {
+					goomba->set_player_murderer(true);
+				}
+				else {
+					player->set_small_jump();
+				}
 				delete goomba;
 				goomba = NULL;
 			}
@@ -302,7 +307,12 @@ int PlayScene::update(int deltaTime)
 		if (koopa != NULL) {
 			koopa->update(deltaTime);
 			if (koopa->killed()) {
-				player->set_small_jump();
+				if (!koopa->get_player_murderer()) {
+					koopa->set_player_murderer(true);
+				}
+				else {
+					player->set_small_jump();
+				}
 				delete koopa;
 				koopa = NULL;
 			}
@@ -335,8 +345,21 @@ int PlayScene::update(int deltaTime)
 		if (goomba != NULL) {
 			for (auto & koopa : koopas) {
 				if (koopa != NULL) {
-					map->collisionEnemyEnemy(goomba->getPosition(), glm::ivec2(32, 32), *goomba->getVelocity(),
-											 koopa->getPosition(), koopa->get_sprite_size(), *koopa->getVelocity());
+					int aux = map->collisionEnemyEnemy(goomba->getPosition(), glm::ivec2(32, 32), *goomba->getVelocity(),
+													   koopa->getPosition(), koopa->get_sprite_size(), *koopa->getVelocity());
+					switch (aux)
+					{
+						case 1:
+							goomba->set_player_murderer(false);
+							goomba->setDying();
+							break;
+						case 2:
+							// This is imposible
+							koopa->setDying();
+							break;
+						case -1:
+							break;
+					}
 				}
 			}
 		}
@@ -357,8 +380,21 @@ int PlayScene::update(int deltaTime)
 		if (koopas[i] != NULL) {
 			for (unsigned int j = i + 1; j < koopas.size(); ++j) {
 				if (koopas[j] != NULL) {
-					map->collisionEnemyEnemy(koopas[i]->getPosition(), koopas[i]->get_sprite_size(), *koopas[i]->getVelocity(),
-											 koopas[j]->getPosition(), koopas[j]->get_sprite_size(), *koopas[j]->getVelocity());
+					int aux = map->collisionEnemyEnemy(koopas[i]->getPosition(), koopas[i]->get_sprite_size(), *koopas[i]->getVelocity(),
+													   koopas[j]->getPosition(), koopas[j]->get_sprite_size(), *koopas[j]->getVelocity());
+					switch (aux)
+					{
+					case 1:
+						koopas[i]->setDying();
+						koopas[i]->set_player_murderer(false);
+						break;
+					case 2:
+						koopas[j]->setDying();
+						koopas[j]->set_player_murderer(false);
+						break;
+					case -1:
+						break;
+					}
 				}
 			}
 		}

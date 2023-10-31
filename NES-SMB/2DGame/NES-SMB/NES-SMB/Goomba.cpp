@@ -26,6 +26,7 @@ void Goomba::reset()
 	hit = false;
 	starMario = false;
 	dying = false;
+	player_murderer = true;
 }
 
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
@@ -53,6 +54,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	dead_player = false;
 	hit = false;
 	starMario = false;
+	player_murderer = true;
 }
 
 

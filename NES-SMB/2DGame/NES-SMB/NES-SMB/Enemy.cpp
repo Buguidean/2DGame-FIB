@@ -66,3 +66,11 @@ void Enemy::setStarMario(bool s) {
 float* Enemy::getVelocity() {
 	return &v;
 }
+
+bool Enemy::get_player_murderer() {
+	return player_murderer;
+}
+
+void Enemy::set_player_murderer(const bool &state) {
+	player_murderer = state;
+}
