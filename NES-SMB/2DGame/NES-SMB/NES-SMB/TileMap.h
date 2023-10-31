@@ -37,6 +37,7 @@ public:
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	int collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const;
 	int collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const;
+	int collisionEnemyEnemy(const glm::ivec2 &posE_1, const glm::ivec2 &sizeE_1, float &v1, const glm::ivec2 &posE_2, const glm::ivec2 &sizeE_2, float &v2) const;
 
 	int* getMap();
 	

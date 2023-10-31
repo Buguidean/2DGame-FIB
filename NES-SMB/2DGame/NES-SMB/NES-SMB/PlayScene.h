@@ -47,12 +47,16 @@ private:
 	std::vector<float> distances;
 	std::vector<Text*> timer;
 	std::vector<BlockSprite*> blocks;
+	std::vector<Koopa*> koopas;
+	std::vector<Goomba*> goombas;
+	std::vector<glm::ivec2> pos_koopas;
+	std::vector<glm::ivec2> pos_goombas;
 	TileMap *map;
 	TileMap *back;
 	TileMap *sprites;
 	Player *player;
-	Goomba *goomba;
-	Koopa *koopa;
+	//Goomba *goomba;
+	//Koopa *koopa;
 	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;

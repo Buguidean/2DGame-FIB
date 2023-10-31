@@ -12,6 +12,10 @@ public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void reset();
+	void setDying();
+
+private:
+	bool dying;
 };
 
 #endif // _GOOMBA_INCLUDE

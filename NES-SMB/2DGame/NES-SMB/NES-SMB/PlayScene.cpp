@@ -9,7 +9,7 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 12
+#define INIT_PLAYER_X_TILES 3
 #define INIT_PLAYER_Y_TILES 11
 
 #define INIT_ENEMY_X_TILES 37
@@ -22,8 +22,8 @@ PlayScene::PlayScene()
 	sprites = NULL;
 	timer.resize(3, nullptr);
 	player = NULL;
-	goomba = NULL;
-	koopa = NULL;
+	//goomba = NULL;
+	//koopa = NULL;
 	flag = NULL;
 	engine = NULL;
 }
@@ -38,10 +38,12 @@ PlayScene::~PlayScene()
 		delete sprites;
 	if (player != NULL)
 		delete player;
+	/*
 	if (goomba != NULL)
 		delete goomba;
 	if (koopa != NULL)
 		delete koopa;
+		*/
 	if (flag != NULL)
 		delete flag;
 	if (!std::all_of(timer.begin(), timer.end(), [](Text* ptr) {return ptr == nullptr;})){
@@ -68,28 +70,31 @@ void PlayScene::reset()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	if (goomba == NULL) {
-		goomba = new Goomba();
-		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		goomba->setTileMap(map);
-	}
-	else {
-		goomba->reset();
+	for (int i = 0 ; i < goombas.size() ; ++i) {
+		if (goombas[i] == NULL) {
+			goombas[i] = new Goomba();
+			goombas[i]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+			goombas[i]->setTileMap(map);
+		}
+		else {
+			goombas[i]->reset();
+		}
+
+		goombas[i]->setPosition(pos_goombas[i]);
 	}
 
-	goomba->setPosition(glm::vec2((INIT_ENEMY_X_TILES)* map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+	for (int i = 0; i < koopas.size(); ++i) {
+		if (koopas[i] == NULL) {
+			koopas[i] = new Koopa();
+			koopas[i]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+			koopas[i]->setTileMap(map);
+		}
+		else {
+			koopas[i]->reset();
+		}
 
-	if (koopa == NULL) {
-		//koopa = new Koopa();
-		//koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		//koopa->setTileMap(map);
-	}
-	else {
-		koopa->reset();
-	}
-
-	// koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES - 25) * map->getTileSize(), (INIT_ENEMY_Y_TILES-1) * map->getTileSize()));
-	
+		koopas[i]->setPosition(pos_koopas[i]);
+	}	
 
 	//flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	flag->setTileMap(map);
@@ -128,7 +133,7 @@ void PlayScene::init()
 
 	int* map_sprites = sprites->getMap();
 
-	for (int j = 0 ; j < 15 ; ++j) {
+	for (int j = 0 ; j < 20 ; ++j) {
 		for (int i = 0; i < 211; ++i) {
 			if (map_sprites[j * 211 + i] == 19) {
 				Question* aux = new Question();
@@ -143,6 +148,22 @@ void PlayScene::init()
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
 				blocks.push_back(aux);
+			}
+			else if (map_sprites[j * 211 + i] == 17) {
+				Goomba* aux = new Goomba();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+				goombas.push_back(aux);
+				pos_goombas.push_back(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+			}
+			else if (map_sprites[j * 211 + i] == 18) {
+				Koopa* aux = new Koopa();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), (j-1) * map->getTileSize()));
+				aux->setTileMap(map);
+				koopas.push_back(aux);
+				pos_koopas.push_back(glm::vec2(i * map->getTileSize(), (j-1) * map->getTileSize()));
 			}
 		}
 	}
@@ -163,6 +184,7 @@ void PlayScene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
+	/*
 	goomba = new Goomba();
 	goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	goomba->setPosition(glm::vec2((INIT_ENEMY_X_TILES) * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
@@ -172,6 +194,7 @@ void PlayScene::init()
 	koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES-25) * map->getTileSize(), (INIT_ENEMY_Y_TILES-1) * map->getTileSize()));
 	koopa->setTileMap(map);
+	*/
 
 	flag = new Flag();
 	flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -205,7 +228,7 @@ int PlayScene::update(int deltaTime)
 	timer[2]->setNumber(uni);
 	
 
-	// ANIMATED BLOCKS ACTUALIZATION
+	// ANIMATED BLOCKS ACTUALIZATION ///////////////////////////////////////////
 	for (auto & block : blocks) {
 		block->obtainPosPlayer(player->getPosition());
 		block->setMarioSpriteSize(player->getMarioSpriteSize());
@@ -249,102 +272,100 @@ int PlayScene::update(int deltaTime)
 			active = false;
 		}
 	}
-	
-	/*
-	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
-		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
-	}
-	*/
-	
 
+	////////////////////////////////////////////////////////////////////////////
+	
 	if (Game::instance().getKey('c')) {
 		engine->stopAllSounds();
 		engine->drop();
 		return 1;
 	}
 
-	if (goomba != NULL) {
-		goomba->update(deltaTime);
-	}
-	if (koopa != NULL) {
-		koopa->update(deltaTime);
-	}
-
-	if (goomba != NULL && goomba->killed()) {
-		player->set_small_jump();
-		delete goomba;
-		goomba = NULL;
-	}
-
-	if (koopa != NULL && koopa->hitted()) {
-		player->set_small_jump();
-		koopa->disable_hitted();
-	}
-
-	if (koopa != NULL && koopa->killed()) {
-		player->set_small_jump();
-		delete koopa;
-		koopa = NULL;
-	}
-
-	if (goomba != NULL && goomba->playerKilled()) {
-		player->killAnimation();
-		// player = NULL;
-	}
-	else if (goomba != NULL && goomba->isHit()) {
-		player->hit();
-		goomba->setHit();
-	}
-	else if (koopa != NULL && koopa->playerKilled()) {
-		player->killAnimation();
-		// player = NULL;
-	}
-	else if (koopa != NULL && koopa->isHit()) {
-		player->hit();
-		koopa->setHit();
-	}
-	else {
-		glm::ivec2 pos = player->getPosition();
+	for (auto & goomba : goombas) {
 		if (goomba != NULL) {
-			goomba->obtainPosPlayer(pos);
-			goomba->setMarioSpriteSize(player->getMarioSpriteSize());
-			goomba->setStarMario(player->isStarMario());
-		}
-		if (koopa != NULL) {
-			koopa->obtainPosPlayer(pos);
-			koopa->setMarioSpriteSize(player->getMarioSpriteSize());
-			koopa->setStarMario(player->isStarMario());
-		}
-
-		float v = player->getVelocity();
-		int icenter = int(centerCam);
-		int diff = icenter - pos.x;
-
-		if (diff >= 256) {
-			player->margin(true, icenter);
-		}
-
-		else if (player->moving() && (centerCam + 256.f <= 6751.f)) {
-			player->margin(false, icenter);
-			if (diff <= 20) {
-				projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
-				for (auto & digit : timer) {
-					digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
-				}
-				centerCam += v;
+			goomba->update(deltaTime);
+			if (goomba->killed()) {
+				player->set_small_jump();
+				delete goomba;
+				goomba = NULL;
 			}
-
-			else if (diff <= 130) {
-				projection = glm::translate(projection, glm::vec3(-(v / 2.f), 0.f, 0.f));
-				for (auto & digit : timer) {
-					digit->setPosition(glm::fvec2(digit->getPosition().x + (v/2), digit->getPosition().y));
+			else {
+				if (goomba->playerKilled()) {
+					player->killAnimation();
+					// player = NULL;
 				}
-				centerCam += (v / 2.f);
+				else if (goomba->isHit()) {
+					player->hit();
+					goomba->setHit();
+				}
+				else {
+					glm::ivec2 pos = player->getPosition();
+					goomba->obtainPosPlayer(pos);
+					goomba->setMarioSpriteSize(player->getMarioSpriteSize());
+					goomba->setStarMario(player->isStarMario());
+				}
 			}
 		}
 	}
 
+	for (auto & koopa : koopas) {
+		if (koopa != NULL) {
+			koopa->update(deltaTime);
+			if (koopa->killed()) {
+				player->set_small_jump();
+				delete koopa;
+				koopa = NULL;
+			}
+			else {
+				if (koopa->hitted()) {
+					player->set_small_jump();
+					koopa->disable_hitted();
+				}
+				if (koopa->playerKilled()) {
+					player->killAnimation();
+					// player = NULL;
+				}
+				else if (koopa->isHit()) {
+					player->hit();
+					koopa->setHit();
+				}
+				else {
+					glm::ivec2 pos = player->getPosition();
+					koopa->obtainPosPlayer(pos);
+					koopa->setMarioSpriteSize(player->getMarioSpriteSize());
+					koopa->setStarMario(player->isStarMario());
+				}
+			}
+		}
+	}
 
+	glm::ivec2 pos = player->getPosition();
+	float v = player->getVelocity();
+	int icenter = int(centerCam);
+	int diff = icenter - pos.x;
+
+	if (diff >= 256) {
+		player->margin(true, icenter);
+	}
+
+	else if (player->moving() && (centerCam + 256.f <= 6751.f)) {
+		player->margin(false, icenter);
+		if (diff <= 20) {
+			projection = glm::translate(projection, glm::vec3(-v, 0.f, 0.f));
+			for (auto & digit : timer) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
+			}
+			centerCam += v;
+		}
+
+		else if (diff <= 130) {
+			projection = glm::translate(projection, glm::vec3(-(v / 2.f), 0.f, 0.f));
+			for (auto & digit : timer) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + (v/2), digit->getPosition().y));
+			}
+			centerCam += (v / 2.f);
+		}
+	}
 
 	flag->update(deltaTime, player->getPosition());
 	if (flag->getIsMario())
@@ -376,11 +397,15 @@ void PlayScene::render()
 	for (auto & block : blocks)
 		block->render();
 
-	if (goomba != NULL)
-		goomba->render();
+	for (auto & goomba : goombas){
+		if (goomba != NULL)
+			goomba->render();
+	}
 
-	if (koopa != NULL)
-		koopa->render();
+	for (auto & koopa : koopas) {
+		if (koopa != NULL)
+			koopa->render();
+	}
 }
 
 void PlayScene::initShaders()

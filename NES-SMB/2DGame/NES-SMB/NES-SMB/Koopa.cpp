@@ -25,7 +25,6 @@ Koopa::~Koopa()
 	if (spriteC != NULL) {
 		delete spriteC;
 	}
-	
 }
 
 void Koopa::reset() 
@@ -224,4 +223,8 @@ bool Koopa::hitted() {
 
 void Koopa::disable_hitted() {
 	first_hit = false;
+}
+
+void Koopa::setDying() {
+	dying = true;
 }

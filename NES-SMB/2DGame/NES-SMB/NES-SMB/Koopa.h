@@ -14,6 +14,7 @@ public:
 	bool hitted();
 	void disable_hitted();
 	void reset();
+	void setDying();
 
 
 private:
