@@ -15,7 +15,7 @@ class Player
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, irrklang::ISoundEngine*& engine);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void render();
 	
@@ -35,6 +35,8 @@ public:
 	bool getFinalAnimation();
 	void hit();
 	void set_small_jump();
+	void reset();
+
 	
 private:
 	void flagTreatment();

@@ -3,11 +3,18 @@
 
 MainScene::MainScene()
 {
+
 }
 
 
 MainScene::~MainScene()
 {
+
+}
+
+void MainScene::reset()
+{
+
 }
 
 void MainScene::init()

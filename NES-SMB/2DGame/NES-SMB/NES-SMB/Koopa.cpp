@@ -17,6 +17,39 @@ void Koopa::shell_sprite() {
 	sprite_size = glm::ivec2(32, 32);
 }
 
+Koopa::~Koopa()
+{
+	if (spriteN != NULL) {
+		delete spriteN;
+	}
+	if (spriteC != NULL) {
+		delete spriteC;
+	}
+	
+}
+
+void Koopa::reset() 
+{
+	v = -1.f;
+	oldEnemy = posEnemy;
+	playerPos = glm::ivec2(64, 352);
+
+	shieldState = 0;
+	shieldCount = 0;
+
+	sprite = spriteN;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
+	shield = false;
+	dying = false;
+	dead = false;
+	dead_player = false;
+	transitionState = true;
+	hit = false;
+	starMario = false;
+	first_hit = false;
+	sprite_size = glm::ivec2(32, 64);
+}
+
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 

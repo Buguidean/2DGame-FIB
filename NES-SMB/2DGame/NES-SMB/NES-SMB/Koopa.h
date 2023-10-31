@@ -7,10 +7,14 @@ class Koopa :
 	public Enemy
 {
 public:
+	~Koopa();
+	
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	bool hitted();
 	void disable_hitted();
+	void reset();
+
 
 private:
 	void normal_sprite();
@@ -22,7 +26,8 @@ private:
 	bool transitionState;
 	bool first_hit;
 	glm::ivec2 sprite_size;
-	Sprite *spriteN,*spriteC;
+	Sprite *spriteN;
+	Sprite *spriteC;
 	Texture spritesheetN, spritesheetC;
 
 	// shieldState = 0: No shield (se usa shield)

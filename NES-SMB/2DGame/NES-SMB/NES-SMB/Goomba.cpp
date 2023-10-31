@@ -8,6 +8,25 @@ enum GoombaAnims
 	GOOMBA_MOVE, GOOMBA_DEATH
 };
 
+Goomba::~Goomba() 
+{
+	if (sprite != NULL)
+		delete sprite;
+}
+
+void Goomba::reset() 
+{
+	v = -1.f;
+	sprite->changeAnimation(0);
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
+	oldEnemy = posEnemy;
+	playerPos = glm::ivec2(64, 352);
+	dead = false;
+	dead_player = false;
+	hit = false;
+	starMario = false;
+}
+
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 

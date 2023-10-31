@@ -14,10 +14,31 @@ enum PlayerAnims
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, TURN_LEFT, TURN_RIGHT, STAND_FLAG, RSTAND_FLAG, DOWN_FLAG, DEATH
 };
 
-
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, irrklang::ISoundEngine* & enginePS)
+void Player::reset()
 {
-	engine = enginePS;
+	bJumping = false;
+	small_jump = false;
+	Moving = false;
+	marg = false;
+	apex = false;
+	inFlag = false;
+	countAnimation = 0;
+	finalAnimation = false;
+	starMario = false;
+	superMario = false;
+	spriteSize = glm::ivec2(32, 32);
+	vx = 0.f;
+	vy = 0.f;
+	spriteM->changeAnimation(1);
+	spriteM->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	oldPlayer = posPlayer;
+	sprite = spriteM;
+}
+
+
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+{
+	engine = irrklang::createIrrKlangDevice();
 	bJumping = false;
 	small_jump = false;
 	Moving = false;

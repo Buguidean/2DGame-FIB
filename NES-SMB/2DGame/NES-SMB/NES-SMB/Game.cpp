@@ -19,7 +19,7 @@ bool Game::update(int deltaTime)
 		type = sceneP.update(deltaTime);
 
 	else if (type == 0 && prev_type == 1) {
-		sceneP.init();
+		sceneP.reset();
 		type, prev_type = sceneP.update(deltaTime);
 	}
 
@@ -27,7 +27,7 @@ bool Game::update(int deltaTime)
 		type = sceneM.update(deltaTime);
 
 	else if (type == 1 && prev_type == 0) {
-		sceneM.init();
+		sceneM.reset();
 		type, prev_type = sceneM.update(deltaTime);
 	}
 

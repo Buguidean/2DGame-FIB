@@ -7,8 +7,11 @@ class Goomba :
 	public Enemy
 {
 public:
+	~Goomba();
+
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
+	void reset();
 };
 
 #endif // _GOOMBA_INCLUDE

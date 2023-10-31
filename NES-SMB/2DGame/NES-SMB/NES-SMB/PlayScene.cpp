@@ -9,8 +9,8 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 3
-#define INIT_PLAYER_Y_TILES 12
+#define INIT_PLAYER_X_TILES 12
+#define INIT_PLAYER_Y_TILES 11
 
 #define INIT_ENEMY_X_TILES 37
 #define INIT_ENEMY_Y_TILES 12
@@ -53,13 +53,75 @@ PlayScene::~PlayScene()
 		delete engine;
 }
 
+void PlayScene::reset()
+{
+	blocks_in_motion.clear();
+	distances.clear();
+
+	active = false;
+	ticks = 400.0f;
+	//initShaders();
+	engine = irrklang::createIrrKlangDevice();
+	engine->play2D("sounds/lvlMusic.ogg", true);
+
+	player->reset();
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
+
+	if (goomba == NULL) {
+		goomba = new Goomba();
+		goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		goomba->setTileMap(map);
+	}
+	else {
+		goomba->reset();
+	}
+
+	goomba->setPosition(glm::vec2((INIT_ENEMY_X_TILES)* map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
+
+	if (koopa == NULL) {
+		//koopa = new Koopa();
+		//koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		//koopa->setTileMap(map);
+	}
+	else {
+		koopa->reset();
+	}
+
+	// koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES - 25) * map->getTileSize(), (INIT_ENEMY_Y_TILES-1) * map->getTileSize()));
+	
+
+	//flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	flag->setTileMap(map);
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	currentTime = 0.0f;
+	centerCam = 256.f;
+}
+
 void PlayScene::init()
 {
+	/*
+	// CLEAN OBJECTS ///////////////
+	for (auto & i : timer) {
+		delete i;
+	}
+	//timer.clear();
+	for (auto & i : blocks) {
+		delete i;
+	}
+	blocks.clear();
+	blocks_in_motion.clear();
+	distances.clear();
+	/////////////////////////////////
+	*/
+
+
 	active = false;
 	ticks = 400.0f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("sounds/lvl.mp3", true, false, true);
+	engine->play2D("sounds/lvlMusic.ogg", true);
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);	
@@ -97,7 +159,7 @@ void PlayScene::init()
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, engine);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -122,6 +184,7 @@ void PlayScene::init()
 
 int PlayScene::update(int deltaTime)
 {
+
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
@@ -140,6 +203,7 @@ int PlayScene::update(int deltaTime)
 	timer[0]->setNumber(cen);
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
+	
 
 	// ANIMATED BLOCKS ACTUALIZATION
 	for (auto & block : blocks) {
@@ -185,13 +249,17 @@ int PlayScene::update(int deltaTime)
 			active = false;
 		}
 	}
-
+	
+	/*
 	if (!(engine->isCurrentlyPlaying("sounds/lvlMusic.ogg"))) {
 		engine->play2D("sounds/lvlMusic.ogg", true, false, true)->setVolume(0.2f);
 	}
+	*/
+	
 
 	if (Game::instance().getKey('c')) {
 		engine->stopAllSounds();
+		engine->drop();
 		return 1;
 	}
 
@@ -204,6 +272,7 @@ int PlayScene::update(int deltaTime)
 
 	if (goomba != NULL && goomba->killed()) {
 		player->set_small_jump();
+		delete goomba;
 		goomba = NULL;
 	}
 
@@ -214,6 +283,7 @@ int PlayScene::update(int deltaTime)
 
 	if (koopa != NULL && koopa->killed()) {
 		player->set_small_jump();
+		delete koopa;
 		koopa = NULL;
 	}
 
@@ -279,7 +349,6 @@ int PlayScene::update(int deltaTime)
 	flag->update(deltaTime, player->getPosition());
 	if (flag->getIsMario())
 		player->setInFlag();
-
 
 	return 0;
 }
