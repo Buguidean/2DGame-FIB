@@ -244,7 +244,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	return false;
 }
 
-int TileMap::collisionEnemyEnemy(const glm::ivec2 &posE_1, const glm::ivec2 &sizeE_1, float &v1, const glm::ivec2 &posE_2, const glm::ivec2 &sizeE_2, float &v2) const
+int TileMap::collisionEnemyEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE_1, float &v1, const glm::ivec2 posE_2, const glm::ivec2 sizeE_2, float &v2) const
 {
 	int min_xE_1, min_yE_1, max_xE_1, max_yE_1;
 	int min_xE_2, min_yE_2, max_xE_2, max_yE_2;

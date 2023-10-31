@@ -228,3 +228,7 @@ void Koopa::disable_hitted() {
 void Koopa::setDying() {
 	dying = true;
 }
+
+glm::ivec2 Koopa::get_sprite_size() {
+	return sprite_size;
+}

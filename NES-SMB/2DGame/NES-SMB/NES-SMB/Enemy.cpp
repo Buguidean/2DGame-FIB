@@ -62,3 +62,7 @@ void Enemy::setHit() {
 void Enemy::setStarMario(bool s) {
 	starMario = s;
 }
+
+float* Enemy::getVelocity() {
+	return &v;
+}

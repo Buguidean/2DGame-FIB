@@ -70,7 +70,7 @@ void PlayScene::reset()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	for (int i = 0 ; i < goombas.size() ; ++i) {
+	for (unsigned int i = 0 ; i < goombas.size() ; ++i) {
 		if (goombas[i] == NULL) {
 			goombas[i] = new Goomba();
 			goombas[i]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -83,7 +83,7 @@ void PlayScene::reset()
 		goombas[i]->setPosition(pos_goombas[i]);
 	}
 
-	for (int i = 0; i < koopas.size(); ++i) {
+	for (unsigned int i = 0; i < koopas.size(); ++i) {
 		if (koopas[i] == NULL) {
 			koopas[i] = new Koopa();
 			koopas[i]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -184,18 +184,6 @@ void PlayScene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	/*
-	goomba = new Goomba();
-	goomba->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	goomba->setPosition(glm::vec2((INIT_ENEMY_X_TILES) * map->getTileSize(), INIT_ENEMY_Y_TILES * map->getTileSize()));
-	goomba->setTileMap(map);
-
-	koopa = new Koopa();
-	koopa->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	koopa->setPosition(glm::vec2((INIT_ENEMY_X_TILES-25) * map->getTileSize(), (INIT_ENEMY_Y_TILES-1) * map->getTileSize()));
-	koopa->setTileMap(map);
-	*/
-
 	flag = new Flag();
 	flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	flag->setTileMap(map);
@@ -281,6 +269,7 @@ int PlayScene::update(int deltaTime)
 		return 1;
 	}
 
+	// GOOMBA ACTUALIZATION
 	for (auto & goomba : goombas) {
 		if (goomba != NULL) {
 			goomba->update(deltaTime);
@@ -308,6 +297,7 @@ int PlayScene::update(int deltaTime)
 		}
 	}
 
+	// KOOPA ACTUALIZATION
 	for (auto & koopa : koopas) {
 		if (koopa != NULL) {
 			koopa->update(deltaTime);
@@ -339,6 +329,45 @@ int PlayScene::update(int deltaTime)
 		}
 	}
 
+	//// ENEMY COLLISIONS ////////////////////////////////////////////////////////////////////////////////////////////////
+
+	for (auto & goomba : goombas) {
+		if (goomba != NULL) {
+			for (auto & koopa : koopas) {
+				if (koopa != NULL) {
+					map->collisionEnemyEnemy(goomba->getPosition(), glm::ivec2(32, 32), *goomba->getVelocity(),
+											 koopa->getPosition(), koopa->get_sprite_size(), *koopa->getVelocity());
+				}
+			}
+		}
+	}
+	
+	for (unsigned int i = 0; i < goombas.size(); ++i) {
+		if (goombas[i] != NULL) {
+			for (unsigned int j = i + 1; j < goombas.size(); ++j) {
+				if (goombas[j] != NULL) {
+					map->collisionEnemyEnemy(goombas[i]->getPosition(), glm::ivec2(32, 32), *goombas[i]->getVelocity(),
+										     goombas[j]->getPosition(), glm::ivec2(32, 32), *goombas[j]->getVelocity());
+				}
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < koopas.size(); ++i) {
+		if (koopas[i] != NULL) {
+			for (unsigned int j = i + 1; j < koopas.size(); ++j) {
+				if (koopas[j] != NULL) {
+					map->collisionEnemyEnemy(koopas[i]->getPosition(), koopas[i]->get_sprite_size(), *koopas[i]->getVelocity(),
+											 koopas[j]->getPosition(), koopas[j]->get_sprite_size(), *koopas[j]->getVelocity());
+				}
+			}
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	// CAMERA ACTUALIZATION
 	glm::ivec2 pos = player->getPosition();
 	float v = player->getVelocity();
 	int icenter = int(centerCam);

@@ -15,6 +15,7 @@ public:
 	void disable_hitted();
 	void reset();
 	void setDying();
+	glm::ivec2 get_sprite_size();
 
 
 private:

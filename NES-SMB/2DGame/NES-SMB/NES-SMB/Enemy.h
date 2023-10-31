@@ -27,6 +27,7 @@ public:
 	void setStarMario(bool s);
 	bool isHit();
 	void setHit();
+	float* getVelocity();
 
 protected:
 

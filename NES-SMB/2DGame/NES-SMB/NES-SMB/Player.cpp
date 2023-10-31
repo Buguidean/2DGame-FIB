@@ -740,7 +740,9 @@ void Player::hit() {
 }
 
 void Player::set_small_jump() {
-	vy = 5.0f;
-	start_small_jump = posPlayer.y;
-	small_jump = true;
+	if (!starMario) {
+		vy = 5.0f;
+		start_small_jump = posPlayer.y;
+		small_jump = true;
+	}
 }
