@@ -58,8 +58,8 @@ private:
 
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Texture spritesheetM, spritesheetSM, spritesheetStM;
-	Sprite *spriteM, *spriteSM, *spriteStM, *sprite;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM;
+	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *sprite;
 	TileMap *map;
 
 	bool inFlag;

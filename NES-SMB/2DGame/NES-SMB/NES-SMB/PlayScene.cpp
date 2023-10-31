@@ -62,7 +62,7 @@ void PlayScene::reset()
 	ticks = 400.0f;
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	engine->play2D("sounds/lvlMusic.ogg", true);
+	//engine->play2D("sounds/lvlMusic.ogg", true);
 
 	player->reset();
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -121,7 +121,7 @@ void PlayScene::init()
 	ticks = 400.0f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	engine->play2D("sounds/lvlMusic.ogg", true);
+	//engine->play2D("sounds/lvlMusic.ogg", true);
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);	
