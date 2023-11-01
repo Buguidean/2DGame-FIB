@@ -15,6 +15,8 @@ class Player
 {
 
 public:
+	~Player();
+
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void render();
@@ -62,7 +64,7 @@ private:
 
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM;
+	Texture *spritesheetM, *spritesheetSM, *spritesheetSuperStM, *spritesheetSmallStM;
 	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *sprite;
 	TileMap *map;
 
