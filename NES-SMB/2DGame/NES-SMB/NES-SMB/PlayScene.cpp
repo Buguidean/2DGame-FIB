@@ -70,9 +70,16 @@ void PlayScene::reset()
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
 
-	player->reset();
+	if (player == NULL) {
+		player = new Player();
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		player->setTileMap(map);
+	}
+	else {
+		player->reset();
+	}
+	
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
 
 	for (unsigned int i = 0 ; i < goombas.size() ; ++i) {
 		if (goombas[i] == NULL) {
@@ -289,6 +296,7 @@ void PlayScene::goombas_update(int deltaTime)
 				if (goomba->playerKilled()) {
 					player->killAnimation();
 					// player = NULL;
+					break;
 				}
 				else if (goomba->isHit()) {
 					player->hit();
@@ -328,6 +336,7 @@ void PlayScene::koopas_update(int deltaTime)
 				if (koopa->playerKilled()) {
 					player->killAnimation();
 					// player = NULL;
+					break;
 				}
 				else if (koopa->isHit()) {
 					player->hit();
@@ -446,27 +455,40 @@ void PlayScene::camera_update()
 
 int PlayScene::update(int deltaTime)
 {
-
-	currentTime += deltaTime;
-	player->update(deltaTime);
-
-	timer_update(deltaTime);
-	animated_blocks_update(deltaTime);
-	
-	if (Game::instance().getKey('c')) {
+	if (player == NULL || Game::instance().getKey('c')) {
 		engine->stopAllSounds();
 		engine->drop();
 		return 1;
 	}
 
-	goombas_update(deltaTime);
-	koopas_update(deltaTime);
-	enemy_collisions();
-	camera_update();
+	currentTime += deltaTime;
 
-	flag->update(deltaTime, player->getPosition());
-	if (flag->getIsMario())
-		player->setInFlag();
+	if (player->being_killed()) {
+		player->update(deltaTime);
+		animated_blocks_update(deltaTime);
+	}
+
+	else if (player->killed()) {
+		delete player;
+		player = NULL;
+	}
+
+	else {
+
+		player->update(deltaTime);
+		animated_blocks_update(deltaTime);
+		timer_update(deltaTime);
+
+		goombas_update(deltaTime);
+		koopas_update(deltaTime);
+		enemy_collisions();
+		camera_update();
+
+		flag->update(deltaTime, player->getPosition());
+		if (flag->getIsMario())
+			player->setInFlag();
+
+	}
 
 	return 0;
 }
@@ -485,7 +507,9 @@ void PlayScene::render()
 	map->render();
 	// if (!enemy->playerKilled())
 	flag->render();
-	player->render();
+
+	if (player != NULL)
+		player->render();
 
 	timer[0]->render();
 	timer[1]->render();

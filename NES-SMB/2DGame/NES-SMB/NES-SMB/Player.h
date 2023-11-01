@@ -36,7 +36,8 @@ public:
 	void hit();
 	void set_small_jump();
 	void reset();
-
+	bool killed();
+	bool being_killed();
 	
 private:
 	void flagTreatment();
@@ -47,7 +48,10 @@ private:
 	void setStarMarioSprite();
 
 	bool bJumping;
+	bool dead;
+	bool dying;
 	bool small_jump;
+	int death_jump;
 	int start_small_jump;
 	bool Moving;
 	bool marg;

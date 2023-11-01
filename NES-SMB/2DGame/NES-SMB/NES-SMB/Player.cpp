@@ -16,6 +16,8 @@ enum PlayerAnims
 
 void Player::reset()
 {
+	dead = false;
+	dying = false;
 	bJumping = false;
 	small_jump = false;
 	Moving = false;
@@ -39,6 +41,8 @@ void Player::reset()
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	engine = irrklang::createIrrKlangDevice();
+	dead = false;
+	dying = false;
 	bJumping = false;
 	small_jump = false;
 	Moving = false;
@@ -408,261 +412,279 @@ void Player::setStarMarioSprite() {
 
 void Player::update(int deltaTime)
 {
-	if (Game::instance().getKey('n') && (superMario || starMario))
-	{
-		setMarioSprite();
+	if (dying) {
+		if ((death_jump - posPlayer.y) >= 40) {
+			if (vy > -5.f) {
+				vy -= 0.1f * deltaTime;
+			}
+		}
+		int dvy = int(vy);
+		posPlayer.y -= dvy;
+		if (posPlayer.y > 600) {
+			dying = false;
+			dead = true;
+		}
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
-	else if (Game::instance().getKey('m') && (!superMario || starMario))
-	{
-		setSuperMarioSprite();
-	}
-	else if (Game::instance().getKey('g') && !starMario)
-	{
-		setStarMarioSprite();
-	}
-	sprite->update(deltaTime);
-	oldPlayer = posPlayer;
 
-	if (inFlag && !finalAnimation) {
-		flagTreatment();
-	}
-	else if (finalAnimation) {
-		//getOut(deltaTime);
-		posPlayer.x = 198 * 32 + 10;
-	}
 	else {
-		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+
+		if (Game::instance().getKey('n') && (superMario || starMario))
 		{
-			if (vx < -2.90f)
-				sprite->setAnimationSpeed(MOVE_LEFT, 14);
-			else
-				sprite->setAnimationSpeed(MOVE_LEFT, 8);
-			if (vx <= 0.f) {
-				if (sprite->animation() != MOVE_LEFT && !bJumping && vx < 0.f)
-					sprite->changeAnimation(MOVE_LEFT);
-			}
-
-			else {
-				posPlayer.x += int(vx);
-				if (!bJumping && vx > 0.f && sprite->animation() != TURN_LEFT)
-					sprite->changeAnimation(TURN_LEFT);
-			}
-
-			if (vx > -3.f) {
-				if (bJumping)
-					vx -= 0.03f * deltaTime / 5.f;
-				else
-					vx -= 0.01f * deltaTime;
-			}
-
-			int dv = int(vx);
-			posPlayer.x += dv;
+			setMarioSprite();
 		}
-
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+		else if (Game::instance().getKey('m') && (!superMario || starMario))
 		{
-			if (vx > 2.90f)
-				sprite->setAnimationSpeed(MOVE_RIGHT, 14);
-			else
-				sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-			if (vx >= 0.f) {
-				if (sprite->animation() != MOVE_RIGHT && !bJumping && vx > 0.f)
-					sprite->changeAnimation(MOVE_RIGHT);
-			}
-			else {
-				posPlayer.x += int(vx);
-				if (!bJumping && vx < 0.f && sprite->animation() != TURN_RIGHT)
-					sprite->changeAnimation(TURN_RIGHT);
-			}
-
-
-			if (vx < 3.f) {
-				if (bJumping)
-					vx += 0.03f * deltaTime / 5.f;
-				else
-					vx += 0.01f * deltaTime;
-			}
-
-			int dv = int(vx);
-			posPlayer.x += dv;
+			setSuperMarioSprite();
 		}
-
-		else
+		else if (Game::instance().getKey('g') && !starMario)
 		{
-			posPlayer.x += int(vx);
-			if (vx < 2.0f)
-				sprite->setAnimationSpeed(MOVE_RIGHT, 4);
-			if (vx > -2.0f)
-				sprite->setAnimationSpeed(MOVE_LEFT, 4);
-			if ((sprite->animation() == MOVE_LEFT) && vx == 0.0f)
-				sprite->changeAnimation(STAND_LEFT);
-			else if ((sprite->animation() == MOVE_RIGHT) && vx == 0.0f)
-				sprite->changeAnimation(STAND_RIGHT);
+			setStarMarioSprite();
 		}
+		sprite->update(deltaTime);
+		oldPlayer = posPlayer;
 
-		//
-		if (vx == 0.f && sprite->animation() == TURN_LEFT) {
-			sprite->changeAnimation(STAND_LEFT);
+		if (inFlag && !finalAnimation) {
+			flagTreatment();
 		}
-		else if (vx == 0.f && sprite->animation() == TURN_RIGHT) {
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-		//
-
-		if (std::abs(vx) > 0.01f) {
-			// Simulate friction by reducing the velocity
-			if (vx > 0.0f) {
-				if (bJumping)
-					vx -= 0.01f * deltaTime / 10.f;
-				else
-					vx -= 0.004f * deltaTime;
-				if (vx < 0.0f) {
-					vx = 0.0f;
-				}
-			}
-			else if (vx < 0.0f) {
-				if (bJumping)
-					vx += 0.01f * deltaTime / 10.f;
-				else
-					vx += 0.004f * deltaTime;
-				if (vx > 0.0f) {
-					vx = 0.0f;
-				}
-			}
+		else if (finalAnimation) {
+			//getOut(deltaTime);
+			posPlayer.x = 198 * 32 + 10;
 		}
 		else {
-			vx = 0.0f;
-		}
-
-
-		//////////////// Collision Left/Right /////////////////////////////////////////////////////////
-		if (vx >= 0.f) {
-			if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
-				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
-					vx = 0.0f;
-					sprite->changeAnimation(STAND_LEFT);
-				}
-				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
-					vx = 0.5f;
-					sprite->changeAnimation(STAND_RIGHT);
-
-				}
-			}
-		}
-
-		else {
-			if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic) && !bJumping) {
-				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
-					vx = -0.5f;
-					sprite->changeAnimation(STAND_LEFT);
-				}
-				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
-					vx = 0.0f;
-					sprite->changeAnimation(STAND_RIGHT);
-
-				}
-			}
-		}
-		////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		if (small_jump) {
-			if ((start_small_jump - posPlayer.y) >= 20) {
-				if (vy > -5.f) {
-					vy -= 0.1f * deltaTime;
-				}
-			}
-			int dv = int(vy);
-			posPlayer.y -= dv;
-			if (vy > 0.f)
-				small_jump = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
-			else
-				small_jump = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
-		}
-
-		else {
-			if (bJumping)
+			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
-				if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
-					sprite->changeAnimation(JUMP_LEFT);
-				else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
-					sprite->changeAnimation(JUMP_RIGHT);
+				if (vx < -2.90f)
+					sprite->setAnimationSpeed(MOVE_LEFT, 14);
+				else
+					sprite->setAnimationSpeed(MOVE_LEFT, 8);
+				if (vx <= 0.f) {
+					if (sprite->animation() != MOVE_LEFT && !bJumping && vx < 0.f)
+						sprite->changeAnimation(MOVE_LEFT);
+				}
 
-				if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-					/*
-					jumpAngle += JUMP_ANGLE_STEP;
-					if (jumpAngle == 180)
-					{
-						bJumping = false;
-						posPlayer.y = startY;
-					}
-					*/
-					// Jump Sound
-					if (vy > 0.f) {
-						if ((superMario || starMario)) {
-							if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
-								engine->play2D("sounds/jump_super.wav", false, false, true);
-							}
-						}
-						else if (!(engine->isCurrentlyPlaying("sounds/jump_small.wav"))) {
-							engine->play2D("sounds/jump_small.wav", false, false, true);
-						}
-					}
+				else {
+					posPlayer.x += int(vx);
+					if (!bJumping && vx > 0.f && sprite->animation() != TURN_LEFT)
+						sprite->changeAnimation(TURN_LEFT);
+				}
 
-					if (!apex) {
-						if (abs(startY - posPlayer.y) >= 128)
-							apex = true;
-						if (vy < 3.6f)
-							vy += 0.4f * deltaTime;
-
-					}
-					else if (apex && vy > -5.f) {
-						vy -= 0.08f * deltaTime;
-					}
-
-					int dv = int(vy);
-					posPlayer.y -= dv;
-
-					if (vy > 0.f)
-						bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+				if (vx > -3.f) {
+					if (bJumping)
+						vx -= 0.03f * deltaTime / 5.f;
 					else
-						bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+						vx -= 0.01f * deltaTime;
+				}
+
+				int dv = int(vx);
+				posPlayer.x += dv;
+			}
+
+			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+			{
+				if (vx > 2.90f)
+					sprite->setAnimationSpeed(MOVE_RIGHT, 14);
+				else
+					sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+				if (vx >= 0.f) {
+					if (sprite->animation() != MOVE_RIGHT && !bJumping && vx > 0.f)
+						sprite->changeAnimation(MOVE_RIGHT);
 				}
 				else {
-					apex = true;
-					if (abs(startY - posPlayer.y) >= 60)
-						if (vy > -5.f)
-							vy -= 0.08f * deltaTime;
-					int dv = int(vy);
-					posPlayer.y -= dv;
-					if (vy > 0.f)
-						bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
-					else
-						bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+					posPlayer.x += int(vx);
+					if (!bJumping && vx < 0.f && sprite->animation() != TURN_RIGHT)
+						sprite->changeAnimation(TURN_RIGHT);
 				}
+
+
+				if (vx < 3.f) {
+					if (bJumping)
+						vx += 0.03f * deltaTime / 5.f;
+					else
+						vx += 0.01f * deltaTime;
+				}
+
+				int dv = int(vx);
+				posPlayer.x += dv;
 			}
+
 			else
 			{
-				apex = false;
-				vy = 0.f;
-				posPlayer.y += FALL_STEP;
-				if (map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y))
-				{
-					if (sprite->animation() == JUMP_LEFT)
-						sprite->changeAnimation(STAND_LEFT);
-					else if (sprite->animation() == JUMP_RIGHT)
-						sprite->changeAnimation(STAND_RIGHT);
+				posPlayer.x += int(vx);
+				if (vx < 2.0f)
+					sprite->setAnimationSpeed(MOVE_RIGHT, 4);
+				if (vx > -2.0f)
+					sprite->setAnimationSpeed(MOVE_LEFT, 4);
+				if ((sprite->animation() == MOVE_LEFT) && vx == 0.0f)
+					sprite->changeAnimation(STAND_LEFT);
+				else if ((sprite->animation() == MOVE_RIGHT) && vx == 0.0f)
+					sprite->changeAnimation(STAND_RIGHT);
+			}
 
-					if (Game::instance().getSpecialKey(GLUT_KEY_UP))
-					{
-						bJumping = true;
-						jumpAngle = 0;
-						startY = posPlayer.y;
+			//
+			if (vx == 0.f && sprite->animation() == TURN_LEFT) {
+				sprite->changeAnimation(STAND_LEFT);
+			}
+			else if (vx == 0.f && sprite->animation() == TURN_RIGHT) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+			//
+
+			if (std::abs(vx) > 0.01f) {
+				// Simulate friction by reducing the velocity
+				if (vx > 0.0f) {
+					if (bJumping)
+						vx -= 0.01f * deltaTime / 10.f;
+					else
+						vx -= 0.004f * deltaTime;
+					if (vx < 0.0f) {
+						vx = 0.0f;
+					}
+				}
+				else if (vx < 0.0f) {
+					if (bJumping)
+						vx += 0.01f * deltaTime / 10.f;
+					else
+						vx += 0.004f * deltaTime;
+					if (vx > 0.0f) {
+						vx = 0.0f;
 					}
 				}
 			}
-		}
+			else {
+				vx = 0.0f;
+			}
 
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
+			//////////////// Collision Left/Right /////////////////////////////////////////////////////////
+			if (vx >= 0.f) {
+				if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+						vx = 0.0f;
+						sprite->changeAnimation(STAND_LEFT);
+					}
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+						vx = 0.5f;
+						sprite->changeAnimation(STAND_RIGHT);
+
+					}
+				}
+			}
+
+			else {
+				if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic) && !bJumping) {
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+						vx = -0.5f;
+						sprite->changeAnimation(STAND_LEFT);
+					}
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+						vx = 0.0f;
+						sprite->changeAnimation(STAND_RIGHT);
+
+					}
+				}
+			}
+			////////////////////////////////////////////////////////////////////////////////////////////////
+
+			if (small_jump) {
+				if ((start_small_jump - posPlayer.y) >= 20) {
+					if (vy > -5.f) {
+						vy -= 0.1f * deltaTime;
+					}
+				}
+				int dv = int(vy);
+				posPlayer.y -= dv;
+				if (vy > 0.f)
+					small_jump = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+				else
+					small_jump = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+			}
+
+			else {
+				if (bJumping)
+				{
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+						sprite->changeAnimation(JUMP_LEFT);
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+						sprite->changeAnimation(JUMP_RIGHT);
+
+					if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+						/*
+						jumpAngle += JUMP_ANGLE_STEP;
+						if (jumpAngle == 180)
+						{
+							bJumping = false;
+							posPlayer.y = startY;
+						}
+						*/
+						// Jump Sound
+						if (vy > 0.f) {
+							if ((superMario || starMario)) {
+								if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
+									engine->play2D("sounds/jump_super.wav", false, false, true);
+								}
+							}
+							else if (!(engine->isCurrentlyPlaying("sounds/jump_small.wav"))) {
+								engine->play2D("sounds/jump_small.wav", false, false, true);
+							}
+						}
+
+						if (!apex) {
+							if (abs(startY - posPlayer.y) >= 128)
+								apex = true;
+							if (vy < 3.6f)
+								vy += 0.4f * deltaTime;
+
+						}
+						else if (apex && vy > -5.f) {
+							vy -= 0.08f * deltaTime;
+						}
+
+						int dv = int(vy);
+						posPlayer.y -= dv;
+
+						if (vy > 0.f)
+							bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+						else
+							bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+					}
+					else {
+						apex = true;
+						if (abs(startY - posPlayer.y) >= 60)
+							if (vy > -5.f)
+								vy -= 0.08f * deltaTime;
+						int dv = int(vy);
+						posPlayer.y -= dv;
+						if (vy > 0.f)
+							bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+						else
+							bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+					}
+				}
+				else
+				{
+					apex = false;
+					vy = 0.f;
+					posPlayer.y += FALL_STEP;
+					if (map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y))
+					{
+						if (sprite->animation() == JUMP_LEFT)
+							sprite->changeAnimation(STAND_LEFT);
+						else if (sprite->animation() == JUMP_RIGHT)
+							sprite->changeAnimation(STAND_RIGHT);
+
+						if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+						{
+							bJumping = true;
+							jumpAngle = 0;
+							startY = posPlayer.y;
+						}
+					}
+				}
+			}
+
+			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+		}
 	}
 	// MIRAR SI HACE FALTA
 	// sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -717,6 +739,10 @@ void Player::margin(bool value, int center)
 
 void Player::killAnimation() {
 	sprite->changeAnimation(DEATH);
+	vy = 5.f;
+	vx = 0.f;
+	death_jump = posPlayer.y;
+	dying = true;
 }
 
 void Player::setInFlag() {
@@ -745,4 +771,14 @@ void Player::set_small_jump() {
 		start_small_jump = posPlayer.y;
 		small_jump = true;
 	}
+}
+
+bool Player::killed()
+{
+	return dead;
+}
+
+bool Player::being_killed()
+{
+	return dying;
 }
