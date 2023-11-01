@@ -323,7 +323,7 @@ void PlayScene::koopas_update(int deltaTime)
 					koopa->set_player_murderer(true);
 				}
 				else {
-					player->set_small_jump();
+					//player->set_small_jump();
 				}
 				delete koopa;
 				koopa = NULL;

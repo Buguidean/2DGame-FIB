@@ -595,11 +595,11 @@ void Player::update(int deltaTime)
 			//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 			if (vx >= 0.f) {
 				if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
-					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT ) {
 						vx = 0.0f;
 						sprite->changeAnimation(STAND_LEFT);
 					}
-					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT ) {
 						vx = 0.5f;
 						sprite->changeAnimation(STAND_RIGHT);
 
@@ -639,9 +639,9 @@ void Player::update(int deltaTime)
 			else {
 				if (bJumping)
 				{
-					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT)
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT || sprite->animation() == TURN_LEFT)
 						sprite->changeAnimation(JUMP_LEFT);
-					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT)
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == TURN_RIGHT)
 						sprite->changeAnimation(JUMP_RIGHT);
 
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
