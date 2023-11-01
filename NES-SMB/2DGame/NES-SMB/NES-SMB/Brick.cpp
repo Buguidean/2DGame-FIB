@@ -55,6 +55,7 @@ void Brick::update(int deltaTime)
 
 		if (posBlock.y >= startY) {
 			posBlock.y = startY;
+			drop = true;
 			bumping = false;
 		}
 	}

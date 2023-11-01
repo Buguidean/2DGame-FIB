@@ -224,10 +224,9 @@ void Koopa::update(int deltaTime)
 		posEnemy.y += FALL_STEP;
 		map->collisionMoveDown(posEnemy, sprite_size, &posEnemy.y);
 
-		if (map->collisionMoveRight(posEnemy, sprite_size, &posEnemy.x))
+		if (map->collisionMoveRightEntity(posEnemy, sprite_size, &posEnemy.x))
 			vx = -vx;
-		// El 2 es un "placeholder"
-		if (map->collisionMoveLeft(posEnemy, sprite_size, &posEnemy.x, false, 2))
+		if (map->collisionMoveLeftEntity(posEnemy, sprite_size, &posEnemy.x))
 			vx = -vx;
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));

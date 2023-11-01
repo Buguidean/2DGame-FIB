@@ -9,6 +9,9 @@
 #include "BlockSprite.h"
 #include "Question.h"
 #include "Brick.h"
+#include "PowerUps.h"
+#include "Mush.h"
+#include "Star.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -54,6 +57,7 @@ private:
 	std::vector<float> distances;
 	std::vector<Text*> timer;
 	std::vector<BlockSprite*> blocks;
+	std::vector<PowerUps*> power_sprites;
 	std::vector<Koopa*> koopas;
 	std::vector<Goomba*> goombas;
 	std::vector<glm::ivec2> pos_koopas;
@@ -61,6 +65,7 @@ private:
 	TileMap *map;
 	TileMap *back;
 	TileMap *sprites;
+	TileMap *powerups;
 	Player *player;
 	//Goomba *goomba;
 	//Koopa *koopa;

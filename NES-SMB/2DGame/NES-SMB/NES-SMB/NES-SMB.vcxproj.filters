@@ -64,6 +64,15 @@
     <ClCompile Include="BlockSprite.cpp">
       <Filter>Implementation\BlockSprites</Filter>
     </ClCompile>
+    <ClCompile Include="Mush.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUps.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -129,6 +138,15 @@
     <ClInclude Include="BlockSprite.h">
       <Filter>Headers\BlockSprites</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUps.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Mush.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -154,6 +172,12 @@
     </Filter>
     <Filter Include="Implementation\BlockSprites">
       <UniqueIdentifier>{397d259c-f3a6-40dc-8c7d-af98cc59d10b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\PowerUps">
+      <UniqueIdentifier>{a402af2b-edcb-48dd-b452-6927d07fc3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\PowerUps">
+      <UniqueIdentifier>{a0abe5f4-e7cd-438d-8ea9-a2596efbe3ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

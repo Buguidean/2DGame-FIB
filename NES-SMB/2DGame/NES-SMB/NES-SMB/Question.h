@@ -17,10 +17,10 @@ class Question:
 		void sprite_update(int deltaTime) override;
 		bool check_colision() override;
 
-
 	private:
 		float vy;
 		bool bumping;
+		bool drop;
 		float startY;
 };
 

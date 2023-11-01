@@ -22,8 +22,6 @@ PlayScene::PlayScene()
 	sprites = NULL;
 	timer.resize(3, nullptr);
 	player = NULL;
-	//goomba = NULL;
-	//koopa = NULL;
 	flag = NULL;
 	engine = NULL;
 }
@@ -38,12 +36,7 @@ PlayScene::~PlayScene()
 		delete sprites;
 	if (player != NULL)
 		delete player;
-	/*
-	if (goomba != NULL)
-		delete goomba;
-	if (koopa != NULL)
-		delete koopa;
-		*/
+
 	if (flag != NULL)
 		delete flag;
 	if (!std::all_of(timer.begin(), timer.end(), [](Text* ptr) {return ptr == nullptr;})){
@@ -117,22 +110,6 @@ void PlayScene::reset()
 
 void PlayScene::init()
 {
-	/*
-	// CLEAN OBJECTS ///////////////
-	for (auto & i : timer) {
-		delete i;
-	}
-	//timer.clear();
-	for (auto & i : blocks) {
-		delete i;
-	}
-	blocks.clear();
-	blocks_in_motion.clear();
-	distances.clear();
-	/////////////////////////////////
-	*/
-
-
 	active = false;
 	ticks = 400.0f;
 	initShaders();
@@ -140,12 +117,28 @@ void PlayScene::init()
 	//engine->play2D("sounds/lvlMusic.ogg", true);
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);	
+	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	powerups = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	int* map_sprites = sprites->getMap();
+	int* map_powerups = powerups->getMap();
 
 	for (int j = 0 ; j < 20 ; ++j) {
 		for (int i = 0; i < 211; ++i) {
+			if (map_powerups[j * 211 + i] == 23) {
+				Mush* aux = new Mush();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+				power_sprites.push_back(aux);
+			}
+			else if (map_powerups[j * 211 + i] == 24) {
+				Star* aux = new Star();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+				power_sprites.push_back(aux);
+			}
 			if (map_sprites[j * 211 + i] == 19) {
 				Question* aux = new Question();
 				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -245,6 +238,13 @@ void PlayScene::animated_blocks_update(int deltaTime)
 		if (distances[0] <= distances[1]) {
 			blocks[blocks_in_motion[0]]->update(deltaTime);
 			if (blocks[blocks_in_motion[0]]->not_bumping()) {
+				// POWER_UPS
+				for (auto & powerUp : power_sprites) {
+					if (blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+						powerUp->set_poping(true);
+						powerUp->set_render(true);
+					}
+				}
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
@@ -253,6 +253,13 @@ void PlayScene::animated_blocks_update(int deltaTime)
 		else {
 			blocks[blocks_in_motion[1]]->update(deltaTime);
 			if (blocks[blocks_in_motion[1]]->not_bumping()) {
+				// POWER_UPS
+				for (auto & powerUp : power_sprites) {
+					if (blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition()) {
+						powerUp->set_poping(true);
+						powerUp->set_render(true);
+					}
+				}
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
@@ -264,6 +271,13 @@ void PlayScene::animated_blocks_update(int deltaTime)
 		active = true;
 		blocks[blocks_in_motion[0]]->update(deltaTime);
 		if (blocks[blocks_in_motion[0]]->not_bumping()) {
+			// POWER_UPS
+			for (auto & powerUp : power_sprites) {
+				if (blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+					powerUp->set_poping(true);
+					powerUp->set_render(true);
+				}
+			}
 			blocks_in_motion.clear();
 			distances.clear();
 			active = false;
@@ -484,6 +498,11 @@ int PlayScene::update(int deltaTime)
 		enemy_collisions();
 		camera_update();
 
+		for (auto & powerUp : power_sprites) {
+			if (powerUp->get_render())
+				powerUp->update(deltaTime);
+		}
+
 		flag->update(deltaTime, player->getPosition());
 		if (flag->getIsMario())
 			player->setInFlag();
@@ -526,6 +545,11 @@ void PlayScene::render()
 	for (auto & koopa : koopas) {
 		if (koopa != NULL)
 			koopa->render();
+	}
+
+	for (auto & powerUp : power_sprites) {
+		if (powerUp != NULL && powerUp->get_render())
+			powerUp->render();
 	}
 }
 

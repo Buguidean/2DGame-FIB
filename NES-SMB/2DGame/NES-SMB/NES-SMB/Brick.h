@@ -20,6 +20,7 @@ class Brick :
 	private:
 		float vy;
 		bool bumping;
+		bool drop;
 		float startY;
 };
 

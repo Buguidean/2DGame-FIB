@@ -149,11 +149,10 @@ void Goomba::update(int deltaTime)
 			posEnemy.y += FALL_STEP;
 			map->collisionMoveDown(posEnemy, glm::ivec2(32, 32), &posEnemy.y);
 
-			if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
+			if (map->collisionMoveRightEntity(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
 				vx = -vx;
 			}
-			// El 2 es un "placeholder"
-			if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2)) {
+			if (map->collisionMoveLeftEntity(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
 				vx = -vx;
 			}
 		}

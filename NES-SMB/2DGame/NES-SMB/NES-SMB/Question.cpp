@@ -64,6 +64,7 @@ void Question::update(int deltaTime)
 		
 		if (posBlock.y >= startY) {
 			posBlock.y = startY;
+			drop = true;
 			bumping = false;
 		}
 	}
@@ -75,6 +76,7 @@ void Question::update(int deltaTime)
 			vy = 2.0f;
 			startY = posBlock.y;
 			bumping = true;
+			sprite->changeAnimation(INACTIVE);
 			break;
 		case -1:
 			break;

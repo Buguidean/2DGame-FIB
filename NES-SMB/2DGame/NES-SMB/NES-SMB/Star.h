@@ -1,0 +1,30 @@
+#ifndef _STAR_INCLUDE
+#define _STAR_INCLUDE
+
+
+#include "PowerUps.h"
+
+
+// Text is basically a Sprite that represents the texts.
+
+class Star :
+	public PowerUps
+{
+public:
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
+	void update(int deltaTime) override;
+	void set_render(const bool state) override;
+	bool get_render() override;
+	void set_poping(const bool state) override;
+
+private:
+	float vx,vy;
+	int startY;
+	bool should_render;
+	bool poping;
+	bool bJumping;
+	bool first_touch;
+};
+
+
+#endif // STAR_INCLUDE
