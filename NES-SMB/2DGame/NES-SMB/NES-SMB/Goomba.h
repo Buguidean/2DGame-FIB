@@ -13,9 +13,14 @@ public:
 	void update(int deltaTime);
 	void reset();
 	void setDying();
+	bool get_jumped();
+	void set_jumped(const bool state);
+	void set_flipped_death();
 
 private:
-	bool dying;
+	int counter;
+	bool jumped;
+	bool flipped;
 };
 
 #endif // _GOOMBA_INCLUDE

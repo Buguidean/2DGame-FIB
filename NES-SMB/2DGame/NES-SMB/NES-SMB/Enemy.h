@@ -21,6 +21,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	void obtainPosPlayer(const glm::ivec2 &pos);
 	bool killed();
+	bool being_killed();
 	bool playerKilled();
 	glm::ivec2 getPosition();
 	void setMarioSpriteSize(glm::ivec2 &size);
@@ -33,9 +34,11 @@ public:
 
 protected:
 
-	float v;
+	float vx, vy;
+	int start_jump;
 	bool player_murderer;
 	bool dead;
+	bool dying;
 	bool dead_player;
 	bool starMario;
 	bool hit;

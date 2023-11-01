@@ -32,6 +32,13 @@ public:
 
 	void init();
 	int update(int deltaTime);
+	void timer_update(int deltaTime);
+	void animated_blocks_update(int deltaTime);
+	void goombas_update(int deltaTime);
+	void koopas_update(int deltaTime);
+	void enemy_collisions();
+	void camera_update();
+	
 	void render();
 	void reset();
 

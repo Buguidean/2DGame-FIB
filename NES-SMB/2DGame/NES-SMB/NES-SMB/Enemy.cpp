@@ -37,6 +37,11 @@ bool Enemy::killed()
 	return dead;
 }
 
+bool Enemy::being_killed()
+{
+	return dying;
+}
+
 bool Enemy::playerKilled()
 {
 	return dead_player;
@@ -64,7 +69,7 @@ void Enemy::setStarMario(bool s) {
 }
 
 float* Enemy::getVelocity() {
-	return &v;
+	return &vx;
 }
 
 bool Enemy::get_player_murderer() {

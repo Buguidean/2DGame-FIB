@@ -62,6 +62,10 @@ void PlayScene::reset()
 
 	active = false;
 	ticks = 400.0f;
+	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
@@ -193,14 +197,10 @@ void PlayScene::init()
 	centerCam = 256.f;
 }
 
-int PlayScene::update(int deltaTime)
+void PlayScene::timer_update(int deltaTime) 
 {
-
-	currentTime += deltaTime;
-	player->update(deltaTime);
-
 	if (ticks > 0.f)
-		ticks -= deltaTime/400.f;
+		ticks -= deltaTime / 400.f;
 
 	if (ticks < 0.f || ticks < 0.005f)
 		ticks = 0.f;
@@ -209,13 +209,15 @@ int PlayScene::update(int deltaTime)
 	int cen = (int(ticks) / 100) % 10;
 	int des = (int(ticks) / 10) % 10;
 	int uni = int(ticks) % 10;
-	
+
 	// TIMER ACTUALIZATION
 	timer[0]->setNumber(cen);
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
-	
+}
 
+void PlayScene::animated_blocks_update(int deltaTime)
+{
 	// ANIMATED BLOCKS ACTUALIZATION ///////////////////////////////////////////
 	for (auto & block : blocks) {
 		block->obtainPosPlayer(player->getPosition());
@@ -223,10 +225,10 @@ int PlayScene::update(int deltaTime)
 		block->sprite_update(deltaTime);
 	}
 
-	for (int i = blocks.size() - 1 ; (i >=0) && !active ; --i) {
+	for (int i = blocks.size() - 1; (i >= 0) && !active; --i) {
 		if (blocks[i]->check_colision()) {
 			blocks_in_motion.push_back(i);
-			float dist = abs( ((blocks[i]->getPosition().x) + 16.f) - ((player->getPosition().x) + 16.f));
+			float dist = abs(((blocks[i]->getPosition().x) + 16.f) - ((player->getPosition().x) + 16.f));
 			distances.push_back(dist);
 		}
 	}
@@ -250,7 +252,7 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 	}
-	
+
 	else if (blocks_in_motion.size() == 1) {
 		active = true;
 		blocks[blocks_in_motion[0]]->update(deltaTime);
@@ -260,29 +262,29 @@ int PlayScene::update(int deltaTime)
 			active = false;
 		}
 	}
+}
 
-	////////////////////////////////////////////////////////////////////////////
-	
-	if (Game::instance().getKey('c')) {
-		engine->stopAllSounds();
-		engine->drop();
-		return 1;
-	}
-
+void PlayScene::goombas_update(int deltaTime)
+{
 	// GOOMBA ACTUALIZATION
 	for (auto & goomba : goombas) {
 		if (goomba != NULL) {
 			goomba->update(deltaTime);
-			if (goomba->killed()) {
+			if (goomba->being_killed()) {
 				if (!goomba->get_player_murderer()) {
 					goomba->set_player_murderer(true);
 				}
-				else {
+				else if (goomba->get_jumped()){
 					player->set_small_jump();
+					goomba->set_jumped(false);
 				}
+			}
+
+			else if (goomba->killed()) {
 				delete goomba;
 				goomba = NULL;
 			}
+
 			else {
 				if (goomba->playerKilled()) {
 					player->killAnimation();
@@ -301,7 +303,9 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 	}
-
+}
+void PlayScene::koopas_update(int deltaTime)
+{
 	// KOOPA ACTUALIZATION
 	for (auto & koopa : koopas) {
 		if (koopa != NULL) {
@@ -338,39 +342,41 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 	}
-
+}
+void PlayScene::enemy_collisions() 
+{
 	//// ENEMY COLLISIONS ////////////////////////////////////////////////////////////////////////////////////////////////
-
 	for (auto & goomba : goombas) {
 		if (goomba != NULL) {
 			for (auto & koopa : koopas) {
 				if (koopa != NULL) {
 					int aux = map->collisionEnemyEnemy(goomba->getPosition(), glm::ivec2(32, 32), *goomba->getVelocity(),
-													   koopa->getPosition(), koopa->get_sprite_size(), *koopa->getVelocity());
+						koopa->getPosition(), koopa->get_sprite_size(), *koopa->getVelocity());
 					switch (aux)
 					{
-						case 1:
-							goomba->set_player_murderer(false);
-							goomba->setDying();
-							break;
-						case 2:
-							// This is imposible
-							koopa->setDying();
-							break;
-						case -1:
-							break;
+					case 1:
+						goomba->set_flipped_death();
+						goomba->set_player_murderer(false);
+						goomba->setDying();
+						break;
+					case 2:
+						// This is imposible
+						koopa->setDying();
+						break;
+					case -1:
+						break;
 					}
 				}
 			}
 		}
 	}
-	
+
 	for (unsigned int i = 0; i < goombas.size(); ++i) {
 		if (goombas[i] != NULL) {
 			for (unsigned int j = i + 1; j < goombas.size(); ++j) {
 				if (goombas[j] != NULL) {
 					map->collisionEnemyEnemy(goombas[i]->getPosition(), glm::ivec2(32, 32), *goombas[i]->getVelocity(),
-										     goombas[j]->getPosition(), glm::ivec2(32, 32), *goombas[j]->getVelocity());
+						goombas[j]->getPosition(), glm::ivec2(32, 32), *goombas[j]->getVelocity());
 				}
 			}
 		}
@@ -381,15 +387,21 @@ int PlayScene::update(int deltaTime)
 			for (unsigned int j = i + 1; j < koopas.size(); ++j) {
 				if (koopas[j] != NULL) {
 					int aux = map->collisionEnemyEnemy(koopas[i]->getPosition(), koopas[i]->get_sprite_size(), *koopas[i]->getVelocity(),
-													   koopas[j]->getPosition(), koopas[j]->get_sprite_size(), *koopas[j]->getVelocity());
+						koopas[j]->getPosition(), koopas[j]->get_sprite_size(), *koopas[j]->getVelocity());
 					switch (aux)
 					{
 					case 1:
 						koopas[i]->setDying();
+						if (!koopas[i]->get_flipped()) {
+							koopas[i]->set_flipped_death();
+						}
 						koopas[i]->set_player_murderer(false);
 						break;
 					case 2:
 						koopas[j]->setDying();
+						if (!koopas[j]->get_flipped()) {
+							koopas[j]->set_flipped_death();
+						}
 						koopas[j]->set_player_murderer(false);
 						break;
 					case -1:
@@ -399,10 +411,9 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+}
+void PlayScene::camera_update()
+{
 	// CAMERA ACTUALIZATION
 	glm::ivec2 pos = player->getPosition();
 	float v = player->getVelocity();
@@ -426,11 +437,32 @@ int PlayScene::update(int deltaTime)
 		else if (diff <= 130) {
 			projection = glm::translate(projection, glm::vec3(-(v / 2.f), 0.f, 0.f));
 			for (auto & digit : timer) {
-				digit->setPosition(glm::fvec2(digit->getPosition().x + (v/2), digit->getPosition().y));
+				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
 			}
 			centerCam += (v / 2.f);
 		}
 	}
+}
+
+int PlayScene::update(int deltaTime)
+{
+
+	currentTime += deltaTime;
+	player->update(deltaTime);
+
+	timer_update(deltaTime);
+	animated_blocks_update(deltaTime);
+	
+	if (Game::instance().getKey('c')) {
+		engine->stopAllSounds();
+		engine->drop();
+		return 1;
+	}
+
+	goombas_update(deltaTime);
+	koopas_update(deltaTime);
+	enemy_collisions();
+	camera_update();
 
 	flag->update(deltaTime, player->getPosition());
 	if (flag->getIsMario())

@@ -5,7 +5,7 @@
 
 enum GoombaAnims
 {
-	GOOMBA_MOVE, GOOMBA_DEATH
+	GOOMBA_MOVE, GOOMBA_DEATH, GOOMBA_FLIPPED_DEATH
 };
 
 Goomba::~Goomba() 
@@ -16,7 +16,10 @@ Goomba::~Goomba()
 
 void Goomba::reset() 
 {
-	v = -1.f;
+	flipped = false;
+	jumped = false;
+	counter = 0;
+	vx = -1.f;
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 	oldEnemy = posEnemy;
@@ -31,11 +34,16 @@ void Goomba::reset()
 
 void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-
-	v = -1.f;
+	flipped = false;
+	jumped = false;
+	counter = 0;
+	vx = -1.f;
 	spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2);
+	sprite->setNumberAnimations(3);
+
+	sprite->setAnimationSpeed(GOOMBA_FLIPPED_DEATH, 4);
+	sprite->addKeyframe(GOOMBA_FLIPPED_DEATH, glm::vec2(0.5f, 0.5f));
 
 	sprite->setAnimationSpeed(GOOMBA_DEATH, 4);
 	sprite->addKeyframe(GOOMBA_DEATH, glm::vec2(0.0f, 0.5f));
@@ -62,60 +70,113 @@ void Goomba::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	oldEnemy = posEnemy;
-	if (sprite->animation() != GOOMBA_MOVE) {
-		sprite->changeAnimation(GOOMBA_MOVE);
-	}
 
-	if (dying) {
-		//dying animation
-		dead = true;
-	}
-
-	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32));
-
-	switch (state)
-	{
-	case 0:
-	case 2:
-	case 3:
-		posEnemy.x += int(v);
-		if (starMario) {
+	if (flipped) {
+		if ((start_jump - posEnemy.y) >= 20) {
+			if (vy > -5.f) {
+				vy -= 0.1f * deltaTime;
+			}
+		}
+		int dvy = int(vy);
+		int dvx = int(vx);
+		posEnemy.y -= dvy;
+		posEnemy.x += dvx;
+		if (posEnemy.y > 600) {
+			flipped = false;
 			dead = true;
-			v = 0.f;
-			sprite->changeAnimation(GOOMBA_DEATH);
 		}
-		else if (marioSpriteSize.y == 64 && !dead) {
-			hit = true;
-			// marioSpriteSize = glm::ivec2(32, 32);
-		}
-		else if (!dead) {
-			dead_player = true;
-		}
-		break;
-	case 1:
-		v = 0.f;
-		sprite->changeAnimation(GOOMBA_DEATH);
-		dead = true;
-		break;
-	case -1:
-		posEnemy.x += int(v);
-		break;
 	}
 
-	posEnemy.y += FALL_STEP;
-	map->collisionMoveDown(posEnemy, glm::ivec2(32, 32), &posEnemy.y);
+	else {
 
-	if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
-		v = -v;
+		if (!dying && sprite->animation() != GOOMBA_MOVE) {
+			sprite->changeAnimation(GOOMBA_MOVE);
+		}
+
+		if (dying && counter < 500) {
+			counter += deltaTime;
+		}
+
+		else if (dying) {
+			//dying animation
+			dead = true;
+			dying = false;
+			counter = 0;
+		}
+
+		int state = -1;
+		if (!dying) {
+			state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32));
+		}
+
+		switch (state)
+		{
+		case 0:
+		case 2:
+		case 3:
+			posEnemy.x += int(vx);
+			if (starMario) {
+				set_flipped_death();
+				// vx = 0.f;
+				// sprite->changeAnimation(GOOMBA_DEATH);
+			}
+			else if (marioSpriteSize.y == 64 && !dead) {
+				hit = true;
+				// marioSpriteSize = glm::ivec2(32, 32);
+			}
+			else if (!dead) {
+				dead_player = true;
+			}
+			break;
+		case 1:
+			if (starMario) {
+				set_flipped_death();
+			}
+			else {
+				vx = 0.f;
+				sprite->changeAnimation(GOOMBA_DEATH);
+				dying = true;
+				jumped = true;
+				posEnemy.y += 5;
+			}
+			break;
+		case -1:
+			posEnemy.x += int(vx);
+			break;
+		}
+
+		if (!dying) {
+			posEnemy.y += FALL_STEP;
+			map->collisionMoveDown(posEnemy, glm::ivec2(32, 32), &posEnemy.y);
+
+			if (map->collisionMoveRight(posEnemy, glm::ivec2(32, 32), &posEnemy.x)) {
+				vx = -vx;
+			}
+			// El 2 es un "placeholder"
+			if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2)) {
+				vx = -vx;
+			}
+		}
 	}
-	// El 2 es un "placeholder"
-	if (map->collisionMoveLeft(posEnemy, glm::ivec2(32, 32), &posEnemy.x, false, 2)) {
-		v = -v;
-	}
-	
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 }
 
 void Goomba::setDying() {
 	dying = true;
+}
+
+bool Goomba::get_jumped() {
+	return jumped;
+}
+
+void Goomba::set_jumped(const bool state) {
+	jumped = state;
+}
+
+void Goomba::set_flipped_death() {
+	vy = 5.0f;
+	start_jump = posEnemy.y;
+	sprite->changeAnimation(GOOMBA_FLIPPED_DEATH);
+	flipped = true;
 }

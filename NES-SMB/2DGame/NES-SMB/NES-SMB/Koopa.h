@@ -16,13 +16,15 @@ public:
 	void reset();
 	void setDying();
 	glm::ivec2 get_sprite_size();
+	void set_flipped_death();
+	bool get_flipped();
 
 
 private:
+	bool flipped;
 	void normal_sprite();
 	void shell_sprite();
 	bool shield;
-	bool dying;
 	int shieldState;
 	int shieldCount;
 	bool transitionState;
