@@ -370,7 +370,7 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 	return -1;
 }
 
-int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
+pair<int,float> TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
 {
 	int min_xM, min_yM, max_xM, max_yM;
 	int min_xE, min_yE, max_xE, max_yE;
@@ -405,17 +405,17 @@ int TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 		float angle_degrees = angle * 180.0f / M_PI;
 		
 		if (angle_degrees >= 45.f && angle_degrees <= 135.f)
-			return 1; // UP
+			return make_pair(1,angle_degrees); // UP
 		else if (angle_degrees < 0.f)
-			return 0; // DOWN
+			return make_pair(0,angle_degrees); // DOWN
 		else if (angle_degrees >= 0.f && angle_degrees < 45.f)
-			return 2; // LEFT
+			return make_pair(2,angle_degrees); // LEFT
 		else if (angle_degrees > 135.f && angle_degrees <= 180.f)
-			return 3; // RIGHT
+			return make_pair(3,angle_degrees); // RIGHT
 
 	}
 
-	return -1;
+	return make_pair(-1,NULL);
 }
 
 int* TileMap::getMap()

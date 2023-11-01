@@ -4,8 +4,14 @@
 
 enum KoopaAnims
 {
-	LIVE_SHELL, SHELL, MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, DEATH_SHELL
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
 };
+
+enum ShellKoopaAnims
+{
+	LIVE_SHELL, SHELL, DEATH_SHELL
+};
+
 
 void Koopa::normal_sprite() {
 	sprite = spriteN;
@@ -27,7 +33,7 @@ Koopa::~Koopa()
 	}
 }
 
-void Koopa::reset() 
+void Koopa::reset()
 {
 	flipped = false;
 	vx = -1.f;
@@ -66,7 +72,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spriteN->setAnimationSpeed(MOVE_RIGHT, 4);
 	spriteN->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.0f));
 	spriteN->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.0f));
-	
+
 	spriteN->setAnimationSpeed(STAND_LEFT, 4);
 	spriteN->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
 
@@ -86,7 +92,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spriteC->addKeyframe(SHELL, glm::vec2(0.0f, 0.0f));
 
 	spriteC->setAnimationSpeed(DEATH_SHELL, 1);
-	spriteC->addKeyframe(DEATH_SHELL, glm::vec2(0.0f, 0.0f));
+	spriteC->addKeyframe(DEATH_SHELL, glm::vec2(0.0f, 0.5f));
 
 	spriteC->changeAnimation(SHELL);
 
@@ -117,7 +123,7 @@ void Koopa::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	oldEnemy = posEnemy;
-	
+
 	if (flipped) {
 		sprite->changeAnimation(DEATH_SHELL);
 		if ((start_jump - posEnemy.y) >= 20) {
@@ -136,11 +142,11 @@ void Koopa::update(int deltaTime)
 	}
 
 	else {
-		if (!shield && (vx < 0.f || vx < -0.f)) {
+		if (!shield && (vx < 0.f)) {
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
 		}
-		else if (!shield && (vx > 0.f || vx > -0.f)) {
+		else if (!shield && (vx > 0.f)) {
 			if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
 		}
@@ -150,27 +156,19 @@ void Koopa::update(int deltaTime)
 			koopaColision = glm::ivec2(32, 32);
 		}
 
-		int left = -1;
-		int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision);
-		switch (state)
+		posEnemy.x += int(vx);
+		pair<int,float> state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision);
+		switch (state.first)
 		{
 		case 0:
 		case 2:
 		case 3:
-			posEnemy.x += int(vx);
 			if (starMario) {
-				if(sprite_size.y == 64)
-					set_flipped_death();
-				else {
-					vy = 5.0f;
-					sprite->changeAnimation(DEATH_SHELL);
-					start_jump = posEnemy.y;
-					flipped = true;
-				}
+				set_flipped_death();
 			}
-			else if(!dead) {
+			else if (!dead) {
 				if ((vx != 0.0f || vx != -0.0f) && !transitionState) {
-					if (marioSpriteSize.y == 64 ) {
+					if (marioSpriteSize.y == 64) {
 						hit = true;
 					}
 					else {
@@ -178,11 +176,11 @@ void Koopa::update(int deltaTime)
 					}
 				}
 				else if (shield && (vx == 0.0f || vx == -0.0f)) {
-					if (state == 2) {
+					if (state.first == 2) {
 						transitionState = true;
 						vx = 5.f;
 					}
-					else if (state == 3) {
+					else if (state.first == 3) {
 						transitionState = true;
 						vx = -5.f;
 					}
@@ -190,24 +188,29 @@ void Koopa::update(int deltaTime)
 			}
 			break;
 		case 1:
-			vx = 0.f;
 			if (starMario) {
 				set_flipped_death();
 			}
 			else {
 				if (shield) {
-					if (vx != 0.0f) {
+					if (vx != 0.f && !transitionState) {
 						first_hit = true;
 						transitionState = true;
 						vx = 0.f;
 					}
-					else if(vx == 0.0f) {
+					else if (vx == 0.f && !transitionState) {
+						if (state.second < 90.0f)
+							vx = 5.f;
+						else if (state.second >= 90.0f)
+							vx = -5.f;
+
 						first_hit = true;
 						transitionState = true;
-						vx = 5.f;
 					}
 				}
 				else {
+					vx = 0.f;
+					transitionState = true;
 					first_hit = true;
 					shield = true;
 					shell_sprite();
@@ -216,7 +219,6 @@ void Koopa::update(int deltaTime)
 			}
 			break;
 		case -1:
-			posEnemy.x += int(vx);
 			transitionState = false;
 			break;
 		}
@@ -252,8 +254,7 @@ void Koopa::set_flipped_death() {
 	vy = 5.0f;
 	sprite = spriteC;
 	sprite->changeAnimation(DEATH_SHELL);
-	if(sprite_size.y == 64)
-		posEnemy.y += 32;
+	posEnemy.y += 32;
 	start_jump = posEnemy.y;
 	flipped = true;
 }

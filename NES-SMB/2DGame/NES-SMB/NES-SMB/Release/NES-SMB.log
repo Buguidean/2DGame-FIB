@@ -1,10 +1,29 @@
-﻿  PowerUps.cpp
+﻿  BlockSprite.cpp
+  Brick.cpp
+  Enemy.cpp
+  Flag.cpp
+  Game.cpp
+  Goomba.cpp
+  Koopa.cpp
+  MainScene.cpp
+  Mush.cpp
+  PlayScene.cpp
+  Player.cpp
+  PowerUps.cpp
+  Question.cpp
+  Star.cpp
+  Text.cpp
+  TileMap.cpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\utility(200): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  TileMap.cpp(418): note: see reference to function template instantiation 'std::pair<int,float>::pair<int,int,void,0>(std::pair<int,int> &&) noexcept' being compiled
+  TileMap.cpp(418): note: see reference to function template instantiation 'std::pair<int,float>::pair<int,int,void,0>(std::pair<int,int> &&) noexcept' being compiled
+  main.cpp
 SOIL.lib(SOIL.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
 LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  0 of 1206 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  11 of 1212 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+    7 functions were new in current compilation
+    19 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'D:\VJ\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
 SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\VJ\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info

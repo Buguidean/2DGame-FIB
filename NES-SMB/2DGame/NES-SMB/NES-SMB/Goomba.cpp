@@ -106,7 +106,7 @@ void Goomba::update(int deltaTime)
 
 		int state = -1;
 		if (!dying) {
-			state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32));
+			state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32)).first;
 		}
 
 		switch (state)
