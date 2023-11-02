@@ -16,18 +16,6 @@ enum PlayerAnims
 
 Player::~Player()
 {
-	if (spritesheetM != NULL) {
-		delete spritesheetM;
-	}
-	if (spritesheetSM != NULL) {
-		delete spritesheetSM;
-	}
-	if (spritesheetSuperStM != NULL) {
-		delete spritesheetSuperStM;
-	}
-	if (spritesheetSmallStM != NULL) {
-		delete spritesheetSmallStM;
-	}
 	if (spriteM != NULL) {
 		delete spriteM;
 	}
@@ -69,7 +57,7 @@ void Player::reset()
 }
 
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM)
 {
 	engine = irrklang::createIrrKlangDevice();
 	dead = false;
@@ -88,9 +76,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	vx = 0.f;
 	vy = 0.f;
 
-	spritesheetM = new Texture();
-	spritesheetM->loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteM = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.5f), spritesheetM, &shaderProgram);
+	spriteM = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.5f), &spritesheetM, &shaderProgram);
 	spriteM->setNumberAnimations(12);
 
 	spriteM->setAnimationSpeed(STAND_LEFT, 8);
@@ -133,10 +119,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	spriteM->setAnimationSpeed(DEATH, 8);
 	spriteM->addKeyframe(DEATH, glm::vec2(0.75f, 0.f));
-
-	spritesheetSuperStM = new Texture();
-	spritesheetSuperStM->loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteSuperStM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.25f), spritesheetSuperStM, &shaderProgram);
+	
+	spriteSuperStM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.25f), &spritesheetSuperStM, &shaderProgram);
 	spriteSuperStM->setNumberAnimations(11);
 
 	spriteSuperStM->setAnimationSpeed(STAND_LEFT, 16);
@@ -196,9 +180,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.75f, 0.75f));
 	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.75f));
 
-	spritesheetSmallStM = new Texture();
-	spritesheetSmallStM->loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteSmallStM = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.125f), spritesheetSmallStM, &shaderProgram);
+	spriteSmallStM = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.125f), &spritesheetSmallStM, &shaderProgram);
 	spriteSmallStM->setNumberAnimations(11);
 
 	spriteSmallStM->setAnimationSpeed(STAND_LEFT, 16);
@@ -259,9 +241,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spriteSmallStM->addKeyframe(DOWN_FLAG, glm::vec2(0.125f, 0.5f));
 	spriteSmallStM->addKeyframe(DOWN_FLAG, glm::vec2(0.25f, 0.5f));
 
-	spritesheetSM = new Texture();
-	spritesheetSM->loadFromFile("images/superMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteSM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.5f), spritesheetSM, &shaderProgram);
+	spriteSM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.5f), &spritesheetSM, &shaderProgram);
 	spriteSM->setNumberAnimations(12);
 
 	spriteSM->setAnimationSpeed(STAND_LEFT, 8);

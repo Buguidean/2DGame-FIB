@@ -62,13 +62,9 @@ private:
 	std::vector<Goomba*> goombas;
 	std::vector<glm::ivec2> pos_koopas;
 	std::vector<glm::ivec2> pos_goombas;
-	TileMap *map;
-	TileMap *back;
-	TileMap *sprites;
-	TileMap *powerups;
+	TileMap *map, *back, *sprites, *powerups;
 	Player *player;
-	//Goomba *goomba;
-	//Koopa *koopa;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM;
 	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;

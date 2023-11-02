@@ -65,7 +65,7 @@ void PlayScene::reset()
 
 	if (player == NULL) {
 		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM);
 		player->setTileMap(map);
 	}
 	else {
@@ -115,6 +115,13 @@ void PlayScene::init()
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
+
+	// MARIO TEXTURES
+	spritesheetM.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetSM.loadFromFile("images/superMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetSuperStM.loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetSmallStM.loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -184,7 +191,7 @@ void PlayScene::init()
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -469,6 +476,7 @@ void PlayScene::camera_update()
 
 int PlayScene::update(int deltaTime)
 {
+
 	if (player == NULL || Game::instance().getKey('c')) {
 		engine->stopAllSounds();
 		engine->drop();
@@ -514,6 +522,7 @@ int PlayScene::update(int deltaTime)
 
 void PlayScene::render()
 {
+
 	glm::mat4 modelview;
 	texProgram.use();
 
@@ -551,6 +560,7 @@ void PlayScene::render()
 		if (powerUp != NULL && powerUp->get_render())
 			powerUp->render();
 	}
+
 }
 
 void PlayScene::initShaders()
