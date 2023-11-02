@@ -282,13 +282,15 @@ void PlayScene::animated_blocks_update(int deltaTime)
 {
 	// ANIMATED BLOCKS ACTUALIZATION ///////////////////////////////////////////
 	for (auto & block : blocks) {
-		block->obtainPosPlayer(player->getPosition());
-		block->setMarioSpriteSize(player->getMarioSpriteSize());
-		block->sprite_update(deltaTime);
+		if (block != NULL) {
+			block->obtainPosPlayer(player->getPosition());
+			block->setMarioSpriteSize(player->getMarioSpriteSize());
+			block->sprite_update(deltaTime);
+		}
 	}
 
 	for (int i = blocks.size() - 1; (i >= 0) && !active; --i) {
-		if (blocks[i]->check_colision()) {
+		if (blocks[i] != NULL && blocks[i]->check_colision()) {
 			blocks_in_motion.push_back(i);
 			float dist = abs(((blocks[i]->getPosition().x) + 16.f) - ((player->getPosition().x) + 16.f));
 			distances.push_back(dist);
@@ -326,6 +328,11 @@ void PlayScene::animated_blocks_update(int deltaTime)
 			else {
 				// COLISION SUPER MARIO
 				init_particles(0);
+				map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
+				player->setTileMap(map);
+				delete blocks[blocks_in_motion[0]];
+				blocks[blocks_in_motion[0]] = NULL;
+
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
@@ -359,6 +366,11 @@ void PlayScene::animated_blocks_update(int deltaTime)
 			else {
 				// COLISION SUPER MARIO
 				init_particles(1);
+				map->modify_position(int(blocks[blocks_in_motion[1]]->getPosition().y), int(blocks[blocks_in_motion[1]]->getPosition().x));
+				player->setTileMap(map);
+				delete blocks[blocks_in_motion[1]];
+				blocks[blocks_in_motion[1]] = NULL;
+
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
@@ -395,6 +407,11 @@ void PlayScene::animated_blocks_update(int deltaTime)
 		else {
 			// COLISION SUPER MARIO
 			init_particles(0);
+			map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
+			player->setTileMap(map);
+			delete blocks[blocks_in_motion[0]];
+			blocks[blocks_in_motion[0]] = NULL;
+
 			blocks_in_motion.clear();
 			distances.clear();
 			active = false;
@@ -680,7 +697,9 @@ void PlayScene::render()
 	}
 
 	for (auto & block : blocks)
-		block->render();
+		if (block != NULL) {
+			block->render();
+		}
 
 	for (auto & particle : particles) {
 		if (particle != NULL)

@@ -42,6 +42,7 @@ public:
 	int collisionEnemyEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE_1, float &v1, const glm::ivec2 posE_2, const glm::ivec2 sizeE_2, float &v2) const;
 
 	int* getMap();
+	void modify_position(int j, int i);
 	
 private:
 	bool loadLevel(const string &levelFile);

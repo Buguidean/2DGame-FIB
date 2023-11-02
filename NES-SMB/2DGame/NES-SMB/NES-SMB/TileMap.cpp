@@ -422,3 +422,8 @@ int* TileMap::getMap()
 {
 	return map;
 }
+
+void TileMap::modify_position(int j, int i)
+{
+	map[(j / tileSize) * mapSize.x + (i / tileSize)] = 0;
+}
