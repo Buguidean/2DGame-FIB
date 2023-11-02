@@ -132,32 +132,57 @@ void PlayScene::init()
 
 	for (int j = 0 ; j < 20 ; ++j) {
 		for (int i = 0; i < 211; ++i) {
-			if (map_powerups[j * 211 + i] == 23) {
-				Mush* aux = new Mush();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
-				aux->setTileMap(map);
-				power_sprites.push_back(aux);
-			}
-			else if (map_powerups[j * 211 + i] == 24) {
-				Star* aux = new Star();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
-				aux->setTileMap(map);
-				power_sprites.push_back(aux);
-			}
 			if (map_sprites[j * 211 + i] == 19) {
 				Question* aux = new Question();
 				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
+
+				if (map_powerups[j * 211 + i] == 23) {
+					Mush* aux2 = new Mush();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+				else if (map_powerups[j * 211 + i] == 24) {
+					Star* aux2 = new Star();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+
 				blocks.push_back(aux);
+
 			}
 			else if (map_sprites[j * 211 + i] == 2) {
 				Brick* aux = new Brick();
 				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
+
+				if (map_powerups[j * 211 + i] == 23) {
+					// HAS POWER_UP
+					aux->set_gift();
+
+					Mush* aux2 = new Mush();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+				else if (map_powerups[j * 211 + i] == 24) {
+					// HAS POWER_UP
+					aux->set_gift();
+
+					Star* aux2 = new Star();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+
 				blocks.push_back(aux);
 			}
 			else if (map_sprites[j * 211 + i] == 17) {
@@ -223,6 +248,36 @@ void PlayScene::timer_update(int deltaTime)
 	timer[2]->setNumber(uni);
 }
 
+void PlayScene::init_particles(int pos)
+{
+	Particles* p1 = new Particles();
+	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, -2.f, 10.f,1);
+	p1->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x), float(blocks[blocks_in_motion[pos]]->getPosition().y)));
+	particles.push_back(p1);
+
+	Particles* p2 = new Particles();
+	p2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, -1.5f, 8.f,1);
+	p2->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x), float(blocks[blocks_in_motion[pos]]->getPosition().y + 24)));
+	particles.push_back(p2);
+
+	Particles* p3 = new Particles();
+	p3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2.f, 10.f,0);
+	p3->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x + 24), float(blocks[blocks_in_motion[pos]]->getPosition().y)));
+	particles.push_back(p3);
+
+	Particles* p4 = new Particles();
+	p4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1.5f, 8.f,0);
+	p4->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x + 24), float(blocks[blocks_in_motion[pos]]->getPosition().y + 24)));
+	particles.push_back(p4);
+}
+
+void PlayScene::particles_update(int deltaTime)
+{
+	for (auto & particle : particles) {
+		particle->update(deltaTime);
+	}
+}
+
 void PlayScene::animated_blocks_update(int deltaTime)
 {
 	// ANIMATED BLOCKS ACTUALIZATION ///////////////////////////////////////////
@@ -243,30 +298,67 @@ void PlayScene::animated_blocks_update(int deltaTime)
 	if (blocks_in_motion.size() == 2) {
 		active = true;
 		if (distances[0] <= distances[1]) {
-			blocks[blocks_in_motion[0]]->update(deltaTime);
-			if (blocks[blocks_in_motion[0]]->not_bumping()) {
-				// POWER_UPS
-				for (auto & powerUp : power_sprites) {
-					if (blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
-						powerUp->set_poping(true);
-						powerUp->set_render(true);
-					}
+
+			bool gift = blocks[blocks_in_motion[0]]->get_gift();
+			if (player->getMarioSpriteSize().y != 64 || gift) {
+
+				if (gift) {
+					blocks[blocks_in_motion[0]]->set_inactive();
 				}
+
+				blocks[blocks_in_motion[0]]->update(deltaTime);
+				if (blocks[blocks_in_motion[0]]->not_bumping()) {
+					// POWER_UPS
+					for (auto & powerUp : power_sprites) {
+						if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+							blocks[blocks_in_motion[0]]->set_used();
+							powerUp->set_poping(true);
+							powerUp->set_render(true);
+						}
+					}
+					blocks_in_motion.clear();
+					distances.clear();
+					active = false;
+				}
+
+			}
+
+			else {
+				// COLISION SUPER MARIO
+				init_particles(0);
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
 			}
 		}
 		else {
-			blocks[blocks_in_motion[1]]->update(deltaTime);
-			if (blocks[blocks_in_motion[1]]->not_bumping()) {
-				// POWER_UPS
-				for (auto & powerUp : power_sprites) {
-					if (blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition()) {
-						powerUp->set_poping(true);
-						powerUp->set_render(true);
-					}
+
+			bool gift = blocks[blocks_in_motion[1]]->get_gift();
+			if (player->getMarioSpriteSize().y != 64 || gift) {
+
+				if (gift) {
+					blocks[blocks_in_motion[1]]->set_inactive();
 				}
+				blocks[blocks_in_motion[1]]->update(deltaTime);
+				if (blocks[blocks_in_motion[1]]->not_bumping()) {
+					// POWER_UPS
+					for (auto & powerUp : power_sprites) {
+						if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition()) {
+							blocks[blocks_in_motion[1]]->set_used();
+							powerUp->set_poping(true);
+							powerUp->set_render(true);
+						}
+					}
+					blocks_in_motion.clear();
+					distances.clear();
+					active = false;
+				}
+
+			}
+
+			else {
+				// COLISION SUPER MARIO
+				init_particles(1);
 				blocks_in_motion.clear();
 				distances.clear();
 				active = false;
@@ -276,15 +368,33 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 	else if (blocks_in_motion.size() == 1) {
 		active = true;
-		blocks[blocks_in_motion[0]]->update(deltaTime);
-		if (blocks[blocks_in_motion[0]]->not_bumping()) {
-			// POWER_UPS
-			for (auto & powerUp : power_sprites) {
-				if (blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
-					powerUp->set_poping(true);
-					powerUp->set_render(true);
-				}
+
+		bool gift = blocks[blocks_in_motion[0]]->get_gift();
+		if (player->getMarioSpriteSize().y != 64 || gift) {
+
+			if (gift) {
+				blocks[blocks_in_motion[0]]->set_inactive();
 			}
+			blocks[blocks_in_motion[0]]->update(deltaTime);
+			if (blocks[blocks_in_motion[0]]->not_bumping()) {
+				// POWER_UPS
+				for (auto & powerUp : power_sprites) {
+					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+						blocks[blocks_in_motion[0]]->set_used();
+						powerUp->set_poping(true);
+						powerUp->set_render(true);
+					}
+				}
+				blocks_in_motion.clear();
+				distances.clear();
+				active = false;
+			}
+
+		}
+
+		else {
+			// COLISION SUPER MARIO
+			init_particles(0);
 			blocks_in_motion.clear();
 			distances.clear();
 			active = false;
@@ -474,6 +584,29 @@ void PlayScene::camera_update()
 	}
 }
 
+void PlayScene::powerUps_update(int deltaTime)
+{
+	for (auto & powerUp : power_sprites) {
+		if (powerUp != NULL && powerUp->get_render()) {
+			powerUp->obtainPosPlayer(player->getPosition());
+			powerUp->setMarioSpriteSize(player->getMarioSpriteSize());
+			powerUp->update(deltaTime);
+
+			if (powerUp->is_picked() == 1) {
+				player->setSuperMarioSprite();
+				delete powerUp;
+				powerUp = NULL;
+			}
+			else if (powerUp->is_picked() == 2) {
+				player->setStarMarioSprite();
+				delete powerUp;
+				powerUp = NULL;
+			}
+
+		}
+	}
+}
+
 int PlayScene::update(int deltaTime)
 {
 
@@ -499,6 +632,7 @@ int PlayScene::update(int deltaTime)
 
 		player->update(deltaTime);
 		animated_blocks_update(deltaTime);
+		particles_update(deltaTime);
 		timer_update(deltaTime);
 
 		goombas_update(deltaTime);
@@ -506,10 +640,7 @@ int PlayScene::update(int deltaTime)
 		enemy_collisions();
 		camera_update();
 
-		for (auto & powerUp : power_sprites) {
-			if (powerUp->get_render())
-				powerUp->update(deltaTime);
-		}
+		powerUps_update(deltaTime);
 
 		flag->update(deltaTime, player->getPosition());
 		if (flag->getIsMario())
@@ -543,8 +674,18 @@ void PlayScene::render()
 	timer[1]->render();
 	timer[2]->render();
 
+	for (auto & powerUp : power_sprites) {
+		if (powerUp != NULL && powerUp->get_render())
+			powerUp->render();
+	}
+
 	for (auto & block : blocks)
 		block->render();
+
+	for (auto & particle : particles) {
+		if (particle != NULL)
+			particle->render();
+	}
 
 	for (auto & goomba : goombas){
 		if (goomba != NULL)
@@ -556,10 +697,7 @@ void PlayScene::render()
 			koopa->render();
 	}
 
-	for (auto & powerUp : power_sprites) {
-		if (powerUp != NULL && powerUp->get_render())
-			powerUp->render();
-	}
+	
 
 }
 

@@ -19,6 +19,7 @@
 #include "Koopa.h"
 #include "Flag.h"
 #include "Text.h"
+#include "Particles.h"
 #include <irrklang.h>
 
 
@@ -40,6 +41,9 @@ public:
 	void goombas_update(int deltaTime);
 	void koopas_update(int deltaTime);
 	void enemy_collisions();
+	void powerUps_update(int deltaTime);
+	void init_particles(int pos);
+	void particles_update(int deltaTime);
 	void camera_update();
 	
 	void render();
@@ -55,6 +59,7 @@ private:
 	int animated_block;
 	std::vector<int> blocks_in_motion;
 	std::vector<float> distances;
+	std::vector<Particles*> particles;
 	std::vector<Text*> timer;
 	std::vector<BlockSprite*> blocks;
 	std::vector<PowerUps*> power_sprites;

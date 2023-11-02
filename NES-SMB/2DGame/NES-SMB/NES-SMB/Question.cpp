@@ -35,6 +35,8 @@ void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
 	
 	vy = 0.f;
+	used = false;
+	gift = true;
 	bumping = false;
 	startY = posBlock.y;
 }
@@ -53,40 +55,62 @@ void Question::sprite_update(int deltaTime) {
 
 void Question::update(int deltaTime)
 {
-	int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));
+	if (!used) {
+		int state = map->collisionMarioBlock(playerPos, marioSpriteSize, posBlock, glm::ivec2(32, 32));
 
-	if (bumping) {
-		if ((startY - posBlock.y) >= 10)
-			vy -= 0.1f * deltaTime;
-		
-		int dv = int(vy);
-		posBlock.y -= dv;
-		
-		if (posBlock.y >= startY) {
-			posBlock.y = startY;
-			drop = true;
-			bumping = false;
+		if (bumping) {
+			if ((startY - posBlock.y) >= 10)
+				vy -= 0.1f * deltaTime;
+
+			int dv = int(vy);
+			posBlock.y -= dv;
+
+			if (posBlock.y >= startY) {
+				posBlock.y = startY;
+				drop = true;
+				bumping = false;
+			}
 		}
-	}
 
-	else {
-		switch (state)
-		{
-		case 0:
-			vy = 2.0f;
-			startY = posBlock.y;
-			bumping = true;
-			sprite->changeAnimation(INACTIVE);
-			break;
-		case -1:
-			break;
+		else {
+			switch (state)
+			{
+			case 0:
+				vy = 2.0f;
+				startY = posBlock.y;
+				bumping = true;
+				sprite->changeAnimation(INACTIVE);
+				break;
+			case -1:
+				break;
+			}
 		}
-	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
+	}
 }
 
 bool Question::not_bumping()
 {
 	return !bumping;
+}
+
+void Question::set_used()
+{
+	used = true;
+}
+
+void Question::set_inactive()
+{
+	sprite->changeAnimation(INACTIVE);
+}
+
+void Question::set_gift()
+{
+	gift = true;
+}
+
+bool Question::get_gift()
+{
+	return gift;
 }

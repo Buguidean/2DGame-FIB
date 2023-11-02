@@ -73,6 +73,9 @@
     <ClCompile Include="PowerUps.cpp">
       <Filter>Implementation\PowerUps</Filter>
     </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Mush.h">
       <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -35,6 +35,7 @@ void Star::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	should_render = false;
 	poping = false;
 	first_touch = false;
+	picked = -1;
 	startY = posPower.y;
 }
 
@@ -43,6 +44,11 @@ void Star::update(int deltaTime)
 	sprite->update(deltaTime);
 	if (posPower.y == 384) {
 		first_touch = true;
+	}
+
+	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posPower, glm::ivec2(32, 32)).first;
+	if (state != -1) {
+		picked = 2;
 	}
 
 	if (first_touch) {
@@ -119,4 +125,9 @@ void Star::set_poping(const bool state)
 bool Star::get_render()
 {
 	return should_render;
+}
+
+int Star::is_picked()
+{
+	return picked;
 }

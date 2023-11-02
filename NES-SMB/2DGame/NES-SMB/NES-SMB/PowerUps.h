@@ -17,6 +17,7 @@ public:
 	virtual void set_render(const bool state);
 	virtual bool get_render();
 	virtual void set_poping(const bool state);
+	virtual int is_picked();
 	void render();
 
 	void setTileMap(TileMap *tileMap);

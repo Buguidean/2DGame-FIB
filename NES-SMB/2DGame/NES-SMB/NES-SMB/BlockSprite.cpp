@@ -5,6 +5,10 @@ void BlockSprite::update(int deltaTime) {}
 bool BlockSprite::not_bumping() { return NULL; }
 bool BlockSprite::check_colision() { return NULL; }
 void BlockSprite::sprite_update(int deltaTime) {}
+void BlockSprite::set_used() {}
+void BlockSprite::set_inactive() {}
+void BlockSprite::set_gift() {}
+bool BlockSprite::get_gift() { return NULL; }
 
 void BlockSprite::render()
 {

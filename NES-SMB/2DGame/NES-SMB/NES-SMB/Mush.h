@@ -16,12 +16,14 @@ public:
 	void set_render(const bool state) override;
 	bool get_render() override;
 	void set_poping(const bool state) override;
+	int is_picked() override;
 
 private:
 	float vx,vy;
 	int startY;
 	bool should_render;
 	bool poping;
+	int picked;
 };
 
 

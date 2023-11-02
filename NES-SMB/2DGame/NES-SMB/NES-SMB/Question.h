@@ -16,11 +16,17 @@ class Question:
 		bool not_bumping() override;
 		void sprite_update(int deltaTime) override;
 		bool check_colision() override;
+		void set_used() override;
+		void set_gift() override;
+		bool get_gift() override;
+		void set_inactive() override;
 
 	private:
+		bool gift;
 		float vy;
 		bool bumping;
 		bool drop;
+		bool used;
 		float startY;
 };
 

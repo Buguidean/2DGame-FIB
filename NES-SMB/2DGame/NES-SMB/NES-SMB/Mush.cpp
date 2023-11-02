@@ -30,11 +30,18 @@ void Mush::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	vx = 1.f;
 	should_render = false;
 	poping = false;
+	picked = -1;
 	startY = posPower.y;
 }
 
 void Mush::update(int deltaTime)
 {
+
+	int state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posPower, glm::ivec2(32, 32)).first;
+	if (state != -1) {
+		picked = 1;
+	}
+
 	if (poping) {
 		if ((startY - posPower.y) <= 32) {
 			int dv = int(vy);
@@ -77,4 +84,9 @@ void Mush::set_poping(const bool state)
 bool Mush::get_render()
 {
 	return should_render;
+}
+
+int Mush::is_picked()
+{
+	return picked;
 }

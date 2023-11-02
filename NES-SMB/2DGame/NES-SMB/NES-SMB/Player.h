@@ -40,14 +40,14 @@ public:
 	void reset();
 	bool killed();
 	bool being_killed();
-	
-private:
-	void flagTreatment();
-	void getOut(int deltaTime);
 
 	void setMarioSprite();
 	void setSuperMarioSprite();
 	void setStarMarioSprite();
+	
+private:
+	void flagTreatment();
+	void getOut(int deltaTime);
 
 	bool bJumping;
 	bool dead;
