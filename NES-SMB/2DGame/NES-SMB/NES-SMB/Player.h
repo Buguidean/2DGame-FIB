@@ -17,7 +17,7 @@ class Player
 public:
 	~Player();
 
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange);
 	void update(int deltaTime);
 	void render();
 	
@@ -33,8 +33,8 @@ public:
 	void killAnimation();
 
 	bool isStarMario();
-	//bool isSuperMario();
-	//void setSuperMario();
+	bool isSuperMario();
+	void unsetStarMario();
 	void setInFlag();
 	bool getFinalAnimation();
 	void hit();
@@ -42,10 +42,18 @@ public:
 	void reset();
 	bool killed();
 	bool being_killed();
+	bool is_infinite();
 
+	void setAnimationSpeed();
+	void setBackAnimationSpeed();
 	void setMarioSprite();
 	void setSuperMarioSprite();
 	void setStarMarioSprite();
+	void set_Growing();
+	bool get_Growing();
+	void set_Shrinking();
+	bool get_Shrinking();
+	void unset_Invulnerable();
 	
 private:
 	void flagTreatment();
@@ -65,7 +73,7 @@ private:
 	int ic;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *sprite;
+	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *spriteChange, *sprite;
 	TileMap *map;
 
 	bool inFlag;
@@ -77,6 +85,10 @@ private:
 	glm::ivec2 spriteSize;
 	irrklang::ISoundEngine* engine;
 
+	bool infinite;
+	bool growing;
+	bool shrinking;
+	bool invulnerable;
 };
 
 

@@ -55,6 +55,7 @@ void PlayScene::reset()
 
 	active = false;
 	ticks = 400.0f;
+	star_timer = 0.f;
 	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -65,7 +66,7 @@ void PlayScene::reset()
 
 	if (player == NULL) {
 		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM);
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
 		player->setTileMap(map);
 	}
 	else {
@@ -112,6 +113,7 @@ void PlayScene::init()
 {
 	active = false;
 	ticks = 400.0f;
+	star_timer = 0.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
@@ -121,6 +123,7 @@ void PlayScene::init()
 	spritesheetSM.loadFromFile("images/superMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetSuperStM.loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetSmallStM.loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetChange.loadFromFile("images/grow_shrink.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -216,7 +219,7 @@ void PlayScene::init()
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -616,17 +619,40 @@ void PlayScene::powerUps_update(int deltaTime)
 				else if (player->isStarMario) {
 					player->setSuperMario();
 				}*/
-				player->setSuperMarioSprite();
+				player->set_Growing();
 				delete powerUp;
 				powerUp = NULL;
 			}
 			else if (powerUp->is_picked() == 2) {
 
 				player->setStarMarioSprite();
+				star_timer = 30.f;
 				delete powerUp;
 				powerUp = NULL;
 			}
 
+		}
+	}
+}
+
+void PlayScene::star_timer_update(int deltaTime)
+{
+	if (!player->is_infinite()) {
+		if (star_timer > 0.f)
+			star_timer -= deltaTime / 400.f;
+		if (star_timer < 3.f) {
+			player->setAnimationSpeed();
+		}
+		if (star_timer < 0.f || star_timer < 0.005f) {
+			player->setBackAnimationSpeed();
+			if (player->isSuperMario()) {
+				player->unsetStarMario();
+				player->setSuperMarioSprite();
+			}
+			else {
+				player->setMarioSprite();
+			}
+			star_timer = 0.f;
 		}
 	}
 }
@@ -641,8 +667,14 @@ int PlayScene::update(int deltaTime)
 	}
 
 	currentTime += deltaTime;
+	star_timer_update(deltaTime);
 
 	if (player->being_killed()) {
+		player->update(deltaTime);
+		animated_blocks_update(deltaTime);
+	}
+
+	else if (player->get_Growing()) {
 		player->update(deltaTime);
 		animated_blocks_update(deltaTime);
 	}
@@ -653,7 +685,7 @@ int PlayScene::update(int deltaTime)
 	}
 
 	else {
-
+		
 		player->update(deltaTime);
 		animated_blocks_update(deltaTime);
 		particles_update(deltaTime);

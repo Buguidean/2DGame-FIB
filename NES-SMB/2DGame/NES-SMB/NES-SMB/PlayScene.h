@@ -44,6 +44,7 @@ public:
 	void powerUps_update(int deltaTime);
 	void init_particles(int pos);
 	void particles_update(int deltaTime);
+	void star_timer_update(int deltaTime);
 	void camera_update();
 	
 	void render();
@@ -54,6 +55,7 @@ private:
 
 private:
 
+	float star_timer;
 	float ticks;
 	bool active;
 	int animated_block;
@@ -69,7 +71,7 @@ private:
 	std::vector<glm::ivec2> pos_goombas;
 	TileMap *map, *back, *sprites, *powerups;
 	Player *player;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange;
 	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;
