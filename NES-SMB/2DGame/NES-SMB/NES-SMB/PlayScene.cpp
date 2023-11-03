@@ -610,11 +610,18 @@ void PlayScene::powerUps_update(int deltaTime)
 			powerUp->update(deltaTime);
 
 			if (powerUp->is_picked() == 1) {
+
+				/*if(!player->isSuperMario && !player->isStarMario)
+					player->setSuperMarioSprite();
+				else if (player->isStarMario) {
+					player->setSuperMario();
+				}*/
 				player->setSuperMarioSprite();
 				delete powerUp;
 				powerUp = NULL;
 			}
 			else if (powerUp->is_picked() == 2) {
+
 				player->setStarMarioSprite();
 				delete powerUp;
 				powerUp = NULL;

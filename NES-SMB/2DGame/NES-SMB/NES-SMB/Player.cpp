@@ -384,12 +384,19 @@ void Player::setSuperMarioSprite() {
 
 	int animation = sprite->animation();
 	superMario = true;
-	starMario = false;
-	sprite = spriteSM;
-	if (sprite->animation() != animation) {
-		sprite->changeAnimation(animation);
+	if (!starMario) { //smallMario
+		sprite = spriteSM;
+		if (sprite->animation() != animation) {
+			sprite->changeAnimation(animation);
+		}
 	}
-	if (spriteSize.y == 32) {
+	else { //smallStarMario
+		sprite = spriteSuperStM;
+		if (sprite->animation() != animation) {
+			sprite->changeAnimation(animation);
+		}
+	}
+	if (spriteSize.y == 32) { 
 		posPlayer.y = posPlayer.y - 32;
 		spriteSize = glm::ivec2(32, 64);
 	}
@@ -776,6 +783,15 @@ glm::ivec2 Player::getMarioSpriteSize() {
 bool Player::isStarMario() {
 	return starMario;
 }
+
+/*bool Player::isSuperMario() {
+	return superMario;
+}
+
+void Player::setSuperMario() {
+	superMario = true;
+	spriteSize = glm::ivec2(32, 64);
+}*/
 
 void Player::hit() {
 	setMarioSprite();

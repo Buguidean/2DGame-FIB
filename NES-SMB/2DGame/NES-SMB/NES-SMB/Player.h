@@ -33,6 +33,8 @@ public:
 	void killAnimation();
 
 	bool isStarMario();
+	//bool isSuperMario();
+	//void setSuperMario();
 	void setInFlag();
 	bool getFinalAnimation();
 	void hit();
@@ -61,7 +63,6 @@ private:
 	float vy;
 	bool apex;
 	int ic;
-
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
 	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *sprite;
