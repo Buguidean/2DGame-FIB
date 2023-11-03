@@ -744,7 +744,7 @@ void PlayScene::render()
 	// if (!enemy->playerKilled())
 	flag->render();
 
-	if (player != NULL)
+	if (player != NULL && int(inv_timer*10000)%2 == 0)
 		player->render();
 
 	timer[0]->render();
