@@ -54,6 +54,7 @@ public:
 	void set_Shrinking();
 	bool get_Shrinking();
 	void unset_Invulnerable();
+	bool get_Invulnerable();
 	
 private:
 	void flagTreatment();

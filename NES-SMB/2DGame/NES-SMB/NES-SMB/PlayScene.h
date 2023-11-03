@@ -45,6 +45,7 @@ public:
 	void init_particles(int pos);
 	void particles_update(int deltaTime);
 	void star_timer_update(int deltaTime);
+	void inv_timer_update(int deltaTime);
 	void camera_update();
 	
 	void render();
@@ -56,6 +57,7 @@ private:
 private:
 
 	float star_timer;
+	float inv_timer;
 	float ticks;
 	bool active;
 	int animated_block;

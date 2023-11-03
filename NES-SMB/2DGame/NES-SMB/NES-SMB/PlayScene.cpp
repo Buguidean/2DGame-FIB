@@ -56,6 +56,7 @@ void PlayScene::reset()
 	active = false;
 	ticks = 400.0f;
 	star_timer = 0.f;
+	inv_timer = 0.f;
 	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -114,6 +115,7 @@ void PlayScene::init()
 	active = false;
 	ticks = 400.0f;
 	star_timer = 0.f;
+	inv_timer = 0.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
@@ -450,15 +452,18 @@ void PlayScene::goombas_update(int deltaTime)
 					break;
 				}
 				else if (goomba->isHit()) {
-					player->hit();
+					player->set_Shrinking();
+					inv_timer = 10.f;
+					//player->hit();
 					goomba->setHit();
 				}
-				else {
-					glm::ivec2 pos = player->getPosition();
-					goomba->obtainPosPlayer(pos);
-					goomba->setMarioSpriteSize(player->getMarioSpriteSize());
-					goomba->setStarMario(player->isStarMario());
-				}
+				
+				glm::ivec2 pos = player->getPosition();
+				goomba->obtainPosPlayer(pos);
+				goomba->setMarioSpriteSize(player->getMarioSpriteSize());
+				goomba->setStarMario(player->isStarMario());
+				goomba->setInvMario(player->get_Invulnerable());
+
 			}
 		}
 	}
@@ -490,15 +495,19 @@ void PlayScene::koopas_update(int deltaTime)
 					break;
 				}
 				else if (koopa->isHit()) {
-					player->hit();
+					player->set_Shrinking();
+					inv_timer = 10.f;
+					//player->hit();
 					koopa->setHit();
 				}
-				else {
-					glm::ivec2 pos = player->getPosition();
-					koopa->obtainPosPlayer(pos);
-					koopa->setMarioSpriteSize(player->getMarioSpriteSize());
-					koopa->setStarMario(player->isStarMario());
-				}
+				
+
+				glm::ivec2 pos = player->getPosition();
+				koopa->obtainPosPlayer(pos);
+				koopa->setMarioSpriteSize(player->getMarioSpriteSize());
+				koopa->setStarMario(player->isStarMario());
+				koopa->setInvMario(player->get_Invulnerable());
+				
 			}
 		}
 	}
@@ -613,13 +622,9 @@ void PlayScene::powerUps_update(int deltaTime)
 			powerUp->update(deltaTime);
 
 			if (powerUp->is_picked() == 1) {
-
-				/*if(!player->isSuperMario && !player->isStarMario)
-					player->setSuperMarioSprite();
-				else if (player->isStarMario) {
-					player->setSuperMario();
-				}*/
-				player->set_Growing();
+				if (!player->isSuperMario()) {
+					player->set_Growing();
+				}
 				delete powerUp;
 				powerUp = NULL;
 			}
@@ -657,6 +662,16 @@ void PlayScene::star_timer_update(int deltaTime)
 	}
 }
 
+void PlayScene::inv_timer_update(int deltaTime)
+{
+	if (inv_timer > 0.f)
+		inv_timer -= deltaTime / 400.f;
+	if (inv_timer < 0.f || inv_timer < 0.005f) {
+		player->unset_Invulnerable();
+		inv_timer = 0.f;
+	}
+}
+
 int PlayScene::update(int deltaTime)
 {
 
@@ -668,6 +683,7 @@ int PlayScene::update(int deltaTime)
 
 	currentTime += deltaTime;
 	star_timer_update(deltaTime);
+	inv_timer_update(deltaTime);
 
 	if (player->being_killed()) {
 		player->update(deltaTime);
@@ -675,6 +691,11 @@ int PlayScene::update(int deltaTime)
 	}
 
 	else if (player->get_Growing()) {
+		player->update(deltaTime);
+		animated_blocks_update(deltaTime);
+	}
+
+	else if (player->get_Shrinking()) {
 		player->update(deltaTime);
 		animated_blocks_update(deltaTime);
 	}

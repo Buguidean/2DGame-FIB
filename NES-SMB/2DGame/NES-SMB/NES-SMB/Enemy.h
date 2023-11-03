@@ -26,6 +26,7 @@ public:
 	glm::ivec2 getPosition();
 	void setMarioSpriteSize(glm::ivec2 &size);
 	void setStarMario(bool s);
+	void setInvMario(bool s);
 	bool isHit();
 	void setHit();
 	float* getVelocity();
@@ -41,6 +42,7 @@ protected:
 	bool dying;
 	bool dead_player;
 	bool starMario;
+	bool invinc;
 	bool hit;
 	int startY;
 

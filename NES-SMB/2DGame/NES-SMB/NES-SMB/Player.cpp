@@ -306,7 +306,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteChange = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 1.f), &spritesheetChange, &shaderProgram);
 	spriteChange->setNumberAnimations(2);
 
-	spriteChange->setAnimationSpeed(GROW, 12);
+	spriteChange->setAnimationSpeed(GROW, 22);
 	spriteChange->addKeyframe(GROW, glm::vec2(0.f, 0.f));
 	spriteChange->addKeyframe(GROW, glm::vec2(0.125f, 0.f));
 	spriteChange->addKeyframe(GROW, glm::vec2(0.f, 0.f));
@@ -320,7 +320,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteChange->addKeyframe(GROW, glm::vec2(0.125f, 0.f));
 	spriteChange->addKeyframe(GROW, glm::vec2(0.25f, 0.f));
 
-	spriteChange->setAnimationSpeed(SHRINK, 12);
+	spriteChange->setAnimationSpeed(SHRINK, 22);
 	spriteChange->addKeyframe(SHRINK, glm::vec2(0.375f, 0.f));
 	spriteChange->addKeyframe(SHRINK, glm::vec2(0.375f, 0.f));
 	spriteChange->addKeyframe(SHRINK, glm::vec2(0.5f, 0.f));
@@ -556,9 +556,11 @@ void Player::setStarMarioSprite() {
 
 void Player::set_Growing()
 {
+	sprite = spriteChange;
 	posPlayer.y -= 32;
 	sprite->changeAnimation(GROW);
 	growing = true;
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 bool Player::get_Growing()
@@ -568,9 +570,12 @@ bool Player::get_Growing()
 
 void Player::set_Shrinking()
 {
+	sprite = spriteChange;
+	//posPlayer.y -= 32;
 	sprite->changeAnimation(SHRINK);
 	shrinking = true;
 	invulnerable = true;
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 bool Player::get_Shrinking()
@@ -581,6 +586,11 @@ bool Player::get_Shrinking()
 void Player::unset_Invulnerable()
 {
 	invulnerable = false;
+}
+
+bool Player::get_Invulnerable()
+{
+	return invulnerable;
 }
 
 void Player::update(int deltaTime)
@@ -602,6 +612,8 @@ void Player::update(int deltaTime)
 
 	else if (growing) {
 		sprite = spriteChange;
+		if (sprite->animation() != GROW)
+			sprite->changeAnimation(GROW);
 		sprite->update(deltaTime);
 		if (sprite->get_currentKeyframe() == 11) {
 			posPlayer.y += 32;
@@ -613,8 +625,11 @@ void Player::update(int deltaTime)
 
 	else if (shrinking) {
 		sprite = spriteChange;
+		if (sprite->animation() != SHRINK)
+			sprite->changeAnimation(SHRINK);
 		sprite->update(deltaTime);
 		if (sprite->get_currentKeyframe() == 8) {
+			//posPlayer.y -= 32;
 			shrinking = false;
 			setMarioSprite();
 		}

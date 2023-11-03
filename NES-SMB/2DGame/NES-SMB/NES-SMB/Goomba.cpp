@@ -26,6 +26,7 @@ void Goomba::reset()
 	playerPos = glm::ivec2(64, 352);
 	dead = false;
 	dead_player = false;
+	invinc = false;
 	hit = false;
 	starMario = false;
 	dying = false;
@@ -57,6 +58,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posEnemy.x), float(tileMapDispl.y + posEnemy.y)));
 	oldEnemy = posEnemy;
 	playerPos = glm::ivec2(64, 352);
+	invinc = false;
 	dying = false;
 	dead = false;
 	dead_player = false;
@@ -104,45 +106,47 @@ void Goomba::update(int deltaTime)
 			counter = 0;
 		}
 
+		posEnemy.x += int(vx);
 		int state = -1;
-		if (!dying) {
-			state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32)).first;
-		}
+		if (!invinc) {
+			if (!dying) {
+				state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, glm::ivec2(32, 32)).first;
+			}
 
-		switch (state)
-		{
-		case 0:
-		case 2:
-		case 3:
-			posEnemy.x += int(vx);
-			if (starMario) {
-				set_flipped_death();
-				// vx = 0.f;
-				// sprite->changeAnimation(GOOMBA_DEATH);
+			switch (state)
+			{
+			case 0:
+			case 2:
+			case 3:
+				posEnemy.x += int(vx);
+				if (starMario) {
+					set_flipped_death();
+					// vx = 0.f;
+					// sprite->changeAnimation(GOOMBA_DEATH);
+				}
+				else if (marioSpriteSize.y == 64 && !dead) {
+					hit = true;
+					// marioSpriteSize = glm::ivec2(32, 32);
+				}
+				else if (!dead) {
+					dead_player = true;
+				}
+				break;
+			case 1:
+				if (starMario) {
+					set_flipped_death();
+				}
+				else {
+					vx = 0.f;
+					sprite->changeAnimation(GOOMBA_DEATH);
+					dying = true;
+					jumped = true;
+					posEnemy.y += 5;
+				}
+				break;
+			case -1:
+				break;
 			}
-			else if (marioSpriteSize.y == 64 && !dead) {
-				hit = true;
-				// marioSpriteSize = glm::ivec2(32, 32);
-			}
-			else if (!dead) {
-				dead_player = true;
-			}
-			break;
-		case 1:
-			if (starMario) {
-				set_flipped_death();
-			}
-			else {
-				vx = 0.f;
-				sprite->changeAnimation(GOOMBA_DEATH);
-				dying = true;
-				jumped = true;
-				posEnemy.y += 5;
-			}
-			break;
-		case -1:
-			posEnemy.x += int(vx);
-			break;
 		}
 
 		if (!dying) {

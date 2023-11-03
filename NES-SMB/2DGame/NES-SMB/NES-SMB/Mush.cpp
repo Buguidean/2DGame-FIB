@@ -27,7 +27,7 @@ void Mush::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPower.x), float(tileMapDispl.y + posPower.y)));
 
 	vy = 0.f;
-	vx = 1.f;
+	vx = 2.f;
 	should_render = false;
 	poping = false;
 	picked = -1;

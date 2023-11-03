@@ -36,6 +36,7 @@ Koopa::~Koopa()
 void Koopa::reset()
 {
 	flipped = false;
+	invinc = false;
 	vx = -1.f;
 	oldEnemy = posEnemy;
 	playerPos = glm::ivec2(64, 352);
@@ -60,6 +61,7 @@ void Koopa::reset()
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	flipped = false;
+	invinc = false;
 	vx = -1.f;
 	spritesheetN.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteN = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.25f, 1.0f), &spritesheetN, &shaderProgram);
@@ -157,70 +159,72 @@ void Koopa::update(int deltaTime)
 		}
 
 		posEnemy.x += int(vx);
-		pair<int,float> state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision);
-		switch (state.first)
-		{
-		case 0:
-		case 2:
-		case 3:
-			if (starMario) {
-				set_flipped_death();
-			}
-			else if (!dead) {
-				if ((vx != 0.0f || vx != -0.0f) && !transitionState) {
-					if (marioSpriteSize.y == 64) {
-						hit = true;
-					}
-					else {
-						dead_player = true;
-					}
+		if (!invinc) {
+			pair<int, float> state = map->collisionMarioEnemy(playerPos, marioSpriteSize, posEnemy, koopaColision);
+			switch (state.first)
+			{
+			case 0:
+			case 2:
+			case 3:
+				if (starMario) {
+					set_flipped_death();
 				}
-				else if (shield && (vx == 0.0f || vx == -0.0f)) {
-					if (state.first == 2) {
-						transitionState = true;
-						vx = 5.f;
+				else if (!dead) {
+					if ((vx != 0.0f || vx != -0.0f) && !transitionState) {
+						if (marioSpriteSize.y == 64) {
+							hit = true;
+						}
+						else {
+							dead_player = true;
+						}
 					}
-					else if (state.first == 3) {
-						transitionState = true;
-						vx = -5.f;
-					}
-				}
-			}
-			break;
-		case 1:
-			if (starMario) {
-				set_flipped_death();
-			}
-			else {
-				if (shield) {
-					if (vx != 0.f && !transitionState) {
-						first_hit = true;
-						transitionState = true;
-						vx = 0.f;
-					}
-					else if (vx == 0.f && !transitionState) {
-						if (state.second < 90.0f)
+					else if (shield && (vx == 0.0f || vx == -0.0f)) {
+						if (state.first == 2) {
+							transitionState = true;
 							vx = 5.f;
-						else if (state.second >= 90.0f)
+						}
+						else if (state.first == 3) {
+							transitionState = true;
 							vx = -5.f;
-
-						first_hit = true;
-						transitionState = true;
+						}
 					}
+				}
+				break;
+			case 1:
+				if (starMario) {
+					set_flipped_death();
 				}
 				else {
-					vx = 0.f;
-					transitionState = true;
-					first_hit = true;
-					shield = true;
-					shell_sprite();
-					posEnemy.y += 32;
+					if (shield) {
+						if (vx != 0.f && !transitionState) {
+							first_hit = true;
+							transitionState = true;
+							vx = 0.f;
+						}
+						else if (vx == 0.f && !transitionState) {
+							if (state.second < 90.0f)
+								vx = 5.f;
+							else if (state.second >= 90.0f)
+								vx = -5.f;
+
+							first_hit = true;
+							transitionState = true;
+						}
+					}
+					else {
+						vx = 0.f;
+						transitionState = true;
+						first_hit = true;
+						shield = true;
+						shell_sprite();
+						posEnemy.y += 32;
+					}
 				}
+				break;
+			case -1:
+				transitionState = false;
+				break;
 			}
-			break;
-		case -1:
-			transitionState = false;
-			break;
 		}
 
 		posEnemy.y += FALL_STEP;

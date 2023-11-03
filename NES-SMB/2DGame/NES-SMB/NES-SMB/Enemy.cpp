@@ -68,6 +68,10 @@ void Enemy::setStarMario(bool s) {
 	starMario = s;
 }
 
+void Enemy::setInvMario(bool s) {
+	invinc = s;
+}
+
 float* Enemy::getVelocity() {
 	return &vx;
 }
