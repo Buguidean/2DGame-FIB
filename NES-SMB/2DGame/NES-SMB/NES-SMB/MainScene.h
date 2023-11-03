@@ -2,6 +2,8 @@
 #define _MAIN_SCENE_INCLUDE
 
 #include "GameScene.h"
+#include "TileMap.h"
+#include "ShaderProgram.h"
 
 class MainScene :
 	protected GameScene
@@ -16,6 +18,13 @@ public:
 
 private:
 	void initShaders();
+
+private:
+	TileMap *map;
+	ShaderProgram texProgram;
+	float currentTime;
+	float centerCam;
+	glm::mat4 projection;
 };
 
 #endif // _MAIN_SCENE_INCLUDE
