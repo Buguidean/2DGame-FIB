@@ -135,7 +135,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 
 	spriteM->setAnimationSpeed(DEATH, 8);
 	spriteM->addKeyframe(DEATH, glm::vec2(0.75f, 0.f));
-	
+
 	spriteSuperStM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.25f), &spritesheetSuperStM, &shaderProgram);
 	spriteSuperStM->setNumberAnimations(11);
 
@@ -336,10 +336,10 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	tileMapDispl = tileMapPos;
 	spriteM->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	oldPlayer = posPlayer;
-	sprite = spriteM;	
+	sprite = spriteM;
 }
 
-void Player::setAnimationSpeed() 
+void Player::setAnimationSpeed()
 {
 	spriteSuperStM->setAnimationSpeed(STAND_LEFT, 8);
 	spriteSmallStM->setAnimationSpeed(STAND_LEFT, 8);
@@ -517,7 +517,7 @@ void Player::setSuperMarioSprite() {
 			sprite->changeAnimation(animation);
 		}
 	}
-	if (spriteSize.y == 32) { 
+	if (spriteSize.y == 32) {
 		posPlayer.y = posPlayer.y - 32;
 		spriteSize = glm::ivec2(32, 64);
 	}
@@ -532,7 +532,7 @@ void Player::setStarMarioSprite() {
 		}
 	}
 
-	
+
 	int animation = sprite->animation();
 	starMario = true;
 
@@ -546,8 +546,8 @@ void Player::setStarMarioSprite() {
 		sprite->changeAnimation(animation);
 	}
 	/*if (spriteSize.y == 32) {
-		posPlayer.y = posPlayer.y - 32;
-		spriteSize = glm::ivec2(32, 64);
+	posPlayer.y = posPlayer.y - 32;
+	spriteSize = glm::ivec2(32, 64);
 	}
 	spriteSize = glm::ivec2(32, 64);*/
 
@@ -818,11 +818,11 @@ void Player::update(int deltaTime)
 			//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 			if (vx >= 0.f) {
 				if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
-					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT ) {
+					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
 						vx = 0.0f;
 						sprite->changeAnimation(STAND_LEFT);
 					}
-					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT ) {
+					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
 						vx = 0.5f;
 						sprite->changeAnimation(STAND_RIGHT);
 
@@ -868,15 +868,7 @@ void Player::update(int deltaTime)
 						sprite->changeAnimation(JUMP_RIGHT);
 
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-						/*
-						jumpAngle += JUMP_ANGLE_STEP;
-						if (jumpAngle == 180)
-						{
-							bJumping = false;
-							posPlayer.y = startY;
-						}
-						*/
-						// Jump Sound
+
 						if (vy > 0.f) {
 							if ((superMario || starMario)) {
 								if (!(engine->isCurrentlyPlaying("sounds/jump_super.wav"))) {
@@ -889,14 +881,25 @@ void Player::update(int deltaTime)
 						}
 
 						if (!apex) {
-							if (abs(startY - posPlayer.y) >= 128)
+							if (startY - posPlayer.y <= 64) {
+								vy = 7.0f;
+							}
+							else if (startY - posPlayer.y <= 100) {
+								vy = 5.0f;
+							}
+							else if (startY - posPlayer.y <= 115) {
+								vy = 4.0f;
+							}
+							else if (startY - posPlayer.y <= 116) {
+								vy = 1.0f;
+							}
+							else if (startY - posPlayer.y >= 130)
 								apex = true;
-							if (vy < 3.6f)
-								vy += 0.4f * deltaTime;
 
 						}
-						else if (apex && vy > -5.f) {
-							vy -= 0.08f * deltaTime;
+						else if (apex) {
+							if (vy > -6.f)
+								vy -= 0.08f * deltaTime;
 						}
 
 						int dv = int(vy);
@@ -909,8 +912,8 @@ void Player::update(int deltaTime)
 					}
 					else {
 						apex = true;
-						if (abs(startY - posPlayer.y) >= 60)
-							if (vy > -5.f)
+						if (abs(startY - posPlayer.y) >= 54)
+							if (vy > -6.f)
 								vy -= 0.08f * deltaTime;
 						int dv = int(vy);
 						posPlayer.y -= dv;
@@ -923,7 +926,7 @@ void Player::update(int deltaTime)
 				else
 				{
 					apex = false;
-					vy = 0.f;
+					//vy = 0.f;
 					posPlayer.y += FALL_STEP;
 					if (map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y))
 					{
