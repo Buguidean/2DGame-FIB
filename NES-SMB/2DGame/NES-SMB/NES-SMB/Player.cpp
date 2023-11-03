@@ -596,14 +596,14 @@ bool Player::get_Invulnerable()
 void Player::update(int deltaTime)
 {
 	if (dying) {
-		if ((death_jump - posPlayer.y) >= 40) {
+		if ((death_jump - posPlayer.y) >= 50) {
 			if (vy > -5.f) {
-				vy -= 0.1f * deltaTime;
+				vy -= 0.08f * deltaTime;
 			}
 		}
 		int dvy = int(vy);
 		posPlayer.y -= dvy;
-		if (posPlayer.y > 400) {
+		if ((posPlayer.y > 512) && (vy < 0.f)) {
 			dying = false;
 			dead = true;
 		}
@@ -997,6 +997,7 @@ void Player::margin(bool value, int center)
 }
 
 void Player::killAnimation() {
+	setMarioSprite();
 	sprite->changeAnimation(DEATH);
 	vy = 5.f;
 	vx = 0.f;

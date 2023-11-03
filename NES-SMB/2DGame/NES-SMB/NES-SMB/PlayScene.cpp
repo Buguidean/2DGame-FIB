@@ -745,9 +745,14 @@ int PlayScene::update(int deltaTime)
 	else {
 		
 		player->update(deltaTime);
+		timer_update(deltaTime);
+
+		if (player->getPosition().y > 512 || ticks == 0.f) {
+			player->killAnimation();
+		}
+
 		animated_blocks_update(deltaTime);
 		particles_update(deltaTime);
-		timer_update(deltaTime);
 
 		goombas_update(deltaTime);
 		koopas_update(deltaTime);
