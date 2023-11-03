@@ -12,6 +12,7 @@
 #include "PowerUps.h"
 #include "Mush.h"
 #include "Star.h"
+#include "Coin.h"
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"

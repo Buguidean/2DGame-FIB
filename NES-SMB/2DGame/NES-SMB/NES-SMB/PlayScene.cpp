@@ -157,6 +157,13 @@ void PlayScene::init()
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
 				}
+				else if (map_powerups[j * 211 + i] == 25) {
+					Coin* aux2 = new Coin();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
 
 				blocks.push_back(aux);
 
@@ -313,11 +320,19 @@ void PlayScene::animated_blocks_update(int deltaTime)
 					blocks[blocks_in_motion[0]]->set_inactive();
 				}
 
+				for (auto & powerUp : power_sprites) {
+					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+						blocks[blocks_in_motion[0]]->set_used();
+						powerUp->set_poping(true);
+						powerUp->set_render(true);
+					}
+				}
+
 				blocks[blocks_in_motion[0]]->update(deltaTime);
 				if (blocks[blocks_in_motion[0]]->not_bumping()) {
 					// POWER_UPS
 					for (auto & powerUp : power_sprites) {
-						if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+						if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && !powerUp->is_coin()) {
 							blocks[blocks_in_motion[0]]->set_used();
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
@@ -351,11 +366,20 @@ void PlayScene::animated_blocks_update(int deltaTime)
 				if (gift) {
 					blocks[blocks_in_motion[1]]->set_inactive();
 				}
+
+				for (auto & powerUp : power_sprites) {
+					if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+						blocks[blocks_in_motion[1]]->set_used();
+						powerUp->set_poping(true);
+						powerUp->set_render(true);
+					}
+				}
+
 				blocks[blocks_in_motion[1]]->update(deltaTime);
 				if (blocks[blocks_in_motion[1]]->not_bumping()) {
 					// POWER_UPS
 					for (auto & powerUp : power_sprites) {
-						if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition()) {
+						if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition() && !powerUp->is_coin()) {
 							blocks[blocks_in_motion[1]]->set_used();
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
@@ -392,11 +416,20 @@ void PlayScene::animated_blocks_update(int deltaTime)
 			if (gift) {
 				blocks[blocks_in_motion[0]]->set_inactive();
 			}
+
+			for (auto & powerUp : power_sprites) {
+				if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+					blocks[blocks_in_motion[0]]->set_used();
+					powerUp->set_poping(true);
+					powerUp->set_render(true);
+				}
+			}
+
 			blocks[blocks_in_motion[0]]->update(deltaTime);
 			if (blocks[blocks_in_motion[0]]->not_bumping()) {
 				// POWER_UPS
 				for (auto & powerUp : power_sprites) {
-					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition()) {
+					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && !powerUp->is_coin()) {
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -636,6 +669,10 @@ void PlayScene::powerUps_update(int deltaTime)
 				powerUp = NULL;
 			}
 
+			else if (powerUp->is_picked() == 3) {
+				delete powerUp;
+				powerUp = NULL;
+			}
 		}
 	}
 }

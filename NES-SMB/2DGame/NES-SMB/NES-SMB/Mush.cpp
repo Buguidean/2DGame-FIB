@@ -31,6 +31,7 @@ void Mush::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	should_render = false;
 	poping = false;
 	picked = -1;
+	coin = false;
 	startY = posPower.y;
 }
 
@@ -89,4 +90,9 @@ bool Mush::get_render()
 int Mush::is_picked()
 {
 	return picked;
+}
+
+bool Mush::is_coin()
+{
+	return coin;
 }

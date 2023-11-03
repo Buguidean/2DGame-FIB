@@ -36,6 +36,7 @@ void Star::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	poping = false;
 	first_touch = false;
 	picked = -1;
+	coin = false;
 	startY = posPower.y;
 }
 
@@ -130,4 +131,9 @@ bool Star::get_render()
 int Star::is_picked()
 {
 	return picked;
+}
+
+bool Star::is_coin()
+{
+	return coin;
 }

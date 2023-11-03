@@ -18,6 +18,7 @@ public:
 	virtual bool get_render();
 	virtual void set_poping(const bool state);
 	virtual int is_picked();
+	virtual bool is_coin();
 	void render();
 
 	void setTileMap(TileMap *tileMap);

@@ -7,6 +7,7 @@ void PowerUps::set_render(const bool state) {}
 void PowerUps::set_poping(const bool state) {}
 bool PowerUps::get_render() { return NULL; }
 int PowerUps::is_picked() { return NULL; }
+bool PowerUps::is_coin() { return NULL; }
 
 void PowerUps::render()
 {

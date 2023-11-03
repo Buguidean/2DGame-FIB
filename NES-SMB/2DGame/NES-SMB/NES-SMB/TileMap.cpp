@@ -189,7 +189,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, i
 				return true;
 			}
 
-			else if (*posX - tileSize * x - size.x <= 5 )
+			else if (*posX - tileSize * x - size.x <= 10 )
 			{
 				*posX = tileSize * x + size.x;
 				return true;
@@ -233,7 +233,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 	{
 		if (map[y*mapSize.x + x] != 0)
 		{
-			if (*posX - tileSize * x + size.x <= 5)
+			if (*posX - tileSize * x + size.x <= 10)
 			{
 				*posX = tileSize * x - size.x;
 				return true;

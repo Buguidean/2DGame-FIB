@@ -17,6 +17,7 @@ public:
 	bool get_render() override;
 	void set_poping(const bool state) override;
 	int is_picked() override;
+	bool is_coin() override;
 
 private:
 	float vx,vy;
@@ -24,6 +25,7 @@ private:
 	bool should_render;
 	bool poping;
 	int picked;
+	bool coin;
 };
 
 
