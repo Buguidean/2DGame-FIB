@@ -39,6 +39,8 @@ public:
 	int update(int deltaTime);
 	void timer_update(int deltaTime);
 	void point_counter_update(int deltaTime);
+	void timer_update_end(int deltaTime);
+	void point_counter_update_end(int deltaTime);
 	void animated_blocks_update(int deltaTime);
 	void goombas_update(int deltaTime);
 	void koopas_update(int deltaTime);
@@ -58,7 +60,7 @@ private:
 
 private:
 
-	int points;
+	float points;
 	float star_timer;
 	float inv_timer;
 	float ticks;

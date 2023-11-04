@@ -481,9 +481,11 @@ void Player::getOut(int deltaTime) {
 		sprite->setAnimationSpeed(MOVE_RIGHT, 6);
 		sprite->changeAnimation(MOVE_RIGHT);
 	}
-	posPlayer.x += int(vx);
-	posPlayer.y += FALL_STEP;
-	map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+	if (posPlayer.x <= 6528) {
+		posPlayer.x += int(vx);
+		posPlayer.y += FALL_STEP;
+		map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+	}
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

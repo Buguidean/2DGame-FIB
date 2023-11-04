@@ -60,7 +60,7 @@ void PlayScene::reset()
 
 	active = false;
 	ticks = 400.0f;
-	points = 0;
+	points = 0.0f;
 	star_timer = 0.f;
 	inv_timer = 0.f;
 
@@ -128,7 +128,7 @@ void PlayScene::init()
 {
 	active = false;
 	ticks = 400.0f;
-	points = 0;
+	points = 0.0f;
 	star_timer = 0.f;
 	inv_timer = 0.f;
 	initShaders();
@@ -295,12 +295,51 @@ void PlayScene::timer_update(int deltaTime)
 void PlayScene::point_counter_update(int deltaTime)
 {
 	// DIGITS OF POINTS COUNTER
-	int d1 = (points / 100000) % 10;
-	int d2 = (points / 10000) % 10;
-	int d3 = (points / 1000) % 10;
-	int d4 = (points / 100) % 10;
-	int d5 = (points / 10) % 10;
-	int d6 = points % 10;
+	int d1 = (int(points) / 100000) % 10;
+	int d2 = (int(points) / 10000) % 10;
+	int d3 = (int(points) / 1000) % 10;
+	int d4 = (int(points) / 100) % 10;
+	int d5 = (int(points) / 10) % 10;
+	int d6 = int(points) % 10;
+
+	// TIMER ACTUALIZATION
+	point_counter[0]->setNumber(d1);
+	point_counter[1]->setNumber(d2);
+	point_counter[2]->setNumber(d3);
+	point_counter[3]->setNumber(d4);
+	point_counter[4]->setNumber(d5);
+	point_counter[5]->setNumber(d6);
+}
+
+void PlayScene::timer_update_end(int deltaTime)
+{
+	if (ticks > 0.f)
+		ticks -= 0.125f * deltaTime;
+
+	if (ticks < 0.f || ticks < 0.005f)
+		ticks = 0.f;
+
+	// DIGITS OF THE TIMER
+	int cen = (int(ticks) / 100) % 10;
+	int des = (int(ticks) / 10) % 10;
+	int uni = int(ticks) % 10;
+
+	// TIMER ACTUALIZATION
+	timer[0]->setNumber(cen);
+	timer[1]->setNumber(des);
+	timer[2]->setNumber(uni);
+}
+
+void PlayScene::point_counter_update_end(int deltaTime)
+{ 
+	points += 50.f * (50.f * (deltaTime / 400.f));
+	// DIGITS OF POINTS COUNTER
+	int d1 = (int(points) / 100000) % 10;
+	int d2 = (int(points) / 10000) % 10;
+	int d3 = (int(points) / 1000) % 10;
+	int d4 = (int(points) / 100) % 10;
+	int d5 = (int(points) / 10) % 10;
+	int d6 = int(points) % 10;
 
 	// TIMER ACTUALIZATION
 	point_counter[0]->setNumber(d1);
@@ -374,7 +413,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 				for (auto & powerUp : power_sprites) {
 					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 						// POINTS COIN
-						points += 200;
+						points += 200.0f;
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -400,7 +439,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
-				points += 50;
+				points += 50.0f;
 				init_particles(0);
 				map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
 				player->setTileMap(map);
@@ -424,7 +463,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 				for (auto & powerUp : power_sprites) {
 					if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 						// POINTS COIN
-						points += 200;
+						points += 200.0f;
 						blocks[blocks_in_motion[1]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -450,7 +489,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
-				points += 50;
+				points += 50.0f;
 				init_particles(1);
 				map->modify_position(int(blocks[blocks_in_motion[1]]->getPosition().y), int(blocks[blocks_in_motion[1]]->getPosition().x));
 				player->setTileMap(map);
@@ -477,7 +516,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 			for (auto & powerUp : power_sprites) {
 				if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 					// POINTS COIN
-					points += 200;
+					points += 200.0f;
 					blocks[blocks_in_motion[0]]->set_used();
 					powerUp->set_poping(true);
 					powerUp->set_render(true);
@@ -503,7 +542,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 		else {
 			// COLISION SUPER MARIO
-			points += 50;
+			points += 50.0f;
 			init_particles(0);
 			map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
 			player->setTileMap(map);
@@ -722,7 +761,7 @@ void PlayScene::powerUps_update(int deltaTime)
 
 			if (powerUp->is_picked() == 1) {
 				// POINTS POWERUP
-				points += 1000;
+				points += 1000.0f;
 				if (!player->isSuperMario()) {
 					player->set_Growing();
 				}
@@ -731,7 +770,7 @@ void PlayScene::powerUps_update(int deltaTime)
 			}
 			else if (powerUp->is_picked() == 2) {
 				// POINTS POWERUP
-				points += 1000;
+				points += 1000.0f;
 				player->setStarMarioSprite();
 				star_timer = 30.f;
 				delete powerUp;
@@ -814,9 +853,8 @@ int PlayScene::update(int deltaTime)
 	else {
 		
 		player->update(deltaTime);
-		timer_update(deltaTime);
 
-		if (player->getPosition().y > 512 || ticks == 0.f) {
+		if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
 			player->killAnimation();
 		}
 
@@ -835,28 +873,37 @@ int PlayScene::update(int deltaTime)
 			int center = player->getPosition().y + (player->getMarioSpriteSize().y/2);
 			//CALCULAR PUNTOS
 			if (center >= 351) {
-				points += 100;
+				points += 100.0f;
 			}
 			else if (center >= 287) {
-				points += 400;
+				points += 400.0f;
 			}
 			else if (center >= 223) {
-				points += 800;
+				points += 800.0f;
 			}
 			else if (center >= 159) {
-				points += 2000;
+				points += 2000.0f;
 			}
 			else if (center >= 127) {
-				points += 4000;
+				points += 4000.0f;
 			}
 			else {
-				points += 5000;
+				points += 5000.0f;
 			}
 			player->setInFlag();
 			flag->unset_points();
 		}
 
-		point_counter_update(deltaTime);
+		if (player->getPosition().x <= 6528) {
+			timer_update(deltaTime);
+			point_counter_update(deltaTime);
+		}
+		else {
+			timer_update_end(deltaTime);
+			if (ticks != 0.f) {
+				point_counter_update_end(deltaTime);
+			}
+		}
 	}
 
 	return 0;
