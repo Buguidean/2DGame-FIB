@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "1-1.tmx": {
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 4,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 415,
-                "y": 163.5
+                "x": 3347,
+                "y": 188.25
             }
         },
         "D:/VJ/2DGame-FIB/assets/tilesets/complete_tileset.tsx": {

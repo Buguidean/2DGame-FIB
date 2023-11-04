@@ -31,13 +31,18 @@ void Flag::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) {
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + flagPosition.x + 16), float(tileMapDispl.y + flagPosition.y)));
 	isMario = false;
+	points = false;
 }
 
 void Flag::update(int deltaTime, glm::ivec2 posMario)
 {
-	if (posMario.x >= flagPosition.x + 15)
-		isMario = true;
 	sprite->update(deltaTime);
+
+	if ((!isMario) && (posMario.x >= flagPosition.x + 15)) {
+		isMario = true;
+		points = true;
+	}
+	
 	if (isMario) {
 		if (flagPosition.y + downVelocity < bottomFlag) {
 			sprite->setPosition(glm::vec2(float(tileMapDispl.x + flagPosition.x + 16), float(tileMapDispl.y + flagPosition.y + downVelocity)));
@@ -45,7 +50,7 @@ void Flag::update(int deltaTime, glm::ivec2 posMario)
 		}
 		else {
 			sprite->setPosition(glm::vec2(float(tileMapDispl.x + flagPosition.x + 16), float(tileMapDispl.y + bottomFlag)));
-			isMario = false;
+			//isMario = false;
 		}
 	}
 }
@@ -76,4 +81,12 @@ glm::ivec2 Flag::getPosition() {
 
 bool Flag::getIsMario() {
 	return isMario;
+}
+
+bool Flag::get_points() {
+	return points;
+}
+
+void Flag::unset_points() {
+	points = false;
 }

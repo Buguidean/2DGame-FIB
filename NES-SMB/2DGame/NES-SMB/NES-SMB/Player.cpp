@@ -433,7 +433,7 @@ void Player::flagTreatment()
 	else {
 		inFlag = false;
 		bJumping = false;
-		vx = 0.f;
+		vx = 2.f;
 		vy = 0.f;
 		sprite->changeAnimation(RSTAND_FLAG);
 		posPlayer.x = 198 * 32 + 11;
@@ -444,6 +444,7 @@ void Player::flagTreatment()
 }
 
 void Player::getOut(int deltaTime) {
+	/*
 	countAnimation += deltaTime;
 	if (countAnimation < 1000) {
 	}
@@ -474,6 +475,16 @@ void Player::getOut(int deltaTime) {
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 	int a = 1;
+	*/
+	sprite->update(deltaTime);
+	if (sprite->animation() != MOVE_RIGHT) {
+		sprite->setAnimationSpeed(MOVE_RIGHT, 6);
+		sprite->changeAnimation(MOVE_RIGHT);
+	}
+	posPlayer.x += int(vx);
+	posPlayer.y += FALL_STEP;
+	map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Player::setMarioSprite() {
@@ -636,6 +647,10 @@ void Player::update(int deltaTime)
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	}
 
+	else if (finalAnimation) {
+		getOut(deltaTime);
+	}
+
 	else {
 
 		if (Game::instance().getKey('n') && (superMario || starMario))
@@ -659,10 +674,7 @@ void Player::update(int deltaTime)
 		if (inFlag && !finalAnimation) {
 			flagTreatment();
 		}
-		else if (finalAnimation) {
-			//getOut(deltaTime);
-			posPlayer.x = 198 * 32 + 10;
-		}
+
 		else {
 			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 			{
@@ -907,8 +919,11 @@ void Player::update(int deltaTime)
 						int dv = int(vy);
 						posPlayer.y -= dv;
 
-						if (vy > 0.f)
-							bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+						if (vy > 0.f) {
+							if (posPlayer.y > 0) {
+								bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+							}
+						}
 						else
 							bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
 					}
@@ -919,8 +934,11 @@ void Player::update(int deltaTime)
 								vy -= 0.08f * deltaTime;
 						int dv = int(vy);
 						posPlayer.y -= dv;
-						if (vy > 0.f)
-							bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+						if (vy > 0.f) {
+							if (posPlayer.y > 0) {
+								bJumping = !map->collisionMoveUp(posPlayer, spriteSize, &posPlayer.y);
+							}
+						}
 						else
 							bJumping = !map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
 					}
@@ -951,7 +969,7 @@ void Player::update(int deltaTime)
 		}
 	}
 	// MIRAR SI HACE FALTA
-	// sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Player::render()

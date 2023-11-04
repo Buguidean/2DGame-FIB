@@ -27,7 +27,7 @@ void MainScene::reset()
 void MainScene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/Main/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;

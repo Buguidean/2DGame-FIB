@@ -38,6 +38,7 @@ public:
 	void init();
 	int update(int deltaTime);
 	void timer_update(int deltaTime);
+	void point_counter_update(int deltaTime);
 	void animated_blocks_update(int deltaTime);
 	void goombas_update(int deltaTime);
 	void koopas_update(int deltaTime);
@@ -57,6 +58,7 @@ private:
 
 private:
 
+	int points;
 	float star_timer;
 	float inv_timer;
 	float ticks;
@@ -66,6 +68,7 @@ private:
 	std::vector<float> distances;
 	std::vector<Particles*> particles;
 	std::vector<Text*> timer;
+	std::vector<Text*> point_counter;
 	std::vector<BlockSprite*> blocks;
 	std::vector<PowerUps*> power_sprites;
 	std::vector<Koopa*> koopas;

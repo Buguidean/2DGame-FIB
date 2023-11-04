@@ -19,12 +19,15 @@ public:
 	void render();
 	glm::ivec2 getPosition();
 	bool getIsMario();
+	bool get_points();
+	void unset_points();
 
 private:
 	glm::ivec2 tileMapDispl, flagPosition;
 	Texture spritesheet;
 	Sprite *sprite;
 	bool isMario;
+	bool points;
 	TileMap *map;
 
 

@@ -21,6 +21,7 @@ PlayScene::PlayScene()
 	back = NULL;
 	sprites = NULL;
 	timer.resize(3, nullptr);
+	point_counter.resize(6, nullptr);
 	player = NULL;
 	flag = NULL;
 	engine = NULL;
@@ -36,11 +37,15 @@ PlayScene::~PlayScene()
 		delete sprites;
 	if (player != NULL)
 		delete player;
-
 	if (flag != NULL)
 		delete flag;
 	if (!std::all_of(timer.begin(), timer.end(), [](Text* ptr) {return ptr == nullptr;})){
 		for (Text* ptr : timer) {
+			delete ptr;
+		}
+	}
+	if (!std::all_of(timer.begin(), timer.end(), [](Text* ptr) {return ptr == nullptr; })) {
+		for (Text* ptr : point_counter) {
 			delete ptr;
 		}
 	}
@@ -55,11 +60,20 @@ void PlayScene::reset()
 
 	active = false;
 	ticks = 400.0f;
+	points = 0;
 	star_timer = 0.f;
 	inv_timer = 0.f;
+
 	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
+	point_counter[0]->setPosition(glm::vec2(2 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[1]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[2]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[3]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
@@ -114,6 +128,7 @@ void PlayScene::init()
 {
 	active = false;
 	ticks = 400.0f;
+	points = 0;
 	star_timer = 0.f;
 	inv_timer = 0.f;
 	initShaders();
@@ -227,6 +242,23 @@ void PlayScene::init()
 	timer[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
+	for (auto & digit : point_counter) {
+		digit = new Text();
+	}
+
+	point_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[0]->setPosition(glm::vec2(2 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[1]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[2]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[3]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[3]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[4]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[5]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
@@ -258,6 +290,25 @@ void PlayScene::timer_update(int deltaTime)
 	timer[0]->setNumber(cen);
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
+}
+
+void PlayScene::point_counter_update(int deltaTime)
+{
+	// DIGITS OF POINTS COUNTER
+	int d1 = (points / 100000) % 10;
+	int d2 = (points / 10000) % 10;
+	int d3 = (points / 1000) % 10;
+	int d4 = (points / 100) % 10;
+	int d5 = (points / 10) % 10;
+	int d6 = points % 10;
+
+	// TIMER ACTUALIZATION
+	point_counter[0]->setNumber(d1);
+	point_counter[1]->setNumber(d2);
+	point_counter[2]->setNumber(d3);
+	point_counter[3]->setNumber(d4);
+	point_counter[4]->setNumber(d5);
+	point_counter[5]->setNumber(d6);
 }
 
 void PlayScene::init_particles(int pos)
@@ -322,6 +373,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 				for (auto & powerUp : power_sprites) {
 					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+						// POINTS COIN
+						points += 200;
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -347,6 +400,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
+				points += 50;
 				init_particles(0);
 				map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
 				player->setTileMap(map);
@@ -369,6 +423,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 				for (auto & powerUp : power_sprites) {
 					if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+						// POINTS COIN
+						points += 200;
 						blocks[blocks_in_motion[1]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -394,6 +450,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
+				points += 50;
 				init_particles(1);
 				map->modify_position(int(blocks[blocks_in_motion[1]]->getPosition().y), int(blocks[blocks_in_motion[1]]->getPosition().x));
 				player->setTileMap(map);
@@ -419,6 +476,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			for (auto & powerUp : power_sprites) {
 				if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
+					// POINTS COIN
+					points += 200;
 					blocks[blocks_in_motion[0]]->set_used();
 					powerUp->set_poping(true);
 					powerUp->set_render(true);
@@ -444,6 +503,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 		else {
 			// COLISION SUPER MARIO
+			points += 50;
 			init_particles(0);
 			map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
 			player->setTileMap(map);
@@ -633,12 +693,18 @@ void PlayScene::camera_update()
 			for (auto & digit : timer) {
 				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
 			}
+			for (auto & digit : point_counter) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
+			}
 			centerCam += v;
 		}
 
 		else if (diff <= 130) {
 			projection = glm::translate(projection, glm::vec3(-(v / 2.f), 0.f, 0.f));
 			for (auto & digit : timer) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
+			}
+			for (auto & digit : point_counter) {
 				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
 			}
 			centerCam += (v / 2.f);
@@ -655,6 +721,8 @@ void PlayScene::powerUps_update(int deltaTime)
 			powerUp->update(deltaTime);
 
 			if (powerUp->is_picked() == 1) {
+				// POINTS POWERUP
+				points += 1000;
 				if (!player->isSuperMario()) {
 					player->set_Growing();
 				}
@@ -662,7 +730,8 @@ void PlayScene::powerUps_update(int deltaTime)
 				powerUp = NULL;
 			}
 			else if (powerUp->is_picked() == 2) {
-
+				// POINTS POWERUP
+				points += 1000;
 				player->setStarMarioSprite();
 				star_timer = 30.f;
 				delete powerUp;
@@ -762,9 +831,32 @@ int PlayScene::update(int deltaTime)
 		powerUps_update(deltaTime);
 
 		flag->update(deltaTime, player->getPosition());
-		if (flag->getIsMario())
+		if (flag->get_points()) {
+			int center = player->getPosition().y + (player->getMarioSpriteSize().y/2);
+			//CALCULAR PUNTOS
+			if (center >= 351) {
+				points += 100;
+			}
+			else if (center >= 287) {
+				points += 400;
+			}
+			else if (center >= 223) {
+				points += 800;
+			}
+			else if (center >= 159) {
+				points += 2000;
+			}
+			else if (center >= 127) {
+				points += 4000;
+			}
+			else {
+				points += 5000;
+			}
 			player->setInFlag();
+			flag->unset_points();
+		}
 
+		point_counter_update(deltaTime);
 	}
 
 	return 0;
@@ -786,12 +878,16 @@ void PlayScene::render()
 	// if (!enemy->playerKilled())
 	flag->render();
 
-	if (player != NULL && int(inv_timer*10000)%2 == 0)
+	if (player != NULL && int(inv_timer*10000)%2 == 0 && player->getPosition().x <= 6528)
 		player->render();
 
-	timer[0]->render();
-	timer[1]->render();
-	timer[2]->render();
+	for (auto & digit : timer) {
+		digit->render();
+	}
+
+	for (auto & digit : point_counter) {
+		digit->render();
+	}
 
 	for (auto & powerUp : power_sprites) {
 		if (powerUp != NULL && powerUp->get_render())
