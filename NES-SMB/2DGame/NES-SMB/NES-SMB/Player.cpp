@@ -676,7 +676,7 @@ void Player::update(int deltaTime)
 				}
 
 				else {
-					posPlayer.x += int(vx);
+					//posPlayer.x += int(vx);
 					if (!bJumping && vx > 0.f && sprite->animation() != TURN_LEFT)
 						sprite->changeAnimation(TURN_LEFT);
 				}
@@ -685,27 +685,27 @@ void Player::update(int deltaTime)
 					if (bJumping) {
 						if (!(Game::instance().getSpecialKey(112))) {
 							if (vx > 3.0)
-								vx -= 0.06f * deltaTime / 5.f;
+								vx -= 0.015f * deltaTime;
 							else
-								vx -= 0.03f * deltaTime / 5.f;
+								vx -= 0.005f * deltaTime;
 						}
 						else {
 							if (vx > 3.0)
-								vx -= 0.06f * deltaTime / 5.f;
+								vx -= 0.015f * deltaTime;
 							else
-								vx -= 0.03f * deltaTime / 5.f;
+								vx -= 0.005f * deltaTime;
 						}
 					}
 					else {
 						if (!(Game::instance().getSpecialKey(112))) {
 							if (vx > 3.0)
-								vx -= 0.05f * deltaTime;
+								vx -= 0.03f * deltaTime;
 							else
 								vx -= 0.01f * deltaTime;
 						}
 						else {
 							if (vx > 3.0)
-								vx -= 0.05f * deltaTime;
+								vx -= 0.03f * deltaTime;
 							else
 								vx -= 0.01f * deltaTime;
 						}
@@ -727,7 +727,7 @@ void Player::update(int deltaTime)
 						sprite->changeAnimation(MOVE_RIGHT);
 				}
 				else {
-					posPlayer.x += int(vx);
+					//posPlayer.x += int(vx);
 					if (!bJumping && vx < 0.f && sprite->animation() != TURN_RIGHT)
 						sprite->changeAnimation(TURN_RIGHT);
 				}
@@ -736,27 +736,27 @@ void Player::update(int deltaTime)
 					if (bJumping) {
 						if (!(Game::instance().getSpecialKey(112))) {
 							if (vx < -3.0)
-								vx += 0.06f * deltaTime / 5.f;
+								vx += 0.015f * deltaTime;
 							else
-								vx += 0.03f * deltaTime / 5.f;
+								vx += 0.015f * deltaTime;
 						}
 						else {
 							if (vx < -3.0)
-								vx += 0.06f * deltaTime / 5.f;
+								vx += 0.005f * deltaTime;
 							else
-								vx += 0.03f * deltaTime / 5.f;
+								vx += 0.005f * deltaTime;
 						}
 					}
 					else {
 						if (!(Game::instance().getSpecialKey(112))) {
 							if (vx < -3.0)
-								vx += 0.05f * deltaTime;
+								vx += 0.03f * deltaTime;
 							else
 								vx += 0.01f * deltaTime;
 						}
 						else {
 							if (vx < -3.0)
-								vx += 0.05f * deltaTime;
+								vx += 0.03f * deltaTime;
 							else
 								vx += 0.01f * deltaTime;
 						}
@@ -792,8 +792,9 @@ void Player::update(int deltaTime)
 			if (std::abs(vx) > 0.01f) {
 				// Simulate friction by reducing the velocity
 				if (vx > 0.0f) {
-					if (bJumping)
-						vx -= 0.01f * deltaTime / 10.f;
+					if (bJumping) {
+						vx -= 0.001f * deltaTime;
+					}
 					else
 						vx -= 0.004f * deltaTime;
 					if (vx < 0.0f) {
@@ -801,8 +802,9 @@ void Player::update(int deltaTime)
 					}
 				}
 				else if (vx < 0.0f) {
-					if (bJumping)
-						vx += 0.01f * deltaTime / 10.f;
+					if (bJumping) {
+						vx += 0.001f * deltaTime;
+					}
 					else
 						vx += 0.004f * deltaTime;
 					if (vx > 0.0f) {

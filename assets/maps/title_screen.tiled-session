@@ -3,16 +3,27 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "title_screen.tmx",
+    "activeFile": "1-1.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "1-1.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 415,
+                "y": 163.5
+            }
+        },
+        "D:/VJ/2DGame-FIB/assets/tilesets/complete_tileset.tsx": {
+            "scaleInDock": 1
+        },
         "title_screen.tmx": {
             "scale": 5.145833333333333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 127.87044534412955,
-                "y": 119.90283400809716
+                "y": 120
             }
         },
         "title_screen.tsx": {
@@ -28,12 +39,14 @@
     "map.width": 16,
     "openFiles": [
         "title_screen.tsx",
-        "title_screen.tmx"
+        "title_screen.tmx",
+        "1-1.tmx"
     ],
     "project": "title_screen.tiled-project",
     "recentFiles": [
         "title_screen.tsx",
-        "title_screen.tmx"
+        "title_screen.tmx",
+        "1-1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
