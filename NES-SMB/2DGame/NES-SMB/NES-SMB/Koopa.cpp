@@ -35,6 +35,7 @@ Koopa::~Koopa()
 
 void Koopa::reset()
 {
+	shell_hit_side = false;
 	flipped = false;
 	invinc = false;
 	vx = -1.f;
@@ -54,12 +55,14 @@ void Koopa::reset()
 	transitionState = true;
 	hit = false;
 	starMario = false;
+	starMarioKill = false;
 	first_hit = false;
 	sprite_size = glm::ivec2(32, 64);
 }
 
 void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
+	shell_hit_side = false;
 	flipped = false;
 	invinc = false;
 	vx = -1.f;
@@ -115,6 +118,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	transitionState = false;
 	hit = false;
 	starMario = false;
+	starMarioKill = false;
 	first_hit = false;
 	player_murderer = true;
 	sprite_size = glm::ivec2(32, 64);
@@ -127,6 +131,7 @@ void Koopa::update(int deltaTime)
 	oldEnemy = posEnemy;
 
 	if (flipped) {
+		starMarioKill = false;
 		sprite->changeAnimation(DEATH_SHELL);
 		if ((start_jump - posEnemy.y) >= 20) {
 			if (vy > -5.f) {
@@ -167,6 +172,7 @@ void Koopa::update(int deltaTime)
 			case 2:
 			case 3:
 				if (starMario) {
+					starMarioKill = true;
 					set_flipped_death();
 				}
 				else if (!dead) {
@@ -180,10 +186,12 @@ void Koopa::update(int deltaTime)
 					}
 					else if (shield && (vx == 0.0f || vx == -0.0f)) {
 						if (state.first == 2) {
+							shell_hit_side = true;
 							transitionState = true;
 							vx = 5.f;
 						}
 						else if (state.first == 3) {
+							shell_hit_side = true;
 							transitionState = true;
 							vx = -5.f;
 						}
@@ -193,6 +201,7 @@ void Koopa::update(int deltaTime)
 			case 1:
 				if (starMario) {
 					set_flipped_death();
+					starMarioKill = true;
 				}
 				else {
 					if (shield) {
@@ -265,4 +274,14 @@ void Koopa::set_flipped_death() {
 
 bool Koopa::get_flipped() {
 	return flipped;
+}
+
+bool Koopa::get_shell_hit_side()
+{
+	return shell_hit_side;
+}
+
+void Koopa::unset_shell_hit_side()
+{
+	shell_hit_side = false;
 }

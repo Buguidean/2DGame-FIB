@@ -14,6 +14,7 @@ public:
 	void reset();
 	void setDying();
 	bool get_jumped();
+	bool get_flipped();
 	void set_jumped(const bool state);
 	void set_flipped_death();
 

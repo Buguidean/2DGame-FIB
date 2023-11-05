@@ -83,3 +83,7 @@ bool Enemy::get_player_murderer() {
 void Enemy::set_player_murderer(const bool &state) {
 	player_murderer = state;
 }
+
+bool Enemy::get_starMarioKill() {
+	return starMarioKill;
+}

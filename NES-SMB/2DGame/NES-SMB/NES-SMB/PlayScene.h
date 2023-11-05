@@ -50,6 +50,7 @@ public:
 	void particles_update(int deltaTime);
 	void star_timer_update(int deltaTime);
 	void inv_timer_update(int deltaTime);
+	void points_timer_update(int deltaTime);
 	void camera_update();
 	
 	void render();
@@ -62,10 +63,15 @@ private:
 
 	float points;
 	float star_timer;
+	float points_timer;
 	float inv_timer;
 	float ticks;
 	bool active;
 	int animated_block;
+	int index;
+	int index_pk;
+	std::vector<float> possible_points_koopa;
+	std::vector<float> possible_points;
 	std::vector<int> blocks_in_motion;
 	std::vector<float> distances;
 	std::vector<Particles*> particles;

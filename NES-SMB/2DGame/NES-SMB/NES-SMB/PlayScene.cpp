@@ -58,10 +58,13 @@ void PlayScene::reset()
 	blocks_in_motion.clear();
 	distances.clear();
 
+	index = 0;
+	index_pk = 0;
 	active = false;
 	ticks = 400.0f;
 	points = 0.0f;
 	star_timer = 0.f;
+	points_timer = 0.f;
 	inv_timer = 0.f;
 
 	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -126,10 +129,15 @@ void PlayScene::reset()
 
 void PlayScene::init()
 {
+	index = 0;
+	index_pk = 0;
+	possible_points = { 100.f,200.f,400.f,500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
+	possible_points_koopa = { 500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
 	active = false;
 	ticks = 400.0f;
 	points = 0.0f;
 	star_timer = 0.f;
+	points_timer = 0.f;
 	inv_timer = 0.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
@@ -567,9 +575,25 @@ void PlayScene::goombas_update(int deltaTime)
 					goomba->set_player_murderer(true);
 				}
 				else if (goomba->get_jumped()){
+					// Player kills goomba
+
+					if ((points_timer != 0.f) && (index != 10))
+						++index;
+					points += possible_points[index];
+					points_timer = 2.f;
+					
 					player->set_small_jump();
 					goomba->set_jumped(false);
 				}
+			}
+
+			else if (goomba->get_starMarioKill()) {
+				// StarMario kills goomba
+
+				if ((points_timer != 0.f) && (index != 10))
+					++index;
+				points += possible_points[index];
+				points_timer = 2.f;
 			}
 
 			else if (goomba->killed()) {
@@ -611,16 +635,45 @@ void PlayScene::koopas_update(int deltaTime)
 					koopa->set_player_murderer(true);
 				}
 				else {
+					// STAR MARIO SEGURO!!!
 					//player->set_small_jump();
 				}
 				delete koopa;
 				koopa = NULL;
 			}
+
+			else if (koopa->get_starMarioKill()) {
+				if ((points_timer != 0.f) && (index != 10))
+					++index;
+				points += possible_points[index];
+				points_timer = 1.f;
+			}
+
 			else {
 				if (koopa->hitted()) {
+
+					// Koopa hit points
+					if (*koopa->getVelocity() == 0.f) {
+						if ((points_timer != 0.f) && (index != 10)) {
+							++index;
+						}
+						points += possible_points[index];
+						points_timer = 1.f;
+					}
+
+					else {
+						points += 400.f;
+					}
+
 					player->set_small_jump();
 					koopa->disable_hitted();
 				}
+
+				else if (koopa->get_shell_hit_side()) {
+					points += 400.f;
+					koopa->unset_shell_hit_side();
+				}
+
 				if (koopa->playerKilled()) {
 					player->killAnimation();
 					// player = NULL;
@@ -656,7 +709,15 @@ void PlayScene::enemy_collisions()
 					switch (aux)
 					{
 					case 1:
-						goomba->set_flipped_death();
+						if (!goomba->get_flipped()) {
+
+							if ((points_timer != 0.f) && (index_pk != 10))
+								++index_pk;
+							points += possible_points_koopa[index_pk];
+							points_timer = 1.f;
+
+							goomba->set_flipped_death();
+						}
 						goomba->set_player_murderer(false);
 						goomba->setDying();
 						break;
@@ -694,6 +755,12 @@ void PlayScene::enemy_collisions()
 					case 1:
 						koopas[i]->setDying();
 						if (!koopas[i]->get_flipped()) {
+
+							if ((points_timer != 0.f) && (index_pk != 10))
+								++index_pk;
+							points += possible_points_koopa[index_pk];
+							points_timer = 1.f;
+
 							koopas[i]->set_flipped_death();
 						}
 						koopas[i]->set_player_murderer(false);
@@ -701,6 +768,12 @@ void PlayScene::enemy_collisions()
 					case 2:
 						koopas[j]->setDying();
 						if (!koopas[j]->get_flipped()) {
+
+							if ((points_timer != 0.f) && (index_pk != 10))
+								++index_pk;
+							points += possible_points_koopa[index_pk];
+							points_timer = 1.f;
+
 							koopas[j]->set_flipped_death();
 						}
 						koopas[j]->set_player_murderer(false);
@@ -807,6 +880,17 @@ void PlayScene::star_timer_update(int deltaTime)
 	}
 }
 
+void PlayScene::points_timer_update(int deltaTime)
+{
+	if (points_timer > 0.f)
+		points_timer -= deltaTime / 400.f;
+	if (points_timer < 0.f || points_timer < 0.005f) {
+		index = 0;
+		index_pk = 0;
+		points_timer = 0.f;
+	}
+}
+
 void PlayScene::inv_timer_update(int deltaTime)
 {
 	if (inv_timer > 0.f)
@@ -904,6 +988,8 @@ int PlayScene::update(int deltaTime)
 				point_counter_update_end(deltaTime);
 			}
 		}
+
+		points_timer_update(deltaTime);
 	}
 
 	return 0;

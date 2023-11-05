@@ -29,6 +29,7 @@ void Goomba::reset()
 	invinc = false;
 	hit = false;
 	starMario = false;
+	starMarioKill = false;
 	dying = false;
 	player_murderer = true;
 }
@@ -64,6 +65,7 @@ void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	dead_player = false;
 	hit = false;
 	starMario = false;
+	starMarioKill = false;
 	player_murderer = true;
 }
 
@@ -74,6 +76,7 @@ void Goomba::update(int deltaTime)
 	oldEnemy = posEnemy;
 
 	if (flipped) {
+		starMarioKill = false;
 		if ((start_jump - posEnemy.y) >= 20) {
 			if (vy > -5.f) {
 				vy -= 0.1f * deltaTime;
@@ -121,6 +124,7 @@ void Goomba::update(int deltaTime)
 				posEnemy.x += int(vx);
 				if (starMario) {
 					set_flipped_death();
+					starMarioKill = true;
 					// vx = 0.f;
 					// sprite->changeAnimation(GOOMBA_DEATH);
 				}
@@ -135,6 +139,7 @@ void Goomba::update(int deltaTime)
 			case 1:
 				if (starMario) {
 					set_flipped_death();
+					starMarioKill = true;
 				}
 				else {
 					vx = 0.f;
@@ -171,6 +176,10 @@ void Goomba::setDying() {
 
 bool Goomba::get_jumped() {
 	return jumped;
+}
+
+bool Goomba::get_flipped() {
+	return flipped;
 }
 
 void Goomba::set_jumped(const bool state) {

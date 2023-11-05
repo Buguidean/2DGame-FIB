@@ -37,7 +37,7 @@ void MainScene::init()
 	initShaders();
 	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	
-	spritesheetArrow.loadFromFile("images/arrow4.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetArrow.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteArrow = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1.f, 1.f), &spritesheetArrow, &texProgram);
 	spriteArrow->setNumberAnimations(1);
 	spriteArrow->addKeyframe(ARROW, glm::vec2(0.f, 0.f));

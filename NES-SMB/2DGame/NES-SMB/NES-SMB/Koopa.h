@@ -18,9 +18,12 @@ public:
 	glm::ivec2 get_sprite_size();
 	void set_flipped_death();
 	bool get_flipped();
+	bool get_shell_hit_side();
+	void unset_shell_hit_side();
 
 
 private:
+	bool shell_hit_side;
 	bool flipped;
 	void normal_sprite();
 	void shell_sprite();

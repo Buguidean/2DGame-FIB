@@ -31,6 +31,7 @@ public:
 	void setHit();
 	float* getVelocity();
 	bool get_player_murderer();
+	bool get_starMarioKill();
 	void set_player_murderer(const bool &state);
 
 protected:
@@ -44,6 +45,7 @@ protected:
 	bool starMario;
 	bool invinc;
 	bool hit;
+	bool starMarioKill;
 	int startY;
 
 	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
