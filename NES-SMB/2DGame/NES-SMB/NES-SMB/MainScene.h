@@ -4,6 +4,8 @@
 #include "GameScene.h"
 #include "TileMap.h"
 #include "ShaderProgram.h"
+#include <glm/glm.hpp>
+#include "Sprite.h"
 
 class MainScene :
 	protected GameScene
@@ -20,11 +22,20 @@ private:
 	void initShaders();
 
 private:
+	void spriteArrowMovement();
+
 	TileMap *map;
 	ShaderProgram texProgram;
+	glm::vec2 posArrow;
 	float currentTime;
 	float centerCam;
 	glm::mat4 projection;
+	Texture spritesheetArrow;
+	Sprite *spriteArrow;
+
+	//
+	int counter;
+	//
 };
 
 #endif // _MAIN_SCENE_INCLUDE

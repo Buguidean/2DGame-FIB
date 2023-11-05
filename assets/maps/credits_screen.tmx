@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="credits_screen.tmx" format="tmx"/>
+ </editorsettings>
  <tileset firstgid="1" name="credits" tilewidth="16" tileheight="16" tilecount="225" columns="15">
   <image source="../../NES-SMB/2DGame/NES-SMB/NES-SMB/images/credits.png" width="254" height="240"/>
  </tileset>
