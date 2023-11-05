@@ -383,8 +383,17 @@ void PlayScene::init_particles(int pos)
 
 void PlayScene::particles_update(int deltaTime)
 {
-	for (auto & particle : particles) {
-		particle->update(deltaTime);
+
+	for (unsigned int i = 0 ; i < particles.size() ; ++i ) {
+		if (particles[i] != NULL) {
+			particles[i]->update(deltaTime);
+
+			if (particles[i]->get_inactive()) {
+				delete particles[i];
+				particles[i] = NULL;
+				particles.erase(particles.begin() + i);
+			}
+		}
 	}
 }
 

@@ -883,7 +883,7 @@ void Player::update(int deltaTime)
 					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == TURN_RIGHT)
 						sprite->changeAnimation(JUMP_RIGHT);
 
-					if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+					if (Game::instance().getKey(32)) {
 
 						if (vy > 0.f) {
 							if ((superMario || starMario)) {
@@ -957,7 +957,7 @@ void Player::update(int deltaTime)
 						else if (sprite->animation() == JUMP_RIGHT)
 							sprite->changeAnimation(STAND_RIGHT);
 
-						if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+						if (Game::instance().getKey(32))
 						{
 							bJumping = true;
 							jumpAngle = 0;
