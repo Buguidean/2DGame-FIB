@@ -52,6 +52,8 @@ private:
 	int prev_type;
 	PlayScene sceneP;                 // Scene to render
 	MainScene sceneM;
+	CreditScene sceneC;
+	InstructionScene sceneI;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 

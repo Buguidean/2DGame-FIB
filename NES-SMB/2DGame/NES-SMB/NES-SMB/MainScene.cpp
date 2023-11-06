@@ -46,8 +46,9 @@ void MainScene::init()
 	spriteArrow->setPosition(glm::vec2(posArrow.x, posArrow.y));
 	counter = 0;
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
-	currentTime = 0.0f;
-	centerCam = 256.f;
+	
+	//currentTime = 0.0f;
+	//centerCam = 256.f;
 }
 
 void MainScene::spriteArrowMovement() {
@@ -88,7 +89,7 @@ int MainScene::update(int deltaTime)
 			//return Instruction scene int;
 		}
 		else if (posArrow.y == 146 * 2 + 64.f) {
-			//return Credit scene int;
+			return 2;
 		}
 	}
 	return 1;

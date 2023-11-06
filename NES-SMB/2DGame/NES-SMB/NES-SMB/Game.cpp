@@ -11,6 +11,8 @@ void Game::init()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	sceneM.init();
 	sceneP.init();
+	sceneC.init();
+	//sceneI.init();
 }
 
 bool Game::update(int deltaTime)
@@ -21,6 +23,12 @@ bool Game::update(int deltaTime)
 	else if (type == 0 && prev_type == 1) {
 		sceneP.reset();
 		type, prev_type = sceneP.update(deltaTime);
+	}
+	else if(type == 2){
+		type = sceneC.update(deltaTime);
+	}
+	else if (type == 3) {
+		// type = sceneI.update(deltaTime);
 	}
 
 	else if (type == 1 && prev_type == 1)
@@ -41,6 +49,11 @@ void Game::render()
 		sceneP.render();
 	else if (type == 1)
 		sceneM.render();
+	else if (type == 2)
+		sceneC.render();
+	else if (type == 3) {
+		//sceneI.render();
+	}
 }
 
 void Game::keyPressed(int key)
