@@ -22,6 +22,8 @@ PlayScene::PlayScene()
 	sprites = NULL;
 	timer.resize(3, nullptr);
 	point_counter.resize(6, nullptr);
+	coin_counter.resize(2, nullptr);
+	level = NULL;
 	player = NULL;
 	flag = NULL;
 	engine = NULL;
@@ -63,6 +65,7 @@ void PlayScene::reset()
 	active = false;
 	ticks = 400.0f;
 	points = 0.0f;
+	coins = 0;
 	star_timer = 0.f;
 	points_timer = 0.f;
 	inv_timer = 0.f;
@@ -77,6 +80,14 @@ void PlayScene::reset()
 	point_counter[3]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
+	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
+	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
@@ -136,6 +147,7 @@ void PlayScene::init()
 	active = false;
 	ticks = 400.0f;
 	points = 0.0f;
+	coins = 0;
 	star_timer = 0.f;
 	points_timer = 0.f;
 	inv_timer = 0.f;
@@ -238,6 +250,11 @@ void PlayScene::init()
 			}
 		}
 	}
+	
+	level = new Text();
+	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	level->setNumber(1);
 
 	for (auto & digit : timer) {
 		digit = new Text();
@@ -266,6 +283,16 @@ void PlayScene::init()
 	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[5]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
+	for (auto & digit : coin_counter) {
+		digit = new Text();
+	}
+
+	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
 
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
@@ -317,6 +344,15 @@ void PlayScene::point_counter_update(int deltaTime)
 	point_counter[3]->setNumber(d4);
 	point_counter[4]->setNumber(d5);
 	point_counter[5]->setNumber(d6);
+}
+
+void PlayScene::coin_counter_update(int deltaTime) {
+	int d1 = (int(coins) / 10) % 10;
+	int d2 = int(coins) % 10;
+
+	// TIMER ACTUALIZATION
+	coin_counter[0]->setNumber(d1);
+	coin_counter[1]->setNumber(d2);
 }
 
 void PlayScene::timer_update_end(int deltaTime)
@@ -431,6 +467,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 					if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 						// POINTS COIN
 						points += 200.0f;
+						++coins;
+
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -481,6 +519,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 					if (powerUp != NULL && blocks[blocks_in_motion[1]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 						// POINTS COIN
 						points += 200.0f;
+						++coins;
+
 						blocks[blocks_in_motion[1]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
@@ -534,6 +574,8 @@ void PlayScene::animated_blocks_update(int deltaTime)
 				if (powerUp != NULL && blocks[blocks_in_motion[0]]->getPosition() == powerUp->getPosition() && powerUp->is_coin()) {
 					// POINTS COIN
 					points += 200.0f;
+					++coins;
+
 					blocks[blocks_in_motion[0]]->set_used();
 					powerUp->set_poping(true);
 					powerUp->set_render(true);
@@ -817,6 +859,13 @@ void PlayScene::camera_update()
 			for (auto & digit : point_counter) {
 				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
 			}
+			
+			for (auto & digit : coin_counter) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
+			}
+
+			level->setPosition(glm::fvec2(level->getPosition().x + v, level->getPosition().y));
+			
 			centerCam += v;
 		}
 
@@ -828,6 +877,12 @@ void PlayScene::camera_update()
 			for (auto & digit : point_counter) {
 				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
 			}
+			for (auto & digit : coin_counter) {
+				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
+			}
+
+			level->setPosition(glm::fvec2(level->getPosition().x + (v / 2), level->getPosition().y));
+
 			centerCam += (v / 2.f);
 		}
 	}
@@ -990,6 +1045,7 @@ int PlayScene::update(int deltaTime)
 		if (player->getPosition().x <= 6528) {
 			timer_update(deltaTime);
 			point_counter_update(deltaTime);
+			coin_counter_update(deltaTime);
 		}
 		else {
 			timer_update_end(deltaTime);
@@ -1002,6 +1058,22 @@ int PlayScene::update(int deltaTime)
 	}
 
 	return 0;
+}
+
+void PlayScene::render_iface() {
+	for (auto & digit : timer) {
+		digit->render();
+	}
+
+	for (auto & digit : point_counter) {
+		digit->render();
+	}
+
+	for (auto & digit : coin_counter) {
+		digit->render();
+	}
+
+	level->render();
 }
 
 void PlayScene::render()
@@ -1023,13 +1095,7 @@ void PlayScene::render()
 	if (player != NULL && int(inv_timer*10000)%2 == 0 && player->getPosition().x <= 6528)
 		player->render();
 
-	for (auto & digit : timer) {
-		digit->render();
-	}
-
-	for (auto & digit : point_counter) {
-		digit->render();
-	}
+	render_iface();
 
 	for (auto & powerUp : power_sprites) {
 		if (powerUp != NULL && powerUp->get_render())
