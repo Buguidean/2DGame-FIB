@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedCoin.h" />
     <ClInclude Include="AnimKeyframes.h" />
     <ClInclude Include="BlockSprite.h" />
     <ClInclude Include="Brick.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedCoin.cpp" />
     <ClCompile Include="BlockSprite.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Coin.cpp" />

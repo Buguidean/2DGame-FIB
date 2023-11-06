@@ -79,6 +79,9 @@
     <ClCompile Include="Coin.cpp">
       <Filter>Implementation\PowerUps</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedCoin.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="Coin.h">
       <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedCoin.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

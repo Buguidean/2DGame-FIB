@@ -15,11 +15,12 @@
 #define INIT_ENEMY_X_TILES 37
 #define INIT_ENEMY_Y_TILES 12
 
+
 PlayScene::PlayScene()
 {
 	map = NULL;
 	back = NULL;
-	sprites = NULL;
+	//sprites = NULL;
 	timer.resize(3, nullptr);
 	point_counter.resize(6, nullptr);
 	coin_counter.resize(2, nullptr);
@@ -88,6 +89,9 @@ void PlayScene::reset()
 
 	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	level->setNumber(1);
+
+	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
@@ -161,6 +165,9 @@ void PlayScene::init()
 	spritesheetSuperStM.loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetSmallStM.loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetChange.loadFromFile("images/grow_shrink.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	// ANIMATED COIN TEXTURE
+	spritesheetCoin.loadFromFile("images/coin_iFace.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -256,6 +263,10 @@ void PlayScene::init()
 	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
 
+	coinSprite = new AnimatedCoin();
+	coinSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoin);
+	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+
 	for (auto & digit : timer) {
 		digit = new Text();
 	}
@@ -287,6 +298,9 @@ void PlayScene::init()
 	for (auto & digit : coin_counter) {
 		digit = new Text();
 	}
+
+	
+	
 
 	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -619,7 +633,7 @@ void PlayScene::goombas_update(int deltaTime)
 {
 	// GOOMBA ACTUALIZATION
 	for (auto & goomba : goombas) {
-		if (goomba != NULL) {
+		if (goomba != NULL && (goomba->getPosition().x > centerCam-300.f && goomba->getPosition().x < centerCam+300.f)) {
 			goomba->update(deltaTime);
 			if (goomba->being_killed()) {
 				if (!goomba->get_player_murderer()) {
@@ -679,7 +693,7 @@ void PlayScene::koopas_update(int deltaTime)
 {
 	// KOOPA ACTUALIZATION
 	for (auto & koopa : koopas) {
-		if (koopa != NULL) {
+		if (koopa != NULL && (koopa->getPosition().x > centerCam - 300.f && koopa->getPosition().x < centerCam + 300.f)) {
 			koopa->update(deltaTime);
 			if (koopa->killed()) {
 				if (!koopa->get_player_murderer()) {
@@ -865,6 +879,7 @@ void PlayScene::camera_update()
 			}
 
 			level->setPosition(glm::fvec2(level->getPosition().x + v, level->getPosition().y));
+			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + v, coinSprite->getPosition().y));
 			
 			centerCam += v;
 		}
@@ -882,6 +897,7 @@ void PlayScene::camera_update()
 			}
 
 			level->setPosition(glm::fvec2(level->getPosition().x + (v / 2), level->getPosition().y));
+			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + (v / 2), coinSprite->getPosition().y));
 
 			centerCam += (v / 2.f);
 		}
@@ -1054,6 +1070,7 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 
+		coinSprite->update(deltaTime);
 		points_timer_update(deltaTime);
 	}
 
@@ -1074,6 +1091,8 @@ void PlayScene::render_iface() {
 	}
 
 	level->render();
+
+	coinSprite->render();
 }
 
 void PlayScene::render()

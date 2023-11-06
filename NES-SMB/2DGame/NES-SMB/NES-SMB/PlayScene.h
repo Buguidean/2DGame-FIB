@@ -21,6 +21,8 @@
 #include "Flag.h"
 #include "Text.h"
 #include "Particles.h"
+#include "Sprite.h"
+#include "AnimatedCoin.h"
 #include <irrklang.h>
 
 
@@ -88,9 +90,11 @@ private:
 	std::vector<Goomba*> goombas;
 	std::vector<glm::ivec2> pos_koopas;
 	std::vector<glm::ivec2> pos_goombas;
+
 	TileMap *map, *back, *sprites, *powerups;
 	Player *player;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin;
+	AnimatedCoin* coinSprite;
 	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;
