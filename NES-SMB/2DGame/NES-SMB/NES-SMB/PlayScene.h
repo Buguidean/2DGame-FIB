@@ -58,6 +58,7 @@ public:
 	void star_timer_update(int deltaTime);
 	void inv_timer_update(int deltaTime);
 	void points_timer_update(int deltaTime);
+	void transition_timer_update(int deltaTime);
 	void camera_update();
 	void render_iface();
 
@@ -74,7 +75,9 @@ private:
 	float points_timer;
 	float inv_timer;
 	float ticks;
+	float transition_time;
 	bool active;
+	bool time_UP;
 	int coins;
 	int animated_block;
 	int index;
@@ -97,6 +100,7 @@ private:
 	std::vector<glm::ivec2> pos_goombas;
 
 	TileMap *map, *back, *sprites, *powerups;
+	TileMap *game_over, *time_up, *transition;
 	Player *player;
 	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped;
 	AnimatedCoin* coinSprite;
@@ -114,6 +118,13 @@ private:
 
 	Text* level;
 	Text* world;
+
+	Text* level_tran;
+	Text* world_tran;
+
+	Text* lives_sp;
+
+	int lives;
 };
 
 

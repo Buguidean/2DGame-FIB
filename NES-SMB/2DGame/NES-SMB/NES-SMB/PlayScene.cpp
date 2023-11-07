@@ -19,6 +19,9 @@
 PlayScene::PlayScene()
 {
 	map = NULL;
+	transition = NULL;
+	game_over = NULL;
+	time_up = NULL;
 	back = NULL;
 	//sprites = NULL;
 	timer.resize(3, nullptr);
@@ -34,6 +37,12 @@ PlayScene::~PlayScene()
 {
 	if (map != NULL)
 		delete map;
+	if (time_up != NULL)
+		delete time_up;
+	if (transition != NULL)
+		delete transition;
+	if (game_over != NULL)
+		delete game_over;
 	if (back != NULL)
 		delete back;
 	if (sprites != NULL)
@@ -64,11 +73,12 @@ void PlayScene::reset()
 	index = 0;
 	index_pk = 0;
 	active = false;
-	ticks = 400.0f;
+	ticks = 10.0f;
 	points = 0.0f;
 	coins = 0;
 	star_timer = 0.f;
 	points_timer = 0.f;
+	//transition_time = 0.f;
 	inv_timer = 0.f;
 
 	timer[0]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -148,17 +158,20 @@ void PlayScene::reset()
 
 void PlayScene::init()
 {
+	time_UP = false;
+	lives = 3;
 	index = 0;
 	index_pk = 0;
 	possible_points = { 100.f,200.f,400.f,500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
 	possible_points_koopa = { 500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
 	active = false;
-	ticks = 400.0f;
+	ticks = 10.0f;
 	points = 0.0f;
 	coins = 0;
 	star_timer = 0.f;
 	points_timer = 0.f;
 	inv_timer = 0.f;
+	transition_time = 0.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
@@ -181,6 +194,10 @@ void PlayScene::init()
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	powerups = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	game_over = TileMap::createTileMap("levels/Screens/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	transition = TileMap::createTileMap("levels/Screens/transition.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	time_up = TileMap::createTileMap("levels/Screens/time_up.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	int* map_sprites = sprites->getMap();
 	int* map_powerups = powerups->getMap();
@@ -276,6 +293,21 @@ void PlayScene::init()
 	world->setPosition(glm::vec2(19 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	world->setNumber(1);
 
+	level_tran = new Text();
+	level_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level_tran->setPosition(glm::vec2(314.f, 198.f));
+	level_tran->setNumber(1);
+
+	world_tran = new Text();
+	world_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	world_tran->setPosition(glm::vec2(278.f, 198.f));
+	world_tran->setNumber(1);
+
+	lives_sp = new Text();
+	lives_sp->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	lives_sp->setPosition(glm::vec2(280.f, 260.f));
+	lives_sp->setNumber(3);
+
 	coinSprite = new AnimatedCoin();
 	coinSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoin);
 	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -353,6 +385,15 @@ void PlayScene::timer_update(int deltaTime)
 	timer[0]->setNumber(cen);
 	timer[1]->setNumber(des);
 	timer[2]->setNumber(uni);
+}
+
+void PlayScene::transition_timer_update(int deltaTime)
+{
+	if (transition_time > 0.f)
+		transition_time -= deltaTime / 400.f;
+
+	if (transition_time < 0.f || transition_time < 0.005f)
+		transition_time = 0.f;
 }
 
 void PlayScene::point_counter_update(int deltaTime)
@@ -1105,105 +1146,124 @@ void PlayScene::inv_timer_update(int deltaTime)
 
 int PlayScene::update(int deltaTime)
 {
+	if (transition_time == 0.f) {
 
-	if (player == NULL || Game::instance().getKey('c')) {
-		engine->stopAllSounds();
-		engine->drop();
-		return 1;
-	}
-
-	currentTime += deltaTime;
-	star_timer_update(deltaTime);
-	inv_timer_update(deltaTime);
-
-	if (player->being_killed()) {
-		player->update(deltaTime);
-		animated_blocks_update(deltaTime);
-	}
-
-	else if (player->get_Growing()) {
-		player->update(deltaTime);
-		animated_blocks_update(deltaTime);
-	}
-
-	else if (player->get_Shrinking()) {
-		player->update(deltaTime);
-		animated_blocks_update(deltaTime);
-	}
-
-	else if (player->killed()) {
-		delete player;
-		player = NULL;
-	}
-
-	else {
-		
-		player->update(deltaTime);
-
-		if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
-			player->killAnimation();
+		//TRANSITION
+		if (player == NULL && lives != 0) {
+			engine->stopAllSounds();
+			engine->drop();
+			transition_time = 6.f;
+			--lives;
+			lives_sp->setNumber(lives);
+			if (ticks == 0 && lives != 0) {
+				time_UP = true;
+				transition_time = 12.f;
+			}
+			reset();
+			return 0;
 		}
 
-		animated_blocks_update(deltaTime);
-		particles_update(deltaTime);
-		pointsSprite_update(deltaTime);
+		//GAME OVER
+		else if (player == NULL && lives == 0) {
+			transition_time = 6.f;
+			reset();
+			return 0;
+		}
 
-		goombas_update(deltaTime);
-		koopas_update(deltaTime);
-		enemy_collisions();
-		camera_update();
+		time_UP = false;
+		currentTime += deltaTime;
+		star_timer_update(deltaTime);
+		inv_timer_update(deltaTime);
 
-		powerUps_update(deltaTime);
+		if (player->being_killed()) {
+			player->update(deltaTime);
+			animated_blocks_update(deltaTime);
+		}
 
-		flag->update(deltaTime, player->getPosition());
-		if (flag->get_points()) {
-			int center = player->getPosition().y + (player->getMarioSpriteSize().y/2);
-			//CALCULAR PUNTOS
-			if (center >= 351) {
-				points += 100.0f;
-				init_pointsSprites(player->getPosition(), 0);
+		else if (player->get_Growing()) {
+			player->update(deltaTime);
+			animated_blocks_update(deltaTime);
+		}
+
+		else if (player->get_Shrinking()) {
+			player->update(deltaTime);
+			animated_blocks_update(deltaTime);
+		}
+
+		else if (player->killed()) {
+			delete player;
+			player = NULL;
+		}
+
+		else {
+
+			player->update(deltaTime);
+
+			if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
+				player->killAnimation();
 			}
-			else if (center >= 287) {
-				points += 400.0f;
-				init_pointsSprites(player->getPosition(), 2);
+
+			animated_blocks_update(deltaTime);
+			particles_update(deltaTime);
+			pointsSprite_update(deltaTime);
+
+			goombas_update(deltaTime);
+			koopas_update(deltaTime);
+			enemy_collisions();
+			camera_update();
+
+			powerUps_update(deltaTime);
+
+			flag->update(deltaTime, player->getPosition());
+			if (flag->get_points()) {
+				int center = player->getPosition().y + (player->getMarioSpriteSize().y / 2);
+				//CALCULAR PUNTOS
+				if (center >= 351) {
+					points += 100.0f;
+					init_pointsSprites(player->getPosition(), 0);
+				}
+				else if (center >= 287) {
+					points += 400.0f;
+					init_pointsSprites(player->getPosition(), 2);
+				}
+				else if (center >= 223) {
+					points += 800.0f;
+					init_pointsSprites(player->getPosition(), 4);
+				}
+				else if (center >= 159) {
+					points += 2000.0f;
+					init_pointsSprites(player->getPosition(), 6);
+				}
+				else if (center >= 127) {
+					points += 4000.0f;
+					init_pointsSprites(player->getPosition(), 7);
+				}
+				else {
+					points += 5000.0f;
+					init_pointsSprites(player->getPosition(), 8);
+				}
+				player->setInFlag();
+				flag->unset_points();
 			}
-			else if (center >= 223) {
-				points += 800.0f;
-				init_pointsSprites(player->getPosition(), 4);
-			}
-			else if (center >= 159) {
-				points += 2000.0f;
-				init_pointsSprites(player->getPosition(), 6);
-			}
-			else if (center >= 127) {
-				points += 4000.0f;
-				init_pointsSprites(player->getPosition(), 7);
+
+			if (player->getPosition().x <= 6528) {
+				timer_update(deltaTime);
+				point_counter_update(deltaTime);
+				coin_counter_update(deltaTime);
 			}
 			else {
-				points += 5000.0f;
-				init_pointsSprites(player->getPosition(), 8);
+				timer_update_end(deltaTime);
+				if (ticks != 0.f) {
+					point_counter_update_end(deltaTime);
+				}
 			}
-			player->setInFlag();
-			flag->unset_points();
-		}
 
-		if (player->getPosition().x <= 6528) {
-			timer_update(deltaTime);
-			point_counter_update(deltaTime);
-			coin_counter_update(deltaTime);
+			staticSprite->update(deltaTime);
+			coinSprite->update(deltaTime);
+			points_timer_update(deltaTime);
 		}
-		else {
-			timer_update_end(deltaTime);
-			if (ticks != 0.f) {
-				point_counter_update_end(deltaTime);
-			}
-		}
-
-		staticSprite->update(deltaTime);
-		coinSprite->update(deltaTime);
-		points_timer_update(deltaTime);
 	}
-
+	transition_timer_update(deltaTime);
 	return 0;
 }
 
@@ -1240,46 +1300,66 @@ void PlayScene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	back->render();
-	map->render();
-	// if (!enemy->playerKilled())
-	flag->render();
 
-	render_iface();
+	if (transition_time == 0.f) {
 
-	for (auto & powerUp : power_sprites) {
-		if (powerUp != NULL && powerUp->get_render())
-			powerUp->render();
-	}
+		back->render();
+		map->render();
+		flag->render();
+		render_iface();
 
-	for (auto & block : blocks)
-		if (block != NULL) {
-			block->render();
+		for (auto & powerUp : power_sprites) {
+			if (powerUp != NULL && powerUp->get_render())
+				powerUp->render();
 		}
 
-	for (auto & particle : particles) {
-		if (particle != NULL)
-			particle->render();
+		for (auto & block : blocks)
+			if (block != NULL) {
+				block->render();
+			}
+
+		for (auto & particle : particles) {
+			if (particle != NULL)
+				particle->render();
+		}
+
+		for (auto & goomba : goombas) {
+			if (goomba != NULL)
+				goomba->render();
+		}
+
+		for (auto & koopa : koopas) {
+			if (koopa != NULL)
+				koopa->render();
+		}
+
+		if (player != NULL && int(inv_timer * 10000) % 2 == 0 && player->getPosition().x <= 6528)
+			player->render();
+
+		for (auto & points_sprite : points_sprites) {
+			if (points_sprite != NULL)
+				points_sprite->render();
+		}
 	}
-
-	for (auto & goomba : goombas){
-		if (goomba != NULL)
-			goomba->render();
+	else if (lives == 0) {
+		game_over->render();
 	}
-
-	for (auto & koopa : koopas) {
-		if (koopa != NULL)
-			koopa->render();
+	else if (lives != 0 && time_UP) {
+		if (transition_time > 6.f)
+			time_up->render();
+		else {
+			transition->render();
+			level_tran->render();
+			world_tran->render();
+			lives_sp->render();
+		}
 	}
-
-	if (player != NULL && int(inv_timer * 10000) % 2 == 0 && player->getPosition().x <= 6528)
-		player->render();
-
-	for (auto & points_sprite : points_sprites) {
-		if (points_sprite != NULL)
-			points_sprite->render();
+	else if (lives != 0) {
+		transition->render();
+		level_tran->render();
+		world_tran->render();
+		lives_sp->render();
 	}
-
 }
 
 void PlayScene::initShaders()
