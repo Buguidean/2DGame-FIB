@@ -76,7 +76,7 @@ private:
 	int ic;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *spriteChange, *sprite;//, *spriteClamped;
+	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *spriteChange, *spriteClamped, *sprite;
 	TileMap *map;
 
 	bool inFlag;
