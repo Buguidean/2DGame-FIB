@@ -171,7 +171,7 @@ void PlayScene::init()
 	spritesheetCoin.loadFromFile("images/coin_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	//STATICIFACE TECTURE
-	spriteseehtStatic.loadFromFile("images/static_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetStatic.loadFromFile("images/static_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -886,7 +886,7 @@ void PlayScene::camera_update()
 
 			level->setPosition(glm::fvec2(level->getPosition().x + v, level->getPosition().y));
 			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + v, coinSprite->getPosition().y));
-			staticSprite->->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
+			staticSprite->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
 			centerCam += v;
 		}
 
