@@ -57,9 +57,10 @@ public:
 	bool get_Invulnerable();
 	
 private:
-	void flagTreatment();
+	void flagTreatment(int deltaTime);
 	void getOut(int deltaTime);
 
+	int counter;
 	bool bJumping;
 	bool dead;
 	bool dying;

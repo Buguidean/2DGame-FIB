@@ -6,7 +6,7 @@
 #include "Game.h"
 
 
-#define FALL_STEP 4
+#define FALL_STEP 5
 
 
 enum PlayerAnims
@@ -48,6 +48,7 @@ Player::~Player()
 
 void Player::reset()
 {
+	counter = 0;
 	invulnerable = false;
 	infinite = false;
 	dead = false;
@@ -76,6 +77,7 @@ void Player::reset()
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange)
 {
+	counter = 0;
 	engine = irrklang::createIrrKlangDevice();
 	invulnerable = false;
 	infinite = false;
@@ -416,7 +418,7 @@ void Player::setBackAnimationSpeed()
 	spriteSmallStM->setAnimationSpeed(DOWN_FLAG, 18);
 }
 
-void Player::flagTreatment()
+void Player::flagTreatment(int deltaTime)
 {
 	posPlayer.x = 197 * 32 + 18;
 	if (sprite->animation() != DOWN_FLAG)
@@ -434,53 +436,26 @@ void Player::flagTreatment()
 
 		posPlayer.y = posPlayer.y + 2;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+		counter+=deltaTime;
 	}
 	else {
-		inFlag = false;
-		bJumping = false;
+		counter += deltaTime;
 		vx = 2.f;
 		vy = 0.f;
 		sprite->changeAnimation(RSTAND_FLAG);
 		posPlayer.x = 198 * 32 + 11;
 		posPlayer.y = maxDown;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-		finalAnimation = true;
+		if (counter > 2200) {
+			inFlag = false;
+			bJumping = false;
+			finalAnimation = true;
+		}
 	}
 }
 
 void Player::getOut(int deltaTime) {
-	/*
-	countAnimation += deltaTime;
-	if (countAnimation < 1000) {
-	}
-	else if (posPlayer.x < 199 * 32) {
-		if (sprite->animation() != MOVE_RIGHT) {
-			sprite->changeAnimation(MOVE_RIGHT);
-		}
 
-		posPlayer.x += 30;
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	}
-	else if (posPlayer.y < (12 * 32) - 2) {
-		if (sprite->animation() != JUMP_RIGHT) {
-			posPlayer.x += 20;
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-			sprite->changeAnimation(JUMP_RIGHT);
-		}
-		else {
-			posPlayer.x += 4;
-			posPlayer.y += 2;
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-		}
-	}
-	else if (posPlayer.x < 200 * 32) {
-		if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	}
-	int a = 1;
-	*/
 	sprite->update(deltaTime);
 	if (sprite->animation() != MOVE_RIGHT) {
 		sprite->setAnimationSpeed(MOVE_RIGHT, 6);
@@ -491,7 +466,7 @@ void Player::getOut(int deltaTime) {
 		posPlayer.y += FALL_STEP;
 		map->collisionMoveDown(posPlayer, spriteSize, &posPlayer.y);
 	}
-	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+
 }
 
 void Player::setMarioSprite() {
@@ -679,7 +654,7 @@ void Player::update(int deltaTime)
 		oldPlayer = posPlayer;
 
 		if (inFlag && !finalAnimation) {
-			flagTreatment();
+			flagTreatment(deltaTime);
 		}
 
 		else {
