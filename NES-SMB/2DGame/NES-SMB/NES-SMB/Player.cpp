@@ -11,17 +11,12 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, TURN_LEFT, TURN_RIGHT, STAND_FLAG, RSTAND_FLAG, DOWN_FLAG, DEATH
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT, TURN_LEFT, TURN_RIGHT, STAND_FLAG, RSTAND_FLAG, DOWN_FLAG, DEATH, CLAMPED_LEFT, CLAMPED_RIGHT
 };
 
 enum TransitionAnims
 {
 	GROW, SHRINK
-};
-
-enum ClampedAnims
-{
-	CLAMPED_LEFT, CLAMPED_RIGHT, STAR_LEFT, STAR_RIGHT
 };
 
 Player::~Player()
@@ -41,9 +36,9 @@ Player::~Player()
 	if (spriteChange != NULL) {
 		delete spriteChange;
 	}
-	if (spriteClamped != NULL) {
+	/*if (spriteClamped != NULL) {
 		delete spriteClamped;
-	}
+	}*/
 	if (engine != NULL) {
 		delete engine;
 	}
@@ -144,13 +139,14 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteM->setAnimationSpeed(DEATH, 8);
 	spriteM->addKeyframe(DEATH, glm::vec2(0.75f, 0.f));
 
-	spriteSuperStM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.25f), &spritesheetSuperStM, &shaderProgram);
-	spriteSuperStM->setNumberAnimations(11);
+
+	spriteSuperStM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.125f), &spritesheetSuperStM, &shaderProgram);
+	spriteSuperStM->setNumberAnimations(13);
 
 	spriteSuperStM->setAnimationSpeed(STAND_LEFT, 22);
-	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
-	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.125f, 0.5f));
-	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.25f, 0.5f));
+	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.25f));
+	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.125f, 0.25f));
+	spriteSuperStM->addKeyframe(STAND_LEFT, glm::vec2(0.25f, 0.25f));
 
 	spriteSuperStM->setAnimationSpeed(STAND_RIGHT, 22);
 	spriteSuperStM->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
@@ -158,9 +154,9 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteSuperStM->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.f));
 
 	spriteSuperStM->setAnimationSpeed(MOVE_LEFT, 22);
-	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.375f, 0.5f));
-	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.5f));
-	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.5f));
+	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.375f, 0.25f));
+	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.25f));
+	spriteSuperStM->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.25f));
 
 	spriteSuperStM->setAnimationSpeed(MOVE_RIGHT, 22);
 	spriteSuperStM->addKeyframe(MOVE_RIGHT, glm::vec2(0.375, 0.f));
@@ -168,41 +164,52 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteSuperStM->addKeyframe(MOVE_RIGHT, glm::vec2(0.625, 0.f));
 
 	spriteSuperStM->setAnimationSpeed(JUMP_LEFT, 22);
-	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.375f, 0.75f));
-	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.5f, 0.75f));
-	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.625f, 0.75f));
+	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.375f, 0.375f));
+	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.5f, 0.375f));
+	spriteSuperStM->addKeyframe(JUMP_LEFT, glm::vec2(0.625f, 0.375f));
 
 	spriteSuperStM->setAnimationSpeed(JUMP_RIGHT, 22);
-	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.375f, 0.25f));
-	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.5f, 0.25f));
-	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.625f, 0.25f));
+	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.375f, 0.125f));
+	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.5f, 0.125f));
+	spriteSuperStM->addKeyframe(JUMP_RIGHT, glm::vec2(0.625f, 0.125f));
 
 	spriteSuperStM->setAnimationSpeed(TURN_LEFT, 22);
-	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.f, 0.75f));
-	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.125f, 0.75f));
-	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.25f, 0.75f));
+	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.f, 0.375f));
+	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.125f, 0.375f));
+	spriteSuperStM->addKeyframe(TURN_LEFT, glm::vec2(0.25f, 0.375f));
 
 	spriteSuperStM->setAnimationSpeed(TURN_RIGHT, 22);
-	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.f, 0.25f));
-	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.125f, 0.25f));
-	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.25f, 0.25f));
+	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.f, 0.125f));
+	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.125f, 0.125f));
+	spriteSuperStM->addKeyframe(TURN_RIGHT, glm::vec2(0.25f, 0.125f));
 
 	spriteSuperStM->setAnimationSpeed(STAND_FLAG, 22);
-	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.75f, 0.f));
-	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.875f, 0.f));
-	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.75f, 0.25f));
+	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.f, 0.5f));
+	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.125f, 0.5f));
+	spriteSuperStM->addKeyframe(STAND_FLAG, glm::vec2(0.25f, 0.5f));
 
 	spriteSuperStM->setAnimationSpeed(RSTAND_FLAG, 22);
-	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.875f, 0.25f));
-	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.75f, 0.5f));
-	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.875f, 0.5f));
+	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.375f, 0.5f));
+	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.5f, 0.5f));
+	spriteSuperStM->addKeyframe(RSTAND_FLAG, glm::vec2(0.625f, 0.5f));
 
 	spriteSuperStM->setAnimationSpeed(DOWN_FLAG, 18);
-	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.75f, 0.f));
-	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.f));
-	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.75f, 0.25f));
-	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.75f, 0.75f));
-	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.75f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.f, 0.5f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.125f, 0.625f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.25f, 0.5f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.f, 0.625f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.125f, 0.5f));
+	spriteSuperStM->addKeyframe(DOWN_FLAG, glm::vec2(0.25f, 0.625f));
+
+	spriteSuperStM->setAnimationSpeed(CLAMPED_LEFT, 22);
+	spriteSuperStM->addKeyframe(CLAMPED_LEFT, glm::vec2(0.125f, 0.75f));
+	spriteSuperStM->addKeyframe(CLAMPED_LEFT, glm::vec2(0.375f, 0.75f));
+	spriteSuperStM->addKeyframe(CLAMPED_LEFT, glm::vec2(0.625f, 0.75f));
+
+	spriteSuperStM->setAnimationSpeed(CLAMPED_RIGHT, 22);
+	spriteSuperStM->addKeyframe(CLAMPED_RIGHT, glm::vec2(0.f, 0.75f));
+	spriteSuperStM->addKeyframe(CLAMPED_RIGHT, glm::vec2(0.25f, 0.75f));
+	spriteSuperStM->addKeyframe(CLAMPED_RIGHT, glm::vec2(0.5f, 0.75f));
 
 	spriteSmallStM = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.125f, 0.125f), &spritesheetSmallStM, &shaderProgram);
 	spriteSmallStM->setNumberAnimations(11);
@@ -265,19 +272,19 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteSmallStM->addKeyframe(DOWN_FLAG, glm::vec2(0.125f, 0.5f));
 	spriteSmallStM->addKeyframe(DOWN_FLAG, glm::vec2(0.25f, 0.5f));
 
-	spriteSM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.5f), &spritesheetSM, &shaderProgram);
+	spriteSM = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 0.25f), &spritesheetSM, &shaderProgram);
 	spriteSM->setNumberAnimations(12);
 
 	spriteSM->setAnimationSpeed(STAND_LEFT, 8);
-	spriteSM->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
+	spriteSM->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.25f));
 
 	spriteSM->setAnimationSpeed(STAND_RIGHT, 8);
 	spriteSM->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 
 	spriteSM->setAnimationSpeed(MOVE_LEFT, 8);
-	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.5f));
-	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.5f));
-	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.375f, 0.5f));
+	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.25f));
+	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.25f));
+	spriteSM->addKeyframe(MOVE_LEFT, glm::vec2(0.375f, 0.25f));
 
 	spriteSM->setAnimationSpeed(MOVE_RIGHT, 8);
 	spriteSM->addKeyframe(MOVE_RIGHT, glm::vec2(0.125, 0.f));
@@ -285,31 +292,38 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteSM->addKeyframe(MOVE_RIGHT, glm::vec2(0.375, 0.f));
 
 	spriteSM->setAnimationSpeed(JUMP_LEFT, 8);
-	spriteSM->addKeyframe(JUMP_LEFT, glm::vec2(0.625f, 0.5f));
+	spriteSM->addKeyframe(JUMP_LEFT, glm::vec2(0.625f, 0.25f));
 
 	spriteSM->setAnimationSpeed(JUMP_RIGHT, 8);
 	spriteSM->addKeyframe(JUMP_RIGHT, glm::vec2(0.625f, 0.f));
 
 	spriteSM->setAnimationSpeed(TURN_LEFT, 8);
-	spriteSM->addKeyframe(TURN_LEFT, glm::vec2(0.5f, 0.5f));
+	spriteSM->addKeyframe(TURN_LEFT, glm::vec2(0.5f, 0.25f));
 
 	spriteSM->setAnimationSpeed(TURN_RIGHT, 8);
 	spriteSM->addKeyframe(TURN_RIGHT, glm::vec2(0.5f, 0.f));
 
+	/*
 	spriteSM->setAnimationSpeed(DEATH, 8);
-	spriteSM->addKeyframe(DEATH, glm::vec2(0.75f, 0.f));
+	spriteSM->addKeyframe(DEATH, glm::vec2(0.75f, 0.25f));
+	*/
 
 	spriteSM->setAnimationSpeed(STAND_FLAG, 2);
 	spriteSM->addKeyframe(STAND_FLAG, glm::vec2(0.875f, 0.f));
 
 	spriteSM->setAnimationSpeed(RSTAND_FLAG, 2);
-	spriteSM->addKeyframe(RSTAND_FLAG, glm::vec2(0.75f, 0.5f));
+	spriteSM->addKeyframe(RSTAND_FLAG, glm::vec2(0.75f, 0.f));
 
 	spriteSM->setAnimationSpeed(DOWN_FLAG, 4);
 	spriteSM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.0f));
-	spriteSM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.5f));
+	spriteSM->addKeyframe(DOWN_FLAG, glm::vec2(0.875f, 0.25f));
 
-	spriteM->changeAnimation(1);
+	spriteSM->setAnimationSpeed(CLAMPED_LEFT, 1);
+	spriteSM->addKeyframe(CLAMPED_LEFT, glm::vec2(0.125f, 0.5f));
+
+	spriteSM->setAnimationSpeed(CLAMPED_RIGHT, 1);
+	spriteSM->addKeyframe(CLAMPED_RIGHT, glm::vec2(0.125f, 0.5f));
+
 
 	spriteChange = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 1.f), &spritesheetChange, &shaderProgram);
 	spriteChange->setNumberAnimations(2);
@@ -340,7 +354,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteChange->addKeyframe(SHRINK, glm::vec2(0.75f, 0.f));
 
 	spriteChange->changeAnimation(GROW);
-	
+
+	/*
 	spriteClamped = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 1.f), &spritesheetClamped, &shaderProgram);
 	spriteClamped->setNumberAnimations(4);
 
@@ -358,9 +373,11 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteClamped->setAnimationSpeed(STAR_LEFT, 22);
 	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.375f, 0.f));
 	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.625f, 0.f));
-	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.875f, 0.f));		
+	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.875f, 0.f));	
+	*/
 
 	tileMapDispl = tileMapPos;
+	spriteM->changeAnimation(1);
 	spriteM->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	oldPlayer = posPlayer;
 	sprite = spriteM;
@@ -471,38 +488,6 @@ void Player::flagTreatment()
 }
 
 void Player::getOut(int deltaTime) {
-	/*
-	countAnimation += deltaTime;
-	if (countAnimation < 1000) {
-	}
-	else if (posPlayer.x < 199 * 32) {
-		if (sprite->animation() != MOVE_RIGHT) {
-			sprite->changeAnimation(MOVE_RIGHT);
-		}
-
-		posPlayer.x += 30;
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	}
-	else if (posPlayer.y < (12 * 32) - 2) {
-		if (sprite->animation() != JUMP_RIGHT) {
-			posPlayer.x += 20;
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-			sprite->changeAnimation(JUMP_RIGHT);
-		}
-		else {
-			posPlayer.x += 4;
-			posPlayer.y += 2;
-			sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-		}
-	}
-	else if (posPlayer.x < 200 * 32) {
-		if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	}
-	int a = 1;
-	*/
 	sprite->update(deltaTime);
 	if (sprite->animation() != MOVE_RIGHT) {
 		sprite->setAnimationSpeed(MOVE_RIGHT, 6);
@@ -516,24 +501,16 @@ void Player::getOut(int deltaTime) {
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+
 void Player::setClampedMarioSprite()
 {
-	sprite = spriteClamped;
-	if (vx <= 0.f) {
-		if (starMario) {
-			if (sprite->animation() != STAR_LEFT)
-				sprite->changeAnimation(STAR_LEFT);
-		}
-		else {
+	if (vx < 0.f) {
+		if (sprite->animation() != CLAMPED_LEFT) {
 			sprite->changeAnimation(CLAMPED_LEFT);
 		}
 	}
 	else {
-		if (starMario) {
-			if (sprite->animation() != STAR_RIGHT)
-				sprite->changeAnimation(STAR_RIGHT);
-		}
-		else {
+		if (sprite->animation() != CLAMPED_RIGHT) {
 			sprite->changeAnimation(CLAMPED_RIGHT);
 		}
 	}
@@ -842,19 +819,19 @@ void Player::update(int deltaTime)
 					sprite->setAnimationSpeed(MOVE_RIGHT, 4);
 				if (vx > -2.0f)
 					sprite->setAnimationSpeed(MOVE_LEFT, 4);
-				if ((sprite->animation() == MOVE_LEFT) && vx == 0.0f)
+				if ((sprite->animation() == MOVE_LEFT) && vx == 0.0f && !clamped)
 					sprite->changeAnimation(STAND_LEFT);
-				else if ((sprite->animation() == MOVE_RIGHT) && vx == 0.0f)
+				else if ((sprite->animation() == MOVE_RIGHT) && vx == 0.0f && !clamped)
 					sprite->changeAnimation(STAND_RIGHT);
 			}
 
 			if (Game::instance().getSpecialKey(GLUT_KEY_DOWN) && superMario) {
-				if (sprite != spriteClamped)
-					setClampedMarioSprite();
+				setClampedMarioSprite();
 			}
 			else {
-				if (starMario)
-					setStarMarioSprite();
+				//if (starMario)
+				//	setStarMarioSprite();
+
 				clamped = false;
 			}
 
