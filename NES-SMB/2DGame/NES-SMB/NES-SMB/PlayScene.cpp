@@ -734,6 +734,10 @@ void PlayScene::goombas_update(int deltaTime)
 
 			}
 		}
+		else if (goomba != NULL && goomba->getPosition().x < centerCam - 300.f) {
+			delete goomba;
+			goomba = NULL;
+		}
 	}
 }
 void PlayScene::koopas_update(int deltaTime)
@@ -815,6 +819,10 @@ void PlayScene::koopas_update(int deltaTime)
 		}
 
 		else if (koopa != NULL && abs(*koopa->getVelocity()) == 5.f){
+			delete koopa;
+			koopa = NULL;
+		}
+		else if (koopa != NULL && koopa->getPosition().x < centerCam - 300.f) {
 			delete koopa;
 			koopa = NULL;
 		}
@@ -1057,7 +1065,7 @@ void PlayScene::star_timer_update(int deltaTime)
 	if (!player->is_infinite()) {
 		if (star_timer > 0.f)
 			star_timer -= deltaTime / 400.f;
-		if (star_timer < 3.f) {
+		if (star_timer < 5.f) {
 			player->setAnimationSpeed();
 		}
 		if (star_timer < 0.f || star_timer < 0.005f) {
