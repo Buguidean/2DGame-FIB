@@ -9,6 +9,7 @@ void BlockSprite::set_used() {}
 void BlockSprite::set_inactive() {}
 void BlockSprite::set_gift() {}
 bool BlockSprite::get_gift() { return NULL; }
+bool BlockSprite::is_question() { return NULL; }
 
 void BlockSprite::render()
 {

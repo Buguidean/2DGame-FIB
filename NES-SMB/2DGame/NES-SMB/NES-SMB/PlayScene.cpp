@@ -521,7 +521,6 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						points += 200.0f;
 						++coins;
 
-						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
 					}
@@ -536,6 +535,9 @@ void PlayScene::animated_blocks_update(int deltaTime)
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
 						}
+					}
+					if (blocks[blocks_in_motion[0]]->is_question()) {
+						blocks[blocks_in_motion[0]]->set_used();
 					}
 					blocks_in_motion.clear();
 					distances.clear();
@@ -573,7 +575,6 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						points += 200.0f;
 						++coins;
 
-						blocks[blocks_in_motion[1]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
 					}
@@ -588,6 +589,9 @@ void PlayScene::animated_blocks_update(int deltaTime)
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
 						}
+					}
+					if (blocks[blocks_in_motion[1]]->is_question()) {
+						blocks[blocks_in_motion[1]]->set_used();
 					}
 					blocks_in_motion.clear();
 					distances.clear();
@@ -628,7 +632,6 @@ void PlayScene::animated_blocks_update(int deltaTime)
 					points += 200.0f;
 					++coins;
 
-					blocks[blocks_in_motion[0]]->set_used();
 					powerUp->set_poping(true);
 					powerUp->set_render(true);
 				}
@@ -642,7 +645,10 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
-					}
+					}	
+				}
+				if (blocks[blocks_in_motion[0]]->is_question()) {
+					blocks[blocks_in_motion[0]]->set_used();
 				}
 				blocks_in_motion.clear();
 				distances.clear();
@@ -1179,9 +1185,6 @@ void PlayScene::render()
 	// if (!enemy->playerKilled())
 	flag->render();
 
-	if (player != NULL && int(inv_timer*10000)%2 == 0 && player->getPosition().x <= 6528)
-		player->render();
-
 	render_iface();
 
 	for (auto & powerUp : power_sprites) {
@@ -1208,6 +1211,9 @@ void PlayScene::render()
 		if (koopa != NULL)
 			koopa->render();
 	}
+
+	if (player != NULL && int(inv_timer * 10000) % 2 == 0 && player->getPosition().x <= 6528)
+		player->render();
 
 	for (auto & points_sprite : points_sprites) {
 		if (points_sprite != NULL)

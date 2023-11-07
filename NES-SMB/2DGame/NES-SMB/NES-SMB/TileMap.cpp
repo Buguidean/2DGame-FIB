@@ -176,8 +176,9 @@ bool TileMap::collisionMoveLeftEntity(const glm::ivec2 &pos, const glm::ivec2 &s
 bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX, bool margin, int center) const
 {
 	int x, y0, y1;
+	int size_x = size.x - 5;
 	
-	x = (pos.x - 1) / tileSize;
+	x = pos.x / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 3) / tileSize;
 	for(int y=y0; y<=y1; y++)
@@ -189,9 +190,9 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, i
 				return true;
 			}
 
-			else if (*posX - tileSize * x - size.x <= 10 )
+			else if (*posX - tileSize * x - size_x <= 10 )
 			{
-				*posX = tileSize * x + size.x;
+				*posX = tileSize * x + size_x;
 				return true;
 			}
 		}
@@ -225,17 +226,18 @@ bool TileMap::collisionMoveRightEntity(const glm::ivec2 &pos, const glm::ivec2 &
 bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const
 {
 	int x, y0, y1;
+	int size_x = size.x - 5;
 	
-	x = (pos.x + size.x) / tileSize;
+	x = (pos.x + size_x) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 3) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
 		if (map[y*mapSize.x + x] != 0)
 		{
-			if (*posX - tileSize * x + size.x <= 10)
+			if (*posX - tileSize * x + size_x <= 10)
 			{
-				*posX = tileSize * x - size.x;
+				*posX = tileSize * x - size_x;
 				return true;
 			}
 		}
@@ -247,9 +249,10 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
 {
 	int x0, x1, y;
-	
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
+	int size_x = size.x - 5;
+
+	x0 = (pos.x + 5) / tileSize;
+	x1 = (pos.x + size_x - 1) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for(int x=x0; x<=x1; x++)
 	{
@@ -269,15 +272,16 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
 {
 	int x0, x1, y;
+	int size_x = size.x - 5;
 
-	x0 = (pos.x + 1) / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
+	x0 = (pos.x + 5) / tileSize;
+	x1 = (pos.x + size_x - 1) / tileSize;
 	y = (pos.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		if (map[y*mapSize.x + x] != 0)
 		{
-			if (*posY - tileSize * y - size.y <= 5)
+			if (*posY - tileSize * y - size.y <= 10)
 			{
 				*posY = tileSize * y + 32;
 				return true;
@@ -337,11 +341,12 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 {
 	int min_xM, min_yM, max_xM, max_yM;
 	int min_xE, min_yE, max_xE, max_yE;
+	int sizeM_x = sizeM.x - 5;
 
 	glm::ivec2 center_M, center_E;
 
-	min_xM = posM.x;
-	max_xM = (posM.x + sizeM.x);
+	min_xM = posM.x + 5;
+	max_xM = (posM.x + sizeM_x - 1);
 	min_yM = posM.y;
 	max_yM = posM.y + sizeM.y;
 
@@ -354,7 +359,7 @@ int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM
 
 	if ((min_xM < max_xE) && (min_xE < max_xM) && (min_yM < max_yE) && (min_yE < max_yM)) {
 
-		center_M = glm::vec2(posM.x + sizeM.x / 2, posM.y + sizeM.y / 2);
+		center_M = glm::vec2(posM.x + sizeM_x / 2, posM.y + sizeM.y / 2);
 		center_E = glm::vec2(posE.x + sizeE.x / 2, posE.y + sizeE.y / 2);
 
 		glm::vec2 direction = center_E - center_M;
@@ -374,11 +379,17 @@ pair<int,float> TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::
 {
 	int min_xM, min_yM, max_xM, max_yM;
 	int min_xE, min_yE, max_xE, max_yE;
+	int sizeM_x = sizeM.x - 5;
+	int sizeE_y;
+	if (sizeE.y == 64)
+		sizeE_y = sizeE.y + 32;
+	else
+		sizeE_y = sizeE.y;
 
 	glm::ivec2 center_M, center_E;
 
-	min_xM = posM.x;
-	max_xM = posM.x + sizeM.x;
+	min_xM = posM.x + 5;
+	max_xM = (posM.x + sizeM_x - 1);
 	min_yM = posM.y;
 	max_yM = posM.y + sizeM.y;
 
@@ -386,17 +397,17 @@ pair<int,float> TileMap::collisionMarioEnemy(const glm::ivec2 &posM, const glm::
 	max_xE = posE.x + sizeE.x - 2;
 
 	if (sizeE.y == 64)
-		min_yE = posE.y + 18;
+		min_yE = posE.y + 32;
 	else
 		min_yE = posE.y + 2;
 
-	max_yE = posE.y + sizeE.y -2;
+	max_yE = posE.y + sizeE_y;
 
 
 	if ((min_xM < max_xE) && (min_xE < max_xM) && (min_yM < max_yE) && (min_yE < max_yM)) {
 
-		center_M = glm::vec2(posM.x + sizeM.x / 2, posM.y + sizeM.y / 2);
-		center_E = glm::vec2(posE.x + sizeE.x / 2, posE.y + sizeE.y / 2);
+		center_M = glm::vec2(posM.x + sizeM_x / 2, posM.y + sizeM.y / 2);
+		center_E = glm::vec2(posE.x + sizeE.x / 2, posE.y + sizeE_y / 2);
 
 		glm::vec2 direction = center_E - center_M;
 		float module = std::sqrt(direction.x * direction.x + direction.y * direction.y);

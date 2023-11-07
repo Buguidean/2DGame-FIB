@@ -20,8 +20,10 @@ class Brick :
 		void set_gift() override;
 		bool get_gift() override;
 		void set_inactive() override;
+		bool is_question() override;
 
 	private:
+		bool question;
 		bool gift;
 		float vy;
 		bool bumping;

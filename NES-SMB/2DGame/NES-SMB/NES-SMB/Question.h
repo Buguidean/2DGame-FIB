@@ -20,10 +20,12 @@ class Question:
 		void set_gift() override;
 		bool get_gift() override;
 		void set_inactive() override;
+		bool is_question() override;
 
 	private:
 		bool gift;
 		float vy;
+		bool question;
 		bool bumping;
 		bool drop;
 		bool used;

@@ -32,6 +32,7 @@ void Brick::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	used = false;
 	gift = false;
 	bumping = false;
+	question = false;
 	startY = posBlock.y;
 }
 
@@ -106,4 +107,9 @@ void Brick::set_gift()
 bool Brick::get_gift()
 {
 	return gift;
+}
+
+bool Brick::is_question() 
+{ 
+	return question;
 }

@@ -21,6 +21,7 @@ public:
 	virtual void set_inactive();
 	virtual void set_gift();
 	virtual bool get_gift();
+	virtual bool is_question();
 	void render();
 
 	void setTileMap(TileMap *tileMap);

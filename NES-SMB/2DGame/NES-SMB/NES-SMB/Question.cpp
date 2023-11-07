@@ -35,6 +35,7 @@ void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBlock.x), float(tileMapDispl.y + posBlock.y)));
 	
 	vy = 0.f;
+	question = true;
 	used = false;
 	gift = true;
 	bumping = false;
@@ -113,4 +114,9 @@ void Question::set_gift()
 bool Question::get_gift()
 {
 	return gift;
+}
+
+bool Question::is_question()
+{
+	return question;
 }
