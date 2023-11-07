@@ -868,7 +868,7 @@ void Player::update(int deltaTime)
 			////////////////////////////////////////////////////////////////////////////////////////////////
 
 			if (small_jump) {
-				if ((start_small_jump - posPlayer.y) >= 20) {
+				if ((start_small_jump - posPlayer.y) >= 30) {
 					if (vy > -5.f) {
 						vy -= 0.1f * deltaTime;
 					}

@@ -105,7 +105,7 @@ void Goomba::update(int deltaTime)
 		else if (dying) {
 			//dying animation
 			dead = true;
-			dying = false;
+			dying = true;
 			counter = 0;
 		}
 

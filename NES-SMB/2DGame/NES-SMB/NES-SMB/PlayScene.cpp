@@ -679,7 +679,13 @@ void PlayScene::goombas_update(int deltaTime)
 	for (auto & goomba : goombas) {
 		if (goomba != NULL && (goomba->getPosition().x > centerCam-300.f && goomba->getPosition().x < centerCam+300.f)) {
 			goomba->update(deltaTime);
-			if (goomba->being_killed()) {
+
+			if (goomba->killed()) {
+				delete goomba;
+				goomba = NULL;
+			}
+
+			else if (goomba->being_killed()) {
 				if (!goomba->get_player_murderer()) {
 					goomba->set_player_murderer(true);
 				}
@@ -705,11 +711,6 @@ void PlayScene::goombas_update(int deltaTime)
 				points += possible_points[index];
 				init_pointsSprites(goomba->getPosition(), index);
 				points_timer = 2.f;
-			}
-
-			else if (goomba->killed()) {
-				delete goomba;
-				goomba = NULL;
 			}
 
 			else {
@@ -812,6 +813,11 @@ void PlayScene::koopas_update(int deltaTime)
 				
 			}
 		}
+
+		else if (koopa != NULL && abs(*koopa->getVelocity()) == 5.f){
+			delete koopa;
+			koopa = NULL;
+		}
 	}
 }
 void PlayScene::enemy_collisions() 
@@ -857,6 +863,52 @@ void PlayScene::enemy_collisions()
 				if (goombas[j] != NULL) {
 					map->collisionEnemyEnemy(goombas[i]->getPosition(), glm::ivec2(32, 32), *goombas[i]->getVelocity(),
 						goombas[j]->getPosition(), glm::ivec2(32, 32), *goombas[j]->getVelocity());
+				}
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < koopas.size(); ++i) {
+		if (koopas[i] != NULL) {
+			for (unsigned int j = 0; j < blocks.size(); ++j) {
+				if (blocks[j] != NULL) {
+					if (map->collisionBlockEnemy(koopas[i]->getPosition(), glm::ivec2(32, 64), blocks[j]->getPosition(), glm::ivec2(32, 32))) {
+						if (!koopas[i]->get_flipped()) {
+
+							if ((points_timer != 0.f) && (index != 10))
+								++index;
+							points += possible_points_koopa[index];
+							init_pointsSprites(koopas[i]->getPosition(), index);
+							points_timer = 2.f;
+
+							koopas[i]->set_flipped_death();
+						}
+						koopas[i]->set_player_murderer(false);
+						koopas[i]->setDying();
+					}
+				}
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < goombas.size(); ++i) {
+		if (goombas[i] != NULL) {
+			for (unsigned int j = 0; j < blocks.size(); ++j) {
+				if (blocks[j] != NULL) {
+					if (map->collisionBlockEnemy(goombas[i]->getPosition(), glm::ivec2(32, 32), blocks[j]->getPosition(), glm::ivec2(32, 32))) {
+						if (!goombas[i]->get_flipped()) {
+
+							if ((points_timer != 0.f) && (index != 10))
+								++index;
+							points += possible_points_koopa[index];
+							init_pointsSprites(goombas[i]->getPosition(), index);
+							points_timer = 2.f;
+
+							goombas[i]->set_flipped_death();
+						}
+						goombas[i]->set_player_murderer(false);
+						goombas[i]->setDying();
+					}
 				}
 			}
 		}

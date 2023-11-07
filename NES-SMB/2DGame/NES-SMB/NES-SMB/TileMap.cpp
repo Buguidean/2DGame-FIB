@@ -337,6 +337,32 @@ int TileMap::collisionEnemyEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE
 	return -1;
 }
 
+bool TileMap::collisionBlockEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE_1, const glm::ivec2 posE_2, const glm::ivec2 sizeE_2) const
+{
+	int min_xE_1, min_yE_1, max_xE_1, max_yE_1;
+	int min_xE_2, min_yE_2, max_xE_2, max_yE_2;
+
+	glm::ivec2 center_M, center_E;
+
+	min_xE_1 = posE_1.x;
+	max_xE_1 = (posE_1.x + sizeE_1.x);
+	min_yE_1 = posE_1.y;
+	max_yE_1 = posE_1.y + sizeE_1.y;
+
+	min_xE_2 = posE_2.x;
+	max_xE_2 = posE_2.x + sizeE_2.x;
+
+	min_yE_2 = posE_2.y;
+	max_yE_2 = posE_2.y + sizeE_2.y;
+
+
+	if ((min_xE_1 < max_xE_2) && (min_xE_2 < max_xE_1) && (min_yE_1 < max_yE_2) && (min_yE_2 < max_yE_1)) {
+		return true;
+	}
+
+	return false;
+}
+
 int TileMap::collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const
 {
 	int min_xM, min_yM, max_xM, max_yM;

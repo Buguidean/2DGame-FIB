@@ -40,6 +40,7 @@ public:
 	pair<int, float> collisionMarioEnemy(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const;
 	int collisionMarioBlock(const glm::ivec2 &posM, const glm::ivec2 &sizeM, const glm::ivec2 &posE, const glm::ivec2 &sizeE) const;
 	int collisionEnemyEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE_1, float &v1, const glm::ivec2 posE_2, const glm::ivec2 sizeE_2, float &v2) const;
+	bool collisionBlockEnemy(const glm::ivec2 posE_1, const glm::ivec2 sizeE_1, const glm::ivec2 posE_2, const glm::ivec2 sizeE_2) const;
 
 	int* getMap();
 	void modify_position(int j, int i);
