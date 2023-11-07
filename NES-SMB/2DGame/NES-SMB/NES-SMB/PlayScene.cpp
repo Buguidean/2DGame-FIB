@@ -71,25 +71,28 @@ void PlayScene::reset()
 	points_timer = 0.f;
 	inv_timer = 0.f;
 
-	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[0]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[1]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[2]->setPosition(glm::vec2(28 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
-	point_counter[0]->setPosition(glm::vec2(2 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[1]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[2]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[3]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[0]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[1]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[2]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[3]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[4]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[5]->setPosition(glm::vec2(8 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
-	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	//level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
+
+	world->setPosition(glm::vec2(19 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	world->setNumber(1);
 
 	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
@@ -100,7 +103,7 @@ void PlayScene::reset()
 
 	if (player == NULL) {
 		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetClamped);
 		player->setTileMap(map);
 	}
 	else {
@@ -166,11 +169,12 @@ void PlayScene::init()
 	spritesheetSuperStM.loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetSmallStM.loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetChange.loadFromFile("images/grow_shrink.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetClamped.loadFromFile("images/clamped_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	// ANIMATED COIN TEXTURE
 	spritesheetCoin.loadFromFile("images/coin_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	//STATICIFACE TECTURE
+	// STATICIFACE TEXTURE
 	spritesheetStatic.loadFromFile("images/static_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
@@ -265,8 +269,13 @@ void PlayScene::init()
 	
 	level = new Text();
 	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	level->setPosition(glm::vec2(22 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
+
+	world = new Text();
+	world->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	world->setPosition(glm::vec2(19 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	world->setNumber(1);
 
 	coinSprite = new AnimatedCoin();
 	coinSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoin);
@@ -281,28 +290,28 @@ void PlayScene::init()
 	}
 
 	timer[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	timer[0]->setPosition(glm::vec2(25 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[0]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	timer[1]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[1]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	timer[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	timer[2]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	timer[2]->setPosition(glm::vec2(28 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	for (auto & digit : point_counter) {
 		digit = new Text();
 	}
 
 	point_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[0]->setPosition(glm::vec2(2 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[0]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[1]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[1]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[2]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[2]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[3]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[3]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[3]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[4]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[4]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[4]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[5]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	point_counter[5]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	point_counter[5]->setPosition(glm::vec2(8 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	for (auto & digit : coin_counter) {
 		digit = new Text();
@@ -315,7 +324,7 @@ void PlayScene::init()
 
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetClamped);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
@@ -448,6 +457,30 @@ void PlayScene::particles_update(int deltaTime)
 				delete particles[i];
 				particles[i] = NULL;
 				particles.erase(particles.begin() + i);
+			}
+		}
+	}
+}
+
+void PlayScene::init_pointsSprites(const glm::vec2 &pos, int anim)
+{
+	PointsSprite* p1 = new PointsSprite();
+	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, anim);
+	p1->setPosition(pos);
+	points_sprites.push_back(p1);
+}
+
+void PlayScene::pointsSprite_update(int deltaTime)
+{
+
+	for (unsigned int i = 0; i < points_sprites.size(); ++i) {
+		if (points_sprites[i] != NULL) {
+			points_sprites[i]->update(deltaTime);
+
+			if (points_sprites[i]->get_inactive()) {
+				delete points_sprites[i];
+				points_sprites[i] = NULL;
+				points_sprites.erase(points_sprites.begin() + i);
 			}
 		}
 	}
@@ -651,6 +684,7 @@ void PlayScene::goombas_update(int deltaTime)
 					if ((points_timer != 0.f) && (index != 10))
 						++index;
 					points += possible_points[index];
+					init_pointsSprites(goomba->getPosition(), index);
 					points_timer = 2.f;
 					
 					player->set_small_jump();
@@ -664,6 +698,7 @@ void PlayScene::goombas_update(int deltaTime)
 				if ((points_timer != 0.f) && (index != 10))
 					++index;
 				points += possible_points[index];
+				init_pointsSprites(goomba->getPosition(), index);
 				points_timer = 2.f;
 			}
 
@@ -717,7 +752,8 @@ void PlayScene::koopas_update(int deltaTime)
 				if ((points_timer != 0.f) && (index != 10))
 					++index;
 				points += possible_points[index];
-				points_timer = 1.f;
+				init_pointsSprites(koopa->getPosition(), index);
+				points_timer = 2.f;
 			}
 
 			else {
@@ -729,11 +765,14 @@ void PlayScene::koopas_update(int deltaTime)
 							++index;
 						}
 						points += possible_points[index];
-						points_timer = 1.f;
+						init_pointsSprites(koopa->getPosition(), index);
+						points_timer = 2.f;
 					}
 
 					else {
 						points += 400.f;
+						init_pointsSprites(koopa->getPosition(), 2);
+						points_timer = 2.f;
 					}
 
 					player->set_small_jump();
@@ -742,7 +781,9 @@ void PlayScene::koopas_update(int deltaTime)
 
 				else if (koopa->get_shell_hit_side()) {
 					points += 400.f;
+					init_pointsSprites(koopa->getPosition(), 2);
 					koopa->unset_shell_hit_side();
+					points_timer = 2.f;
 				}
 
 				if (koopa->playerKilled()) {
@@ -785,7 +826,8 @@ void PlayScene::enemy_collisions()
 							if ((points_timer != 0.f) && (index_pk != 10))
 								++index_pk;
 							points += possible_points_koopa[index_pk];
-							points_timer = 1.f;
+							init_pointsSprites(goomba->getPosition(), index_pk + 3);
+							points_timer = 2.f;
 
 							goomba->set_flipped_death();
 						}
@@ -827,10 +869,12 @@ void PlayScene::enemy_collisions()
 						koopas[i]->setDying();
 						if (!koopas[i]->get_flipped()) {
 
+							points += possible_points_koopa[index_pk];
+							init_pointsSprites(koopas[i]->getPosition(), index_pk + 3);
+							points_timer = 2.f;
+
 							if ((points_timer != 0.f) && (index_pk != 10))
 								++index_pk;
-							points += possible_points_koopa[index_pk];
-							points_timer = 1.f;
 
 							koopas[i]->set_flipped_death();
 						}
@@ -840,10 +884,12 @@ void PlayScene::enemy_collisions()
 						koopas[j]->setDying();
 						if (!koopas[j]->get_flipped()) {
 
+							points += possible_points_koopa[index_pk];
+							init_pointsSprites(koopas[j]->getPosition(), index_pk + 3);
+							points_timer = 2.f;
+
 							if ((points_timer != 0.f) && (index_pk != 10))
 								++index_pk;
-							points += possible_points_koopa[index_pk];
-							points_timer = 1.f;
 
 							koopas[j]->set_flipped_death();
 						}
@@ -884,6 +930,7 @@ void PlayScene::camera_update()
 				digit->setPosition(glm::fvec2(digit->getPosition().x + v, digit->getPosition().y));
 			}
 
+			world->setPosition(glm::fvec2(world->getPosition().x + v, world->getPosition().y));
 			level->setPosition(glm::fvec2(level->getPosition().x + v, level->getPosition().y));
 			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + v, coinSprite->getPosition().y));
 			staticSprite->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
@@ -902,9 +949,10 @@ void PlayScene::camera_update()
 				digit->setPosition(glm::fvec2(digit->getPosition().x + (v / 2), digit->getPosition().y));
 			}
 
+			world->setPosition(glm::fvec2(world->getPosition().x + (v / 2), world->getPosition().y));
 			level->setPosition(glm::fvec2(level->getPosition().x + (v / 2), level->getPosition().y));
 			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + (v / 2), coinSprite->getPosition().y));
-			staticSprite->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
+			staticSprite->setPosition(glm::fvec2(staticSprite->getPosition().x + (v / 2), staticSprite->getPosition().y));
 			centerCam += (v / 2.f);
 		}
 	}
@@ -921,6 +969,7 @@ void PlayScene::powerUps_update(int deltaTime)
 			if (powerUp->is_picked() == 1) {
 				// POINTS POWERUP
 				points += 1000.0f;
+				init_pointsSprites(powerUp->getPosition(), 5);
 				if (!player->isSuperMario()) {
 					player->set_Growing();
 				}
@@ -930,6 +979,7 @@ void PlayScene::powerUps_update(int deltaTime)
 			else if (powerUp->is_picked() == 2) {
 				// POINTS POWERUP
 				points += 1000.0f;
+				init_pointsSprites(powerUp->getPosition(), 5);
 				player->setStarMarioSprite();
 				star_timer = 30.f;
 				delete powerUp;
@@ -937,6 +987,7 @@ void PlayScene::powerUps_update(int deltaTime)
 			}
 
 			else if (powerUp->is_picked() == 3) {
+				init_pointsSprites(glm::fvec2(powerUp->getPosition().x, powerUp->getPosition().y+5), 1);
 				delete powerUp;
 				powerUp = NULL;
 			}
@@ -1030,6 +1081,7 @@ int PlayScene::update(int deltaTime)
 
 		animated_blocks_update(deltaTime);
 		particles_update(deltaTime);
+		pointsSprite_update(deltaTime);
 
 		goombas_update(deltaTime);
 		koopas_update(deltaTime);
@@ -1044,21 +1096,27 @@ int PlayScene::update(int deltaTime)
 			//CALCULAR PUNTOS
 			if (center >= 351) {
 				points += 100.0f;
+				init_pointsSprites(player->getPosition(), 0);
 			}
 			else if (center >= 287) {
 				points += 400.0f;
+				init_pointsSprites(player->getPosition(), 2);
 			}
 			else if (center >= 223) {
 				points += 800.0f;
+				init_pointsSprites(player->getPosition(), 4);
 			}
 			else if (center >= 159) {
 				points += 2000.0f;
+				init_pointsSprites(player->getPosition(), 6);
 			}
 			else if (center >= 127) {
 				points += 4000.0f;
+				init_pointsSprites(player->getPosition(), 7);
 			}
 			else {
 				points += 5000.0f;
+				init_pointsSprites(player->getPosition(), 8);
 			}
 			player->setInFlag();
 			flag->unset_points();
@@ -1076,6 +1134,7 @@ int PlayScene::update(int deltaTime)
 			}
 		}
 
+		staticSprite->update(deltaTime);
 		coinSprite->update(deltaTime);
 		points_timer_update(deltaTime);
 	}
@@ -1097,6 +1156,8 @@ void PlayScene::render_iface() {
 	}
 
 	level->render();
+
+	world->render();
 
 	coinSprite->render();
 
@@ -1149,7 +1210,10 @@ void PlayScene::render()
 			koopa->render();
 	}
 
-	
+	for (auto & points_sprite : points_sprites) {
+		if (points_sprite != NULL)
+			points_sprite->render();
+	}
 
 }
 

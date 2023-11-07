@@ -23,6 +23,7 @@
 #include "Particles.h"
 #include "Sprite.h"
 #include "AnimatedCoin.h"
+#include "PointsSprite.h"
 #include "StaticIface.h"
 #include <irrklang.h>
 
@@ -51,7 +52,9 @@ public:
 	void enemy_collisions();
 	void powerUps_update(int deltaTime);
 	void init_particles(int pos);
+	void init_pointsSprites(const glm::vec2 &pos, int anim);
 	void particles_update(int deltaTime);
+	void pointsSprite_update(int deltaTime);
 	void star_timer_update(int deltaTime);
 	void inv_timer_update(int deltaTime);
 	void points_timer_update(int deltaTime);
@@ -81,6 +84,7 @@ private:
 	std::vector<float> possible_points;
 	std::vector<int> blocks_in_motion;
 	std::vector<float> distances;
+	std::vector<PointsSprite*> points_sprites;
 	std::vector<Particles*> particles;
 	std::vector<Text*> timer;
 	std::vector<Text*> point_counter;
@@ -94,7 +98,7 @@ private:
 
 	TileMap *map, *back, *sprites, *powerups;
 	Player *player;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped;
 	AnimatedCoin* coinSprite;
 	StaticIface* staticSprite;
 	Flag *flag;
@@ -109,6 +113,7 @@ private:
 	irrklang::ISoundEngine* engine;
 
 	Text* level;
+	Text* world;
 };
 
 

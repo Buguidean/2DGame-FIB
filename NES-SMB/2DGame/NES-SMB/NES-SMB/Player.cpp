@@ -19,6 +19,11 @@ enum TransitionAnims
 	GROW, SHRINK
 };
 
+enum ClampedAnims
+{
+	CLAMPED_LEFT, CLAMPED_RIGHT, STAR_LEFT, STAR_RIGHT
+};
+
 Player::~Player()
 {
 	if (spriteM != NULL) {
@@ -35,6 +40,9 @@ Player::~Player()
 	}
 	if (spriteChange != NULL) {
 		delete spriteChange;
+	}
+	if (spriteClamped != NULL) {
+		delete spriteClamped;
 	}
 	if (engine != NULL) {
 		delete engine;
@@ -69,7 +77,7 @@ void Player::reset()
 }
 
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange)
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange, Texture &spritesheetClamped)
 {
 	engine = irrklang::createIrrKlangDevice();
 	invulnerable = false;
@@ -332,6 +340,25 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Te
 	spriteChange->addKeyframe(SHRINK, glm::vec2(0.75f, 0.f));
 
 	spriteChange->changeAnimation(GROW);
+	
+	spriteClamped = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 1.f), &spritesheetClamped, &shaderProgram);
+	spriteClamped->setNumberAnimations(4);
+
+	spriteClamped->setAnimationSpeed(CLAMPED_RIGHT, 1);
+	spriteClamped->addKeyframe(CLAMPED_RIGHT, glm::vec2(0.0f, 0.f));
+
+	spriteClamped->setAnimationSpeed(CLAMPED_LEFT, 1);
+	spriteClamped->addKeyframe(CLAMPED_LEFT, glm::vec2(0.125f, 0.f));
+
+	spriteClamped->setAnimationSpeed(STAR_RIGHT, 22);
+	spriteClamped->addKeyframe(STAR_RIGHT, glm::vec2(0.25f, 0.f));
+	spriteClamped->addKeyframe(STAR_RIGHT, glm::vec2(0.5f, 0.f));
+	spriteClamped->addKeyframe(STAR_RIGHT, glm::vec2(0.75f, 0.f));
+
+	spriteClamped->setAnimationSpeed(STAR_LEFT, 22);
+	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.375f, 0.f));
+	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.625f, 0.f));
+	spriteClamped->addKeyframe(STAR_LEFT, glm::vec2(0.875f, 0.f));		
 
 	tileMapDispl = tileMapPos;
 	spriteM->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -489,6 +516,32 @@ void Player::getOut(int deltaTime) {
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::setClampedMarioSprite()
+{
+	sprite = spriteClamped;
+	if (vx <= 0.f) {
+		if (starMario) {
+			if (sprite->animation() != STAR_LEFT)
+				sprite->changeAnimation(STAR_LEFT);
+		}
+		else {
+			sprite->changeAnimation(CLAMPED_LEFT);
+		}
+	}
+	else {
+		if (starMario) {
+			if (sprite->animation() != STAR_RIGHT)
+				sprite->changeAnimation(STAR_RIGHT);
+		}
+		else {
+			sprite->changeAnimation(CLAMPED_RIGHT);
+		}
+	}
+	spriteSize = glm::ivec2(32, 64);
+	clamped = true;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
 void Player::setMarioSprite() {
 	superMario = false;
 	starMario = false;
@@ -506,7 +559,6 @@ void Player::setMarioSprite() {
 	spriteSize = glm::ivec2(32, 32);
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-
 }
 
 void Player::setSuperMarioSprite() {
@@ -670,6 +722,7 @@ void Player::update(int deltaTime)
 			infinite = true;
 			setStarMarioSprite();
 		}
+
 		sprite->update(deltaTime);
 		oldPlayer = posPlayer;
 
@@ -678,7 +731,8 @@ void Player::update(int deltaTime)
 		}
 
 		else {
-			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+
+			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !clamped)
 			{
 				if (vx < -2.90f)
 					sprite->setAnimationSpeed(MOVE_LEFT, 14);
@@ -730,7 +784,7 @@ void Player::update(int deltaTime)
 				posPlayer.x += dv;
 			}
 
-			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && !clamped)
 			{
 				if (vx > 2.90f)
 					sprite->setAnimationSpeed(MOVE_RIGHT, 14);
@@ -794,11 +848,21 @@ void Player::update(int deltaTime)
 					sprite->changeAnimation(STAND_RIGHT);
 			}
 
+			if (Game::instance().getSpecialKey(GLUT_KEY_DOWN) && superMario) {
+				if (sprite != spriteClamped)
+					setClampedMarioSprite();
+			}
+			else {
+				if (starMario)
+					setStarMarioSprite();
+				clamped = false;
+			}
+
 			//
-			if (vx == 0.f && sprite->animation() == TURN_LEFT) {
+			if (vx == 0.f && sprite->animation() == TURN_LEFT && !clamped) {
 				sprite->changeAnimation(STAND_LEFT);
 			}
-			else if (vx == 0.f && sprite->animation() == TURN_RIGHT) {
+			else if (vx == 0.f && sprite->animation() == TURN_RIGHT && !clamped) {
 				sprite->changeAnimation(STAND_RIGHT);
 			}
 			//

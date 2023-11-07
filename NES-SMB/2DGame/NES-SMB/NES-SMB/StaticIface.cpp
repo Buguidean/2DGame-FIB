@@ -11,7 +11,7 @@ enum anims {
 
 void StaticIface::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spriteSheetStatic)
 {
-	sprite = Sprite::createSprite(glm::ivec2(256, 8), glm::vec2(0.5f, 0.5f), &spriteSheetStatic, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(512, 32), glm::vec2(1.f, 1.f), &spriteSheetStatic, &shaderProgram);
 	sprite->setNumberAnimations(1);
 	sprite->setAnimationSpeed(STAY, 1);
 	sprite->addKeyframe(STAY, glm::vec2(0.f, 0.0f));
