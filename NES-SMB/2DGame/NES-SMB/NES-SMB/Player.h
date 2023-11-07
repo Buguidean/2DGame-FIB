@@ -17,7 +17,7 @@ class Player
 public:
 	~Player();
 
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange, Texture &spritesheetClamped);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetM, Texture &spritesheetSM, Texture &spritesheetSuperStM, Texture &spritesheetSmallStM, Texture &spritesheetChange);
 	void update(int deltaTime);
 	void render();
 	
@@ -49,7 +49,6 @@ public:
 	void setMarioSprite();
 	void setSuperMarioSprite();
 	void setStarMarioSprite();
-	void setClampedMarioSprite();
 	void set_Growing();
 	bool get_Growing();
 	void set_Shrinking();
@@ -72,11 +71,10 @@ private:
 	float vx;
 	float vy;
 	bool apex;
-	bool clamped;
 	int ic;
 	glm::ivec2 tileMapDispl, posPlayer, oldPlayer;
 	int jumpAngle, startY;
-	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *spriteChange, *spriteClamped, *sprite;
+	Sprite *spriteM, *spriteSM, *spriteSuperStM, *spriteSmallStM, *spriteChange, *sprite;
 	TileMap *map;
 
 	bool inFlag;

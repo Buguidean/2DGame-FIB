@@ -103,7 +103,7 @@ void PlayScene::reset()
 
 	if (player == NULL) {
 		player = new Player();
-		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetClamped);
+		player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
 		player->setTileMap(map);
 	}
 	else {
@@ -169,7 +169,6 @@ void PlayScene::init()
 	spritesheetSuperStM.loadFromFile("images/superStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetSmallStM.loadFromFile("images/smallStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spritesheetChange.loadFromFile("images/grow_shrink.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spritesheetClamped.loadFromFile("images/clamped_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	// ANIMATED COIN TEXTURE
 	spritesheetCoin.loadFromFile("images/coin_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -324,7 +323,7 @@ void PlayScene::init()
 
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetClamped);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
