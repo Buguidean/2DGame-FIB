@@ -1,7 +1,53 @@
-﻿  PlayScene.cpp
-SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-  NES-SMB.vcxproj -> C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\NES-SMB.exe
-  NES-SMB.vcxproj -> C:\Users\Daniel\Desktop\Uni\VJ\Git\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Debug\NES-SMB.pdb (Full PDB)
+﻿  StaticIface.cpp
+  PlayScene.cpp
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(174): error C2065: 'spriteseehtStatic': identificador no declarado
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(174): error C2228: el operando izquierdo de '.loadFromFile' debe tener class/struct/union
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(174): note: el tipo es 'unknown-type'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(889): error C2059: error de sintaxis: '->'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(890): error C2039: 'centerCam': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(890): error C2039: 'v': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(893): error C2039: 'diff': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(894): error C2039: 'projection': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(894): error C2039: 'v': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(894): error C2440: '<function-style-cast>': no se puede realizar la conversión de 'initializer list' a 'glm::vec3'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(894): note: Ningún constructor ha podido aceptar el tipo de origen o bien la resolución de sobrecarga del constructor era ambigua
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(895): error C2039: 'timer': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(895): error C2039: '<begin>': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(895): error C3312: no se encontró ninguna función 'begin' invocable para el tipo 'unknown-type'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(895): error C2039: '<end>': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(895): error C3312: no se encontró ninguna función 'end' invocable para el tipo 'unknown-type'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): error C2039: 'digit': no es un miembro de 'StaticIface'
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\staticiface.h(12): note: vea la declaración de 'StaticIface'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): error C2065: 'digit': identificador no declarado
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): error C2227: el operando izquierdo de '->getPosition' debe señalar al tipo class/struct/union/generic
+  c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): note: el tipo es 'unknown-type'
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): error C2228: el operando izquierdo de '.x' debe tener class/struct/union
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\playscene.cpp(896): error C2228: el operando izquierdo de '.y' debe tener class/struct/union
+  Generando código...
+  Compilando...
+  main.cpp
+  Text.cpp
+  Star.cpp
+  Question.cpp
+  Player.cpp
+  Particles.cpp
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\particles.cpp(40): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\particles.cpp(46): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+  Mush.cpp
+  MainScene.cpp
+  Game.cpp
+  Enemy.cpp
+  CreditScene.cpp
+  Coin.cpp
+c:\users\daniel\desktop\uni\vj\git\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\coin.cpp(46): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+  Brick.cpp
+  AnimatedCoin.cpp
+  Generando código...

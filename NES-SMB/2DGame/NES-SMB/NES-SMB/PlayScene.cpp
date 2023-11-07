@@ -93,6 +93,7 @@ void PlayScene::reset()
 
 	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
+	staticSprite->setPosition(glm::vec2(0.f, map->getTileSize() / 2));
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.ogg", true);
@@ -167,7 +168,11 @@ void PlayScene::init()
 	spritesheetChange.loadFromFile("images/grow_shrink.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	// ANIMATED COIN TEXTURE
-	spritesheetCoin.loadFromFile("images/coin_iFace.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetCoin.loadFromFile("images/coin_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	//STATICIFACE TECTURE
+	spriteseehtStatic.loadFromFile("images/static_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 
 	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -267,6 +272,10 @@ void PlayScene::init()
 	coinSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoin);
 	coinSprite->setPosition(glm::vec2(11 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
+	staticSprite = new StaticIface();
+	staticSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetStatic);
+	staticSprite->setPosition(glm::vec2(0.f, map->getTileSize() / 2));
+
 	for (auto & digit : timer) {
 		digit = new Text();
 	}
@@ -298,9 +307,6 @@ void PlayScene::init()
 	for (auto & digit : coin_counter) {
 		digit = new Text();
 	}
-
-	
-	
 
 	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
@@ -880,7 +886,7 @@ void PlayScene::camera_update()
 
 			level->setPosition(glm::fvec2(level->getPosition().x + v, level->getPosition().y));
 			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + v, coinSprite->getPosition().y));
-			
+			staticSprite->->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
 			centerCam += v;
 		}
 
@@ -898,7 +904,7 @@ void PlayScene::camera_update()
 
 			level->setPosition(glm::fvec2(level->getPosition().x + (v / 2), level->getPosition().y));
 			coinSprite->setPosition(glm::fvec2(coinSprite->getPosition().x + (v / 2), coinSprite->getPosition().y));
-
+			staticSprite->setPosition(glm::fvec2(staticSprite->getPosition().x + v, staticSprite->getPosition().y));
 			centerCam += (v / 2.f);
 		}
 	}
@@ -1093,6 +1099,8 @@ void PlayScene::render_iface() {
 	level->render();
 
 	coinSprite->render();
+
+	staticSprite->render();
 }
 
 void PlayScene::render()

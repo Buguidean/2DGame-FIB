@@ -82,6 +82,9 @@
     <ClCompile Include="AnimatedCoin.cpp">
       <Filter>Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="StaticIface.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h">
@@ -163,6 +166,9 @@
       <Filter>Headers\PowerUps</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedCoin.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticIface.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

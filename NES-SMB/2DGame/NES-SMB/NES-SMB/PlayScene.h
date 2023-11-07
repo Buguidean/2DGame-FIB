@@ -23,6 +23,7 @@
 #include "Particles.h"
 #include "Sprite.h"
 #include "AnimatedCoin.h"
+#include "StaticIface.h"
 #include <irrklang.h>
 
 
@@ -93,8 +94,9 @@ private:
 
 	TileMap *map, *back, *sprites, *powerups;
 	Player *player;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic;
 	AnimatedCoin* coinSprite;
+	StaticIface* staticSprite;
 	Flag *flag;
 	ShaderProgram texProgram;
 	float currentTime;

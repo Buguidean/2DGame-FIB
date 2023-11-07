@@ -35,6 +35,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Star.h" />
+    <ClInclude Include="StaticIface.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TileMap.h" />
@@ -64,6 +65,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Star.cpp" />
+    <ClCompile Include="StaticIface.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TileMap.cpp" />
