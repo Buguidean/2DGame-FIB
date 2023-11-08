@@ -3,17 +3,25 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "1-1.tmx",
+    "activeFile": "1-2.tmx",
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
         "1-1.tmx": {
-            "scale": 2,
-            "selectedLayer": 1,
+            "scale": 1.5,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 1218,
-                "y": 186
+                "x": 466.3333333333333,
+                "y": 209
+            }
+        },
+        "1-2.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 289.66666666666663,
+                "y": 288.33333333333326
             }
         },
         "D:/VJ/2DGame-FIB/assets/tilesets/complete_tileset.tsx": {
@@ -33,21 +41,23 @@
         }
     },
     "last.imagePath": "D:/VJ/2DGame-FIB/NES-SMB/2DGame/NES-SMB/NES-SMB/images",
-    "map.height": 15,
+    "map.height": 20,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 16,
+    "map.width": 211,
     "openFiles": [
         "title_screen.tsx",
         "title_screen.tmx",
-        "1-1.tmx"
+        "1-1.tmx",
+        "1-2.tmx"
     ],
     "project": "title_screen.tiled-project",
     "recentFiles": [
         "title_screen.tsx",
         "title_screen.tmx",
-        "1-1.tmx"
+        "1-1.tmx",
+        "1-2.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
