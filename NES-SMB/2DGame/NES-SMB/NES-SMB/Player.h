@@ -51,10 +51,12 @@ public:
 	void setStarMarioSprite();
 	void set_Growing();
 	bool get_Growing();
+	bool get_inFlag();
 	void set_Shrinking();
 	bool get_Shrinking();
 	void unset_Invulnerable();
 	bool get_Invulnerable();
+	void silence();
 	
 private:
 	void flagTreatment(int deltaTime);

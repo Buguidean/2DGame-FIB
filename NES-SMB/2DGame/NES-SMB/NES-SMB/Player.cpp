@@ -430,23 +430,23 @@ void Player::flagTreatment(int deltaTime)
 
 	if (posPlayer.y < maxDown) {
 		//sound
-		if (!(engine->isCurrentlyPlaying("sounds/flagpole.wav"))) {
-			engine->play2D("sounds/flagpole.wav", false, false, true);
+		if (!(engine->isCurrentlyPlaying("sounds/flagpoleOriginal.wav"))) {
+			engine->play2D("sounds/flagpoleOriginal.wav", false, false, true);
 		}
 
-		posPlayer.y = posPlayer.y + 2;
+		posPlayer.y = posPlayer.y + 4;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 		counter+=deltaTime;
 	}
 	else {
 		counter += deltaTime;
-		vx = 2.f;
+		vx = 1.f;
 		vy = 0.f;
 		sprite->changeAnimation(RSTAND_FLAG);
 		posPlayer.x = 198 * 32 + 11;
 		posPlayer.y = maxDown;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-		if (counter > 2200) {
+		if (counter > 1100) {
 			inFlag = false;
 			bJumping = false;
 			finalAnimation = true;
@@ -489,11 +489,13 @@ void Player::setMarioSprite() {
 }
 
 void Player::setSuperMarioSprite() {
+	/*
 	if (!starMario && !superMario) {
 		if (!(engine->isCurrentlyPlaying("sounds/getPowerup.wav"))) {
 			engine->play2D("sounds/getPowerup.wav", false, false, true);
 		}
 	}
+	*/
 
 	int animation = sprite->animation();
 	superMario = true;
@@ -518,11 +520,13 @@ void Player::setSuperMarioSprite() {
 }
 
 void Player::setStarMarioSprite() {
+	/*
 	if (!starMario && !superMario) {
 		if (!(engine->isCurrentlyPlaying("sounds/getPowerup.wav"))) {
 			engine->play2D("sounds/getPowerup.wav", false, false, true);
 		}
 	}
+	*/
 
 
 	int animation = sprite->animation();
@@ -629,6 +633,9 @@ void Player::update(int deltaTime)
 	}
 
 	else if (finalAnimation) {
+		if (!engine->isCurrentlyPlaying("sounds/stage_clear.wav")) {
+			engine->play2D("sounds/stage_clear.wav", false, false);
+		}
 		getOut(deltaTime);
 	}
 
@@ -1076,4 +1083,14 @@ bool Player::being_killed()
 bool Player::is_infinite()
 {
 	return infinite;
+}
+
+void Player::silence()
+{
+	engine->stopAllSounds();
+}
+
+bool Player::get_inFlag()
+{
+	return inFlag;
 }

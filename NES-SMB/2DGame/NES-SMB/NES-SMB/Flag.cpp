@@ -2,7 +2,7 @@
 
 #define INIT_FLAG_X_TILES 197
 #define INIT_FLAG_Y_TILES 3
-#define downVelocity 2
+#define downVelocity 4
 #define bottomFlag 11 * 32
 
 enum flagAnim

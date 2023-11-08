@@ -73,7 +73,7 @@ void PlayScene::reset()
 	index = 0;
 	index_pk = 0;
 	active = false;
-	ticks = 10.0f;
+	ticks = 400.0f;
 	points = 0.0f;
 	coins = 0;
 	star_timer = 0.f;
@@ -109,7 +109,7 @@ void PlayScene::reset()
 	staticSprite->setPosition(glm::vec2(0.f, map->getTileSize() / 2));
 	//initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("sounds/lvlMusic.ogg", true);
+	//engine->play2D("sounds/lvlMusic.wav", true);
 
 	if (player == NULL) {
 		player = new Player();
@@ -165,7 +165,7 @@ void PlayScene::init()
 	possible_points = { 100.f,200.f,400.f,500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
 	possible_points_koopa = { 500.f,800.f,1000.f,2000.f,4000.f,5000.f,8000.f,10000.f };
 	active = false;
-	ticks = 10.0f;
+	ticks = 400.0f;
 	points = 0.0f;
 	coins = 0;
 	star_timer = 0.f;
@@ -174,7 +174,7 @@ void PlayScene::init()
 	transition_time = 0.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("sounds/lvlMusic.ogg", true);
+	engine->play2D("sounds/lvlMusic.wav", true);
 
 	// MARIO TEXTURES
 	spritesheetM.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -548,7 +548,10 @@ void PlayScene::animated_blocks_update(int deltaTime)
 	if (blocks_in_motion.size() == 2) {
 		active = true;
 		if (distances[0] <= distances[1]) {
-
+			if (!engine->isCurrentlyPlaying("sounds/blockCollition.wav")) {
+				player->silence();
+				engine->play2D("sounds/blockCollition.wav", false, false);			
+			}
 			bool gift = blocks[blocks_in_motion[0]]->get_gift();
 			if (player->getMarioSpriteSize().y != 64 || gift) {
 
@@ -561,7 +564,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						// POINTS COIN
 						points += 200.0f;
 						++coins;
-
+						engine->play2D("sounds/coin.wav", false, false);
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
 					}
@@ -575,6 +578,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 							blocks[blocks_in_motion[0]]->set_used();
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
+							engine->play2D("sounds/powerup_appears.wav", false, false);
 						}
 					}
 					if (blocks[blocks_in_motion[0]]->is_question()) {
@@ -589,6 +593,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
+				engine->play2D("sounds/blockBreak.wav", false, false);
 				points += 50.0f;
 				init_particles(0);
 				map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
@@ -602,7 +607,10 @@ void PlayScene::animated_blocks_update(int deltaTime)
 			}
 		}
 		else {
-
+			if (!engine->isCurrentlyPlaying("sounds/blockCollition.wav")) {
+				player->silence();
+				engine->play2D("sounds/blockCollition.wav", false, false);
+			}
 			bool gift = blocks[blocks_in_motion[1]]->get_gift();
 			if (player->getMarioSpriteSize().y != 64 || gift) {
 
@@ -615,7 +623,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						// POINTS COIN
 						points += 200.0f;
 						++coins;
-
+						engine->play2D("sounds/coin.wav", false, false);
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
 					}
@@ -629,6 +637,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 							blocks[blocks_in_motion[1]]->set_used();
 							powerUp->set_poping(true);
 							powerUp->set_render(true);
+							engine->play2D("sounds/powerup_appears.wav", false, false);
 						}
 					}
 					if (blocks[blocks_in_motion[1]]->is_question()) {
@@ -643,6 +652,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 			else {
 				// COLISION SUPER MARIO
+				engine->play2D("sounds/blockBreak.wav", false, false);
 				points += 50.0f;
 				init_particles(1);
 				map->modify_position(int(blocks[blocks_in_motion[1]]->getPosition().y), int(blocks[blocks_in_motion[1]]->getPosition().x));
@@ -659,7 +669,10 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 	else if (blocks_in_motion.size() == 1) {
 		active = true;
-
+		if (!engine->isCurrentlyPlaying("sounds/blockCollition.wav")) {
+			player->silence();
+			engine->play2D("sounds/blockCollition.wav", false, false);
+		}
 		bool gift = blocks[blocks_in_motion[0]]->get_gift();
 		if (player->getMarioSpriteSize().y != 64 || gift) {
 
@@ -672,7 +685,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 					// POINTS COIN
 					points += 200.0f;
 					++coins;
-
+					engine->play2D("sounds/coin.wav", false, false);
 					powerUp->set_poping(true);
 					powerUp->set_render(true);
 				}
@@ -686,6 +699,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 						blocks[blocks_in_motion[0]]->set_used();
 						powerUp->set_poping(true);
 						powerUp->set_render(true);
+						engine->play2D("sounds/powerup_appears.wav", false, false);
 					}	
 				}
 				if (blocks[blocks_in_motion[0]]->is_question()) {
@@ -700,6 +714,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 
 		else {
 			// COLISION SUPER MARIO
+			engine->play2D("sounds/blockBreak.wav", false, false);
 			points += 50.0f;
 			init_particles(0);
 			map->modify_position(int(blocks[blocks_in_motion[0]]->getPosition().y), int(blocks[blocks_in_motion[0]]->getPosition().x));
@@ -732,7 +747,7 @@ void PlayScene::goombas_update(int deltaTime)
 				}
 				else if (goomba->get_jumped()){
 					// Player kills goomba
-
+					engine->play2D("sounds/stomp.wav", false, false);
 					if ((points_timer != 0.f) && (index != 10))
 						++index;
 					points += possible_points[index];
@@ -746,7 +761,7 @@ void PlayScene::goombas_update(int deltaTime)
 
 			else if (goomba->get_starMarioKill()) {
 				// StarMario kills goomba
-
+				engine->play2D("sounds/kick.wav", false, false);
 				if ((points_timer != 0.f) && (index != 10))
 					++index;
 				points += possible_points[index];
@@ -757,11 +772,14 @@ void PlayScene::goombas_update(int deltaTime)
 			else {
 				if (goomba->playerKilled()) {
 					player->killAnimation();
+					engine->stopAllSounds();
+					engine->play2D("sounds/mariodie.wav", false, false);
 					// player = NULL;
 					break;
 				}
 				else if (goomba->isHit()) {
 					player->set_Shrinking();
+					engine->play2D("sounds/hit.wav", false, false);
 					inv_timer = 10.f;
 					//player->hit();
 					goomba->setHit();
@@ -800,6 +818,7 @@ void PlayScene::koopas_update(int deltaTime)
 			}
 
 			else if (koopa->get_starMarioKill()) {
+				engine->play2D("sounds/kick.wav", false, false);
 				if ((points_timer != 0.f) && (index != 10))
 					++index;
 				points += possible_points[index];
@@ -812,6 +831,7 @@ void PlayScene::koopas_update(int deltaTime)
 
 					// Koopa hit points
 					if (*koopa->getVelocity() == 0.f) {
+						engine->play2D("sounds/stomp.wav", false, false);
 						if ((points_timer != 0.f) && (index != 10)) {
 							++index;
 						}
@@ -821,6 +841,7 @@ void PlayScene::koopas_update(int deltaTime)
 					}
 
 					else {
+						engine->play2D("sounds/kick.wav", false, false);
 						points += 400.f;
 						init_pointsSprites(koopa->getPosition(), 2);
 						points_timer = 2.f;
@@ -831,6 +852,7 @@ void PlayScene::koopas_update(int deltaTime)
 				}
 
 				else if (koopa->get_shell_hit_side()) {
+					engine->play2D("sounds/kick.wav", false, false);
 					points += 400.f;
 					init_pointsSprites(koopa->getPosition(), 2);
 					koopa->unset_shell_hit_side();
@@ -839,11 +861,14 @@ void PlayScene::koopas_update(int deltaTime)
 
 				if (koopa->playerKilled()) {
 					player->killAnimation();
+					engine->stopAllSounds();
+					engine->play2D("sounds/mariodie.wav", false, false);
 					// player = NULL;
 					break;
 				}
 				else if (koopa->isHit()) {
 					player->set_Shrinking();
+					engine->play2D("sounds/hit.wav", false, false);
 					inv_timer = 10.f;
 					//player->hit();
 					koopa->setHit();
@@ -882,7 +907,7 @@ void PlayScene::enemy_collisions()
 					{
 					case 1:
 						if (!goomba->get_flipped()) {
-
+							engine->play2D("sounds/kick.wav", false, false);
 							if ((points_timer != 0.f) && (index_pk != 10))
 								++index_pk;
 							points += possible_points_koopa[index_pk];
@@ -974,7 +999,7 @@ void PlayScene::enemy_collisions()
 					case 1:
 						koopas[i]->setDying();
 						if (!koopas[i]->get_flipped()) {
-
+							engine->play2D("sounds/kick.wav", false, false);
 							points += possible_points_koopa[index_pk];
 							init_pointsSprites(koopas[i]->getPosition(), index_pk + 3);
 							points_timer = 2.f;
@@ -989,7 +1014,7 @@ void PlayScene::enemy_collisions()
 					case 2:
 						koopas[j]->setDying();
 						if (!koopas[j]->get_flipped()) {
-
+							engine->play2D("sounds/kick.wav", false, false);
 							points += possible_points_koopa[index_pk];
 							init_pointsSprites(koopas[j]->getPosition(), index_pk + 3);
 							points_timer = 2.f;
@@ -1074,6 +1099,7 @@ void PlayScene::powerUps_update(int deltaTime)
 
 			if (powerUp->is_picked() == 1) {
 				// POINTS POWERUP
+				engine->play2D("sounds/getPowerup.wav", false, false);
 				points += 1000.0f;
 				init_pointsSprites(powerUp->getPosition(), 5);
 				if (!player->isSuperMario()) {
@@ -1084,9 +1110,12 @@ void PlayScene::powerUps_update(int deltaTime)
 			}
 			else if (powerUp->is_picked() == 2) {
 				// POINTS POWERUP
+				engine->stopAllSounds();
+				engine->play2D("sounds/getPowerup.wav", false, false);
 				points += 1000.0f;
 				init_pointsSprites(powerUp->getPosition(), 5);
 				player->setStarMarioSprite();
+				engine->play2D("sounds/starMario.wav", false, false);
 				star_timer = 30.f;
 				delete powerUp;
 				powerUp = NULL;
@@ -1150,8 +1179,6 @@ int PlayScene::update(int deltaTime)
 
 		//TRANSITION
 		if (player == NULL && lives != 0) {
-			engine->stopAllSounds();
-			engine->drop();
 			transition_time = 6.f;
 			--lives;
 			lives_sp->setNumber(lives);
@@ -1201,6 +1228,13 @@ int PlayScene::update(int deltaTime)
 
 			if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
 				player->killAnimation();
+				engine->stopAllSounds();
+				engine->play2D("sounds/mariodie.wav", false, false);
+			}
+			else if (!player->get_inFlag() && !player->getFinalAnimation() && !player->isStarMario()){
+				if (!engine->isCurrentlyPlaying("sounds/lvlMusic.wav")) {
+					engine->play2D("sounds/lvlMusic.wav", true);
+				}
 			}
 
 			animated_blocks_update(deltaTime);
@@ -1216,6 +1250,7 @@ int PlayScene::update(int deltaTime)
 
 			flag->update(deltaTime, player->getPosition());
 			if (flag->get_points()) {
+				engine->stopAllSounds();
 				int center = player->getPosition().y + (player->getMarioSpriteSize().y / 2);
 				//CALCULAR PUNTOS
 				if (center >= 351) {
@@ -1342,12 +1377,16 @@ void PlayScene::render()
 		}
 	}
 	else if (lives == 0) {
+		engine->stopAllSounds();
 		game_over->render();
 	}
 	else if (lives != 0 && time_UP) {
-		if (transition_time > 6.f)
+		if (transition_time > 6.f) {
+			engine->stopAllSounds();
 			time_up->render();
+		}
 		else {
+			engine->stopAllSounds();
 			transition->render();
 			level_tran->render();
 			world_tran->render();
@@ -1355,6 +1394,7 @@ void PlayScene::render()
 		}
 	}
 	else if (lives != 0) {
+		engine->stopAllSounds();
 		transition->render();
 		level_tran->render();
 		world_tran->render();
