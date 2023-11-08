@@ -1,6 +1,6 @@
 #include "BlockSprite.h"
 
-void BlockSprite::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) {}
+void BlockSprite::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &animated_blocks) {}
 void BlockSprite::update(int deltaTime) {}
 bool BlockSprite::not_bumping() { return NULL; }
 bool BlockSprite::check_colision() { return NULL; }

@@ -21,8 +21,6 @@ bool Game::update(int deltaTime)
 		type = sceneP.update(deltaTime);
 
 	else if (type == 0 && prev_type == 1) {
-		sceneP.reset();
-		sceneP.set_lives();
 		type, prev_type = sceneP.update(deltaTime);
 	}
 	else if(type == 2){
@@ -47,7 +45,12 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (type == 0)
+	if (type == 0 && prev_type == 1) {
+		sceneP.set_lives();
+		sceneP.reset();
+		sceneP.render();
+	}
+	else if (type == 0 && prev_type == 0)
 		sceneP.render();
 	else if (type == 1)
 		sceneM.render();

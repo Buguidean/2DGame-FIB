@@ -17,6 +17,8 @@ Flag::Flag()
 
 Flag::~Flag()
 {
+	if (sprite != NULL)
+		delete sprite;
 }
 
 void Flag::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) {

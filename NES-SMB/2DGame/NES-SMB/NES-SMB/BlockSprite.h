@@ -12,7 +12,7 @@ class BlockSprite
 {
 
 public:
-	virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	virtual void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &animated_blocks);
 	virtual void update(int deltaTime);
 	virtual bool not_bumping();
 	virtual void sprite_update(int deltaTime);
@@ -34,7 +34,6 @@ public:
 protected:
 	glm::ivec2 marioSpriteSize, playerPos;
 	glm::fvec2 tileMapDispl, posBlock;
-	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 

@@ -12,16 +12,16 @@
             "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 466.3333333333333,
-                "y": 209
+                "x": 1687.6666666666665,
+                "y": 160.33333333333331
             }
         },
         "1-2.tmx": {
             "scale": 1.5,
-            "selectedLayer": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 289.66666666666663,
-                "y": 288.33333333333326
+                "x": 287.66666666666663,
+                "y": 287
             }
         },
         "D:/VJ/2DGame-FIB/assets/tilesets/complete_tileset.tsx": {
@@ -31,8 +31,8 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 128,
-                "y": 119.83333333333334
+                "x": 128.16666666666666,
+                "y": 120.16666666666664
             }
         },
         "title_screen.tsx": {

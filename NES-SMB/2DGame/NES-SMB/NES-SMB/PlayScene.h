@@ -66,6 +66,7 @@ public:
 	void reset();
 	void set_lives();
 	void silence();
+	void clean_up();
 
 private:
 	void initShaders();
@@ -102,9 +103,10 @@ private:
 	std::vector<glm::ivec2> pos_goombas;
 
 	TileMap *map, *back, *sprites, *powerups;
+	TileMap *map1, *map2, *back1, *back2, *sprites1, *sprites2, *powerups1, *powerups2;
 	TileMap *game_over, *time_up, *transition;
 	Player *player;
-	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped;
+	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped, spritesheetAnimatedBlocks;
 	AnimatedCoin* coinSprite;
 	StaticIface* staticSprite;
 	Flag *flag;

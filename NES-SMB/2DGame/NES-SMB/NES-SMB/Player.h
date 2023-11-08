@@ -57,6 +57,7 @@ public:
 	void unset_Invulnerable();
 	bool get_Invulnerable();
 	void silence();
+	bool is_final_song();
 	
 private:
 	void flagTreatment(int deltaTime);

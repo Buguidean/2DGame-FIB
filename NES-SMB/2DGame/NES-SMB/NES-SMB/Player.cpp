@@ -440,7 +440,7 @@ void Player::flagTreatment(int deltaTime)
 	}
 	else {
 		counter += deltaTime;
-		vx = 1.f;
+		vx = 2.f;
 		vy = 0.f;
 		sprite->changeAnimation(RSTAND_FLAG);
 		posPlayer.x = 198 * 32 + 11;
@@ -455,6 +455,10 @@ void Player::flagTreatment(int deltaTime)
 }
 
 void Player::getOut(int deltaTime) {
+
+	if (!engine->isCurrentlyPlaying("sounds/stage_clear.wav")) {
+		engine->play2D("sounds/stage_clear.wav", false, false);
+	}
 
 	sprite->update(deltaTime);
 	if (sprite->animation() != MOVE_RIGHT) {
@@ -633,9 +637,6 @@ void Player::update(int deltaTime)
 	}
 
 	else if (finalAnimation) {
-		if (!engine->isCurrentlyPlaying("sounds/stage_clear.wav")) {
-			engine->play2D("sounds/stage_clear.wav", false, false);
-		}
 		getOut(deltaTime);
 	}
 
@@ -1093,4 +1094,9 @@ void Player::silence()
 bool Player::get_inFlag()
 {
 	return inFlag;
+}
+
+bool Player::is_final_song() 
+{
+	return engine->isCurrentlyPlaying("sounds/stage_clear.wav");
 }

@@ -19,11 +19,20 @@
 PlayScene::PlayScene()
 {
 	map = NULL;
+	map1 = NULL;
+	map2 = NULL;
 	transition = NULL;
 	game_over = NULL;
 	time_up = NULL;
 	back = NULL;
-	//sprites = NULL;
+	back1 = NULL;
+	back2 = NULL;
+	sprites = NULL;
+	sprites1 = NULL;
+	sprites2 = NULL;
+	powerups = NULL;
+	powerups1 = NULL;
+	powerups2 = NULL;
 	timer.resize(3, nullptr);
 	point_counter.resize(6, nullptr);
 	coin_counter.resize(2, nullptr);
@@ -35,8 +44,10 @@ PlayScene::PlayScene()
 
 PlayScene::~PlayScene()
 {
-	if (map != NULL)
-		delete map;
+	if (map1 != NULL)
+		delete map1;
+	if (map2 != NULL)
+		delete map2;
 	if (time_up != NULL)
 		delete time_up;
 	if (transition != NULL)
@@ -65,11 +76,84 @@ PlayScene::~PlayScene()
 		delete engine;
 }
 
-void PlayScene::reset()
+void PlayScene::clean_up()
 {
 	blocks_in_motion.clear();
 	distances.clear();
 
+	for (auto & points_s : points_sprites) {
+		if (points_s != NULL) {
+			delete points_s;
+			points_s = NULL;
+		}
+	}
+	points_sprites.clear();
+	for (auto & particle_s : particles) {
+		if (particle_s != NULL) {
+			delete particle_s;
+			particle_s = NULL;
+		}
+	}
+	particles.clear();
+	for (auto & block_s : blocks) {
+		if (block_s != NULL) {
+			delete block_s;
+			block_s = NULL;
+		}
+	}
+	blocks.clear();
+	for (auto & powerUP_s : power_sprites) {
+		if (powerUP_s != NULL) {
+			delete powerUP_s;
+			powerUP_s = NULL;
+		}
+	}
+	power_sprites.clear();
+	for (auto & koopa_s : koopas) {
+		if (koopa_s != NULL) {
+			delete koopa_s;
+			koopa_s = NULL;
+		}
+	}
+	for (auto & goomba_s : goombas) {
+		if (goomba_s != NULL) {
+			delete goomba_s;
+			goomba_s = NULL;
+		}
+	}
+	goombas.clear();
+
+	delete map1;
+	map1 = NULL;
+	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	delete map2;
+	map2 = NULL;
+	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+}
+
+void PlayScene::reset()
+{
+	clean_up();
+
+	if (curr_level == 1) {
+		map = map1;
+		back = back1;
+		sprites = sprites1;
+		powerups = powerups1;
+	}
+	else {
+		map = map2;
+		back = back2;
+		sprites = sprites2;
+		powerups = powerups2;
+	}
+
+	/*
+	if (game_over_ret == 1) {
+		transition_time = 6.f;
+	}
+	*/
 	game_over_ret = 0;
 	index = 0;
 	index_pk = 0;
@@ -98,9 +182,24 @@ void PlayScene::reset()
 	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
-	//level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level = new Text();
+	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
+
+
+	level_tran->setNumber(curr_level);
+	world_tran->setNumber(1);
+	lives_sp->setNumber(lives);
+
+
+	staticSprite = new StaticIface();
+	staticSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetStatic);
+	staticSprite->setPosition(glm::vec2(0.f, map->getTileSize() / 2));
+
+	//level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
+	level->setNumber(curr_level);
 
 	world->setPosition(glm::vec2(19 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	world->setNumber(1);
@@ -109,7 +208,8 @@ void PlayScene::reset()
 
 	staticSprite->setPosition(glm::vec2(0.f, map->getTileSize() / 2));
 	//initShaders();
-	engine = irrklang::createIrrKlangDevice();
+	//if (engine == NULL)
+	//engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("sounds/lvlMusic.wav", true);
 
 	if (player == NULL) {
@@ -121,8 +221,10 @@ void PlayScene::reset()
 		player->reset();
 	}
 	
+	player->setTileMap(map);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 
+	/*
 	for (unsigned int i = 0 ; i < goombas.size() ; ++i) {
 		if (goombas[i] == NULL) {
 			goombas[i] = new Goomba();
@@ -147,9 +249,97 @@ void PlayScene::reset()
 		}
 
 		koopas[i]->setPosition(pos_koopas[i]);
-	}	
+	}
+	*/
+	
+	int* map_sprites = sprites->getMap();
+	int* map_powerups = powerups->getMap();
 
-	//flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	for (int j = 0; j < 20; ++j) {
+		for (int i = 0; i < 211; ++i) {
+			if (map_sprites[j * 211 + i] == 19) {
+				Question* aux = new Question();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetAnimatedBlocks);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+
+				if (map_powerups[j * 211 + i] == 23) {
+					Mush* aux2 = new Mush();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+				else if (map_powerups[j * 211 + i] == 24) {
+					Star* aux2 = new Star();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+				else if (map_powerups[j * 211 + i] == 25) {
+					Coin* aux2 = new Coin();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+
+				blocks.push_back(aux);
+
+			}
+			else if (map_sprites[j * 211 + i] == 2) {
+				Brick* aux = new Brick();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetAnimatedBlocks);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+
+				if (map_powerups[j * 211 + i] == 23) {
+					// HAS POWER_UP
+					aux->set_gift();
+
+					Mush* aux2 = new Mush();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+				else if (map_powerups[j * 211 + i] == 24) {
+					// HAS POWER_UP
+					aux->set_gift();
+
+					Star* aux2 = new Star();
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+					aux2->setTileMap(map);
+					power_sprites.push_back(aux2);
+				}
+
+				blocks.push_back(aux);
+			}
+			else if (map_sprites[j * 211 + i] == 17) {
+				Goomba* aux = new Goomba();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+				aux->setTileMap(map);
+				goombas.push_back(aux);
+				pos_goombas.push_back(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
+			}
+			else if (map_sprites[j * 211 + i] == 18) {
+				Koopa* aux = new Koopa();
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->setPosition(glm::vec2(i * map->getTileSize(), (j - 1) * map->getTileSize()));
+				aux->setTileMap(map);
+				koopas.push_back(aux);
+				pos_koopas.push_back(glm::vec2(i * map->getTileSize(), (j - 1) * map->getTileSize()));
+			}
+		}
+	}
+
+	delete flag;
+	flag = NULL;
+	flag = new Flag();
+	flag->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	flag->setTileMap(map);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -191,12 +381,25 @@ void PlayScene::init()
 
 	// STATICIFACE TEXTURE
 	spritesheetStatic.loadFromFile("images/static_iface.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	
+	// ANIMATED BLOCKS TEXTURE
+	spritesheetAnimatedBlocks.loadFromFile("images/block_animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 
-	map = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	back = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	sprites = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	powerups = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	back1 = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	sprites1 = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	powerups1 = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	back2 = TileMap::createTileMap("levels/1-2/1-2b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	sprites2 = TileMap::createTileMap("levels/1-2/1-2s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	powerups2 = TileMap::createTileMap("levels/1-2/1-2p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	map = map1;
+	back = back1;
+	sprites = sprites1;
+	powerups = powerups1;
 
 	game_over = TileMap::createTileMap("levels/Screens/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	transition = TileMap::createTileMap("levels/Screens/transition.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -209,7 +412,7 @@ void PlayScene::init()
 		for (int i = 0; i < 211; ++i) {
 			if (map_sprites[j * 211 + i] == 19) {
 				Question* aux = new Question();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetAnimatedBlocks);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
 
@@ -240,7 +443,7 @@ void PlayScene::init()
 			}
 			else if (map_sprites[j * 211 + i] == 2) {
 				Brick* aux = new Brick();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetAnimatedBlocks);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
 
@@ -309,7 +512,7 @@ void PlayScene::init()
 	lives_sp = new Text();
 	lives_sp->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	lives_sp->setPosition(glm::vec2(280.f, 260.f));
-	lives_sp->setNumber(3);
+	lives_sp->setNumber(lives);
 
 	coinSprite = new AnimatedCoin();
 	coinSprite->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoin);
@@ -951,7 +1154,7 @@ void PlayScene::enemy_collisions()
 				if (blocks[j] != NULL) {
 					if (map->collisionBlockEnemy(koopas[i]->getPosition(), glm::ivec2(32, 64), blocks[j]->getPosition(), glm::ivec2(32, 32))) {
 						if (!koopas[i]->get_flipped()) {
-
+							engine->play2D("sounds/kick.wav", false, false);
 							if ((points_timer != 0.f) && (index != 10))
 								++index;
 							points += possible_points_koopa[index];
@@ -974,7 +1177,7 @@ void PlayScene::enemy_collisions()
 				if (blocks[j] != NULL) {
 					if (map->collisionBlockEnemy(goombas[i]->getPosition(), glm::ivec2(32, 32), blocks[j]->getPosition(), glm::ivec2(32, 32))) {
 						if (!goombas[i]->get_flipped()) {
-
+							engine->play2D("sounds/kick.wav", false, false);
 							if ((points_timer != 0.f) && (index != 10))
 								++index;
 							points += possible_points_koopa[index];
@@ -1178,6 +1381,19 @@ void PlayScene::inv_timer_update(int deltaTime)
 
 int PlayScene::update(int deltaTime)
 {
+	if (Game::instance().getKey('1')) {
+		curr_level = 1;
+		transition_time = 6.f;
+		engine->stopAllSounds();
+		reset();
+	}
+	else if (Game::instance().getKey('2')) {
+		curr_level = 2;
+		transition_time = 6.f;
+		engine->stopAllSounds();
+		reset();
+	}
+
 	if (transition_time == 0.f) {
 		if (lives==0)
 			game_over_ret = 1;
@@ -1229,7 +1445,9 @@ int PlayScene::update(int deltaTime)
 
 		else {
 
-			player->update(deltaTime);
+			if (player->getPosition().x <= 6528) {
+				player->update(deltaTime);
+			}
 
 			if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
 				player->killAnimation();
@@ -1298,14 +1516,30 @@ int PlayScene::update(int deltaTime)
 				}
 			}
 
+			if (!(player->getPosition().x <= 6528) && !(player->is_final_song()) && curr_level == 1) {
+				curr_level = 2;
+				transition_time = 6.f;
+				engine->stopAllSounds();
+				reset();
+			}
+
+			if (!(player->getPosition().x <= 6528) && !(player->is_final_song()) && curr_level == 2) {
+				curr_level = 1;
+				//transition_time = 6.f;
+				engine->stopAllSounds();
+				game_over_ret = 1;
+			}
+
 			staticSprite->update(deltaTime);
 			coinSprite->update(deltaTime);
 			points_timer_update(deltaTime);
 		}
 	}
 	transition_timer_update(deltaTime);
-	if (game_over_ret == 1)
+	if (game_over_ret == 1) {
 		silence();
+		curr_level = 1;
+	}
 	return game_over_ret;
 }
 
@@ -1384,16 +1618,16 @@ void PlayScene::render()
 		}
 	}
 	else if (lives == 0) {
-		engine->stopAllSounds();
+		//engine->stopAllSounds();
 		game_over->render();
 	}
 	else if (lives != 0 && time_UP) {
 		if (transition_time > 6.f) {
-			engine->stopAllSounds();
+			//engine->stopAllSounds();
 			time_up->render();
 		}
 		else {
-			engine->stopAllSounds();
+			//engine->stopAllSounds();
 			transition->render();
 			level_tran->render();
 			world_tran->render();
@@ -1401,7 +1635,7 @@ void PlayScene::render()
 		}
 	}
 	else if (lives != 0) {
-		engine->stopAllSounds();
+		//engine->stopAllSounds();
 		transition->render();
 		level_tran->render();
 		world_tran->render();
@@ -1441,6 +1675,7 @@ void PlayScene::initShaders()
 
 void PlayScene::set_lives()
 {
+	transition_time = 6.f;
 	lives = 3;
 }
 

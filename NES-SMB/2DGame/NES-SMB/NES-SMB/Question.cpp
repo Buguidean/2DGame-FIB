@@ -12,10 +12,9 @@ enum QuestionAnims
 };
 
 
-void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Question::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &animated_blocks)
 {
-	spritesheet.loadFromFile("images/block_animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.0625f, 0.0625f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.0625f, 0.0625f), &animated_blocks, &shaderProgram);
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(ACTIVE, 6);

@@ -11,7 +11,7 @@ class Brick :
 	public BlockSprite
 {
 	public:
-		void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
+		void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &animated_blocks) override;
 		void update(int deltaTime) override;
 		bool not_bumping() override;
 		void sprite_update(int deltaTime) override;

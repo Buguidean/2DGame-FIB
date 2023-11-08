@@ -1,6 +1,5 @@
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\vc140.pdb
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\vc140.idb
-d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\goomba.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\instructionscene.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\koopa.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\main.obj
@@ -9,6 +8,7 @@ d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\mush.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\particles.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\player.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\playscene.obj
+d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\pointssprite.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\powerups.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\question.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\shader.obj
@@ -28,7 +28,7 @@ d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\creditscene.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\flag.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\game.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\gamescene.obj
-d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\pointssprite.obj
+d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\nes-smb\debug\goomba.obj
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\debug\nes-smb.ilk
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\debug\nes-smb.exe
 d:\vj\2dgame-fib\nes-smb\2dgame\nes-smb\debug\nes-smb.pdb
