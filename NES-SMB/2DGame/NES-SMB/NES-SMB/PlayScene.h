@@ -64,6 +64,8 @@ public:
 
 	void render();
 	void reset();
+	void set_lives();
+	void silence();
 
 private:
 	void initShaders();
@@ -125,6 +127,8 @@ private:
 	Text* lives_sp;
 
 	int lives;
+	int curr_level;
+	int game_over_ret;
 };
 
 

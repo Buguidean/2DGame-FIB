@@ -6,8 +6,8 @@
 void Game::init()
 {
 	bPlay = true;
-	type = 0;
-	prev_type = 0;
+	type = 1;
+	prev_type = 1;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	sceneM.init();
 	sceneP.init();
@@ -22,6 +22,7 @@ bool Game::update(int deltaTime)
 
 	else if (type == 0 && prev_type == 1) {
 		sceneP.reset();
+		sceneP.set_lives();
 		type, prev_type = sceneP.update(deltaTime);
 	}
 	else if(type == 2){
@@ -35,6 +36,7 @@ bool Game::update(int deltaTime)
 		type = sceneM.update(deltaTime);
 
 	else if (type == 1 && prev_type == 0) {
+		//sceneP.silence();
 		sceneM.reset();
 		type, prev_type = sceneM.update(deltaTime);
 	}

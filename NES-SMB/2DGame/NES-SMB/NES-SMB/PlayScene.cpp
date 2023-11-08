@@ -70,6 +70,7 @@ void PlayScene::reset()
 	blocks_in_motion.clear();
 	distances.clear();
 
+	game_over_ret = 0;
 	index = 0;
 	index_pk = 0;
 	active = false;
@@ -158,6 +159,8 @@ void PlayScene::reset()
 
 void PlayScene::init()
 {
+	curr_level = 1;
+	game_over_ret = 0;
 	time_UP = false;
 	lives = 3;
 	index = 0;
@@ -171,10 +174,10 @@ void PlayScene::init()
 	star_timer = 0.f;
 	points_timer = 0.f;
 	inv_timer = 0.f;
-	transition_time = 0.f;
+	transition_time = 6.f;
 	initShaders();
 	engine = irrklang::createIrrKlangDevice();
-	engine->play2D("sounds/lvlMusic.wav", true);
+	//engine->play2D("sounds/lvlMusic.wav", true);
 
 	// MARIO TEXTURES
 	spritesheetM.loadFromFile("images/small_mario.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -1176,6 +1179,8 @@ void PlayScene::inv_timer_update(int deltaTime)
 int PlayScene::update(int deltaTime)
 {
 	if (transition_time == 0.f) {
+		if (lives==0)
+			game_over_ret = 1;
 
 		//TRANSITION
 		if (player == NULL && lives != 0) {
@@ -1299,7 +1304,9 @@ int PlayScene::update(int deltaTime)
 		}
 	}
 	transition_timer_update(deltaTime);
-	return 0;
+	if (game_over_ret == 1)
+		silence();
+	return game_over_ret;
 }
 
 void PlayScene::render_iface() {
@@ -1430,4 +1437,14 @@ void PlayScene::initShaders()
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+
+void PlayScene::set_lives()
+{
+	lives = 3;
+}
+
+void PlayScene::silence()
+{
+	engine->stopAllSounds();
 }
