@@ -17,14 +17,17 @@ public:
 	int update(int deltaTime);
 	void render();
 	void reset();
+	void set_timer();
 
 private:
 	void initShaders();
 
 private:
 	void spriteArrowMovement();
+	void transition_timer_update(int deltaTime);
+	float transition_time;
 
-	TileMap *map;
+	TileMap *map,*end;
 	ShaderProgram texProgram;
 	glm::vec2 posArrow;
 	float currentTime;

@@ -32,10 +32,26 @@ void MainScene::reset()
 
 }
 
+void MainScene::set_timer()
+{
+	transition_time = 6.f;
+}
+
+void MainScene::transition_timer_update(int deltaTime)
+{
+	if (transition_time > 0.f)
+		transition_time -= deltaTime / 400.f;
+
+	if (transition_time < 0.f || transition_time < 0.005f)
+		transition_time = 0.f;
+}
+
 void MainScene::init()
 {
+	transition_time = 0.f;
 	initShaders();
 	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	end = TileMap::createTileMap("levels/Screens/end.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	
 	spritesheetArrow.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteArrow = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1.f, 1.f), &spritesheetArrow, &texProgram);
@@ -77,21 +93,21 @@ void MainScene::spriteArrowMovement() {
 
 int MainScene::update(int deltaTime)
 {
-	if (Game::instance().getKey('d'))
-		return 0;
-	else {
+	if (transition_time == 0.f) {
+
 		spriteArrowMovement();
-	}
-	if (Game::instance().getKey(13)) {
-		if (posArrow.y == 146.f*2.f)
-			return 0;
-		else if (posArrow.y == 146.f*2.f + 32.f) {
-			//return Instruction scene int;
+		if (Game::instance().getKey(13)) {
+			if (posArrow.y == 146.f*2.f)
+				return 0;
+			else if (posArrow.y == 146.f*2.f + 32.f) {
+				//return Instruction scene int;
+			}
+			else if (posArrow.y == 146 * 2 + 64.f) {
+				return 2;
+			}
 		}
-		else if (posArrow.y == 146 * 2 + 64.f) {
-			return 2;
-		}
 	}
+	transition_timer_update(deltaTime);
 	return 1;
 }
 
@@ -106,9 +122,13 @@ void MainScene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
-	
-	map->render();
-	spriteArrow->render();
+	if (transition_time == 0.f) {
+		map->render();
+		spriteArrow->render();
+	}
+	else {
+		end->render();
+	}
 }
 
 void MainScene::initShaders()

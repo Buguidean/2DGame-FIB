@@ -29,7 +29,6 @@ bool Game::update(int deltaTime)
 	else if (type == 3) {
 		// type = sceneI.update(deltaTime);
 	}
-
 	else if (type == 1 && prev_type == 1)
 		type = sceneM.update(deltaTime);
 
@@ -52,8 +51,15 @@ void Game::render()
 	}
 	else if (type == 0 && prev_type == 0)
 		sceneP.render();
-	else if (type == 1)
+	else if (type == 1 && prev_type == 0) {
+		if (sceneP.get_Finish()) {
+			sceneM.set_timer();
+		}
 		sceneM.render();
+	}
+	else if (type == 1 && prev_type == 1) {
+		sceneM.render();
+	}
 	else if (type == 2)
 		sceneC.render();
 	else if (type == 3) {

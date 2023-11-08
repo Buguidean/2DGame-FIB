@@ -134,6 +134,7 @@ void PlayScene::clean_up()
 
 void PlayScene::reset()
 {
+	finish = false;
 	clean_up();
 
 	if (curr_level == 1) {
@@ -349,6 +350,7 @@ void PlayScene::reset()
 
 void PlayScene::init()
 {
+	finish = false;
 	curr_level = 1;
 	game_over_ret = 0;
 	time_UP = false;
@@ -1525,8 +1527,10 @@ int PlayScene::update(int deltaTime)
 
 			if (!(player->getPosition().x <= 6528) && !(player->is_final_song()) && curr_level == 2) {
 				curr_level = 1;
+
 				//transition_time = 6.f;
 				engine->stopAllSounds();
+				finish = true;
 				game_over_ret = 1;
 			}
 
@@ -1682,4 +1686,9 @@ void PlayScene::set_lives()
 void PlayScene::silence()
 {
 	engine->stopAllSounds();
+}
+
+bool PlayScene::get_Finish()
+{
+	return finish;
 }

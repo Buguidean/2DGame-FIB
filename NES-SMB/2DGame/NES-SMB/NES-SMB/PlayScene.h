@@ -67,6 +67,7 @@ public:
 	void set_lives();
 	void silence();
 	void clean_up();
+	bool get_Finish();
 
 private:
 	void initShaders();
@@ -85,6 +86,8 @@ private:
 	int animated_block;
 	int index;
 	int index_pk;
+
+	bool finish;
 	
 	std::vector<float> possible_points_koopa;
 	std::vector<float> possible_points;
