@@ -12,7 +12,7 @@ void Game::init()
 	sceneM.init();
 	sceneP.init();
 	sceneC.init();
-	//sceneI.init();
+	sceneI.init();
 }
 
 bool Game::update(int deltaTime)
@@ -27,7 +27,7 @@ bool Game::update(int deltaTime)
 		type = sceneC.update(deltaTime);
 	}
 	else if (type == 3) {
-		// type = sceneI.update(deltaTime);
+		type = sceneI.update(deltaTime);
 	}
 	else if (type == 1 && prev_type == 1)
 		type = sceneM.update(deltaTime);
@@ -60,10 +60,11 @@ void Game::render()
 	else if (type == 1 && prev_type == 1) {
 		sceneM.render();
 	}
-	else if (type == 2)
+	else if (type == 2) {
 		sceneC.render();
+	}
 	else if (type == 3) {
-		//sceneI.render();
+		sceneI.render();
 	}
 }
 

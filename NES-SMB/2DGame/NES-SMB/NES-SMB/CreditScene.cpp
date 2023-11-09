@@ -28,7 +28,7 @@ void CreditScene::init()
 }
 
 int CreditScene::update(int deltaTime) {
-	if (Game::instance().getKey('f')) {
+	if (Game::instance().getKey('b')) {
 		return 1;
 	}
 	return 2;

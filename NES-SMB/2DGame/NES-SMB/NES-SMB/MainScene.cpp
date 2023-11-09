@@ -100,7 +100,7 @@ int MainScene::update(int deltaTime)
 			if (posArrow.y == 146.f*2.f)
 				return 0;
 			else if (posArrow.y == 146.f*2.f + 32.f) {
-				//return Instruction scene int;
+				return 3;
 			}
 			else if (posArrow.y == 146 * 2 + 64.f) {
 				return 2;

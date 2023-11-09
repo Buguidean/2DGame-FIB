@@ -15,7 +15,6 @@ public:
 	void init();
 	int update(int deltaTime);
 	void render();
-	void reset();
 
 private:
 	
