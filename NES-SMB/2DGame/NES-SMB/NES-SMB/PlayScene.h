@@ -106,7 +106,7 @@ private:
 	std::vector<glm::ivec2> pos_goombas;
 
 	TileMap *map, *back, *sprites, *powerups;
-	TileMap *map1, *map2, *back1, *back2, *sprites1, *sprites2, *powerups1, *powerups2;
+	TileMap *map1, *map2, *map3, *back1, *back2, *back3, *sprites1, *sprites2, *sprites3, *powerups1, *powerups2, *powerups3;
 	TileMap *game_over, *time_up, *transition;
 	Player *player;
 	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped, spritesheetAnimatedBlocks;

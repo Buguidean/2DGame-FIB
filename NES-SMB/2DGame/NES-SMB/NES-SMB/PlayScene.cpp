@@ -21,18 +21,22 @@ PlayScene::PlayScene()
 	map = NULL;
 	map1 = NULL;
 	map2 = NULL;
+	map3 = NULL;
 	transition = NULL;
 	game_over = NULL;
 	time_up = NULL;
 	back = NULL;
 	back1 = NULL;
 	back2 = NULL;
+	back3 = NULL;
 	sprites = NULL;
 	sprites1 = NULL;
 	sprites2 = NULL;
+	sprites3 = NULL;
 	powerups = NULL;
 	powerups1 = NULL;
 	powerups2 = NULL;
+	powerups3 = NULL;
 	timer.resize(3, nullptr);
 	point_counter.resize(6, nullptr);
 	coin_counter.resize(2, nullptr);
@@ -48,6 +52,8 @@ PlayScene::~PlayScene()
 		delete map1;
 	if (map2 != NULL)
 		delete map2;
+	if (map3 != NULL)
+		delete map3;
 	if (time_up != NULL)
 		delete time_up;
 	if (transition != NULL)
@@ -130,6 +136,11 @@ void PlayScene::clean_up()
 	delete map2;
 	map2 = NULL;
 	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	delete map3;
+	map3 = NULL;
+	map3 = TileMap::createTileMap("levels/1-3/1-3.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
 }
 
 void PlayScene::reset()
@@ -143,11 +154,17 @@ void PlayScene::reset()
 		sprites = sprites1;
 		powerups = powerups1;
 	}
-	else {
+	else if (curr_level == 2){
 		map = map2;
 		back = back2;
 		sprites = sprites2;
 		powerups = powerups2;
+	}
+	else {
+		map = map3;
+		back = back3;
+		sprites = sprites3;
+		powerups = powerups3;
 	}
 
 	/*
@@ -397,6 +414,11 @@ void PlayScene::init()
 	back2 = TileMap::createTileMap("levels/1-2/1-2b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	sprites2 = TileMap::createTileMap("levels/1-2/1-2s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	powerups2 = TileMap::createTileMap("levels/1-2/1-2p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	map3 = TileMap::createTileMap("levels/1-3/1-3.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	back3 = TileMap::createTileMap("levels/1-3/1-3b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	sprites3 = TileMap::createTileMap("levels/1-3/1-3s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	powerups3 = TileMap::createTileMap("levels/1-3/1-3p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 
 	map = map1;
 	back = back1;
@@ -1395,6 +1417,12 @@ int PlayScene::update(int deltaTime)
 		engine->stopAllSounds();
 		reset();
 	}
+	else if (Game::instance().getKey('3')) {
+		curr_level = 3;
+		transition_time = 6.f;
+		engine->stopAllSounds();
+		reset();
+	}
 
 	if (transition_time == 0.f) {
 		if (lives==0)
@@ -1526,6 +1554,13 @@ int PlayScene::update(int deltaTime)
 			}
 
 			if (!(player->getPosition().x <= 6528) && !(player->is_final_song()) && curr_level == 2) {
+				curr_level = 3;
+				transition_time = 6.f;
+				engine->stopAllSounds();
+				reset();
+			}
+			
+			if (!(player->getPosition().x <= 6528) && !(player->is_final_song()) && curr_level == 3) {
 				curr_level = 1;
 
 				//transition_time = 6.f;
