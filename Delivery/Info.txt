@@ -117,7 +117,7 @@ EXTRAS
 	Recompte de vides.
 
 	Escenes de transició durant el joc: 
-		- transition scene: apareixerà cada cop abans de començar un nivell, per a donar-te informació sobre el nivell, món i vides restants.
+		- Transition scene: apareixerà cada cop abans de començar un nivell, per a donar-te informació sobre el nivell, món i vides restants.
 		- Game over: apareix quan el mario es queda sense vides. Després torna al menú principal
 		- Time Up: apareix quan el mario mor a causa de que s’ha a acabat el temps
 
@@ -128,4 +128,7 @@ EXTRAS
 
 	Animació i petita invulnerabilitat al passar de Super Mario a Small Mario a causa de que en Mario ha sigut impactat per un enemic.
 	
-	Quan en mario impacta sobre el block, si hi ha enemics a sobre, aquests moren.
+	Quan en mario impacta sobre un "block" animat, si hi ha enemics a sobre, aquests moren.
+
+	Els enemics que queden fora de la càmera per l'esquerra s'eliminen, i només s'actualitzen els que es troben a prop del Mario
+	per obtenir una experiència més propera a l'original.
