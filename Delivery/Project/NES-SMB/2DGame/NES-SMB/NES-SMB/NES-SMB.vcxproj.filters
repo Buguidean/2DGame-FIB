@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Game.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Flag.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScene.cpp">
+      <Filter>Implementation\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Implementation\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Implementation\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopa.cpp">
+      <Filter>Implementation\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Question.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockSprite.cpp">
+      <Filter>Implementation\BlockSprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Mush.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUps.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Implementation\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedCoin.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticIface.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="PointsSprite.cpp">
+      <Filter>Implementation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimKeyframes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScene.h">
+      <Filter>Headers\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Headers\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Headers\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Headers\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Question.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockSprite.h">
+      <Filter>Headers\BlockSprites</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUps.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Mush.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Headers\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedCoin.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticIface.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PointsSprite.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{5edd2db1-c894-476c-af91-c8166bc245ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation">
+      <UniqueIdentifier>{94af0729-1518-4f87-97ef-776b633a0a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Scenes">
+      <UniqueIdentifier>{357f6740-4642-48fc-9d09-6789837872d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Enemies">
+      <UniqueIdentifier>{c8c5b9aa-ced0-47aa-865f-3424682a293f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\Scenes">
+      <UniqueIdentifier>{694d24e8-f5c5-4715-a6fc-142533f42e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\Enemies">
+      <UniqueIdentifier>{da83e694-11b6-4826-9168-665d8420d359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\BlockSprites">
+      <UniqueIdentifier>{11edb4ca-76e2-41ab-9019-8b57a0736d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\BlockSprites">
+      <UniqueIdentifier>{397d259c-f3a6-40dc-8c7d-af98cc59d10b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\PowerUps">
+      <UniqueIdentifier>{a402af2b-edcb-48dd-b452-6927d07fc3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Implementation\PowerUps">
+      <UniqueIdentifier>{a0abe5f4-e7cd-438d-8ea9-a2596efbe3ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

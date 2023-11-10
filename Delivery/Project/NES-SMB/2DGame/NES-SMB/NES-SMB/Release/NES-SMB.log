@@ -1,0 +1,51 @@
+﻿  AnimatedCoin.cpp
+  BlockSprite.cpp
+  Brick.cpp
+  Coin.cpp
+Coin.cpp(46): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+  CreditScene.cpp
+  Flag.cpp
+  Game.cpp
+  GameScene.cpp
+  Goomba.cpp
+  InstructionScene.cpp
+  Koopa.cpp
+  main.cpp
+  MainScene.cpp
+  Mush.cpp
+  Particles.cpp
+Particles.cpp(39): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Particles.cpp(45): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Player.cpp
+  PlayScene.cpp
+  PointsSprite.cpp
+PointsSprite.cpp(59): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+PointsSprite.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  PowerUps.cpp
+  Question.cpp
+  Compiling...
+  Shader.cpp
+  ShaderProgram.cpp
+  Enemy.cpp
+  Sprite.cpp
+  Star.cpp
+  StaticIface.cpp
+  Text.cpp
+  Texture.cpp
+  TileMap.cpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\utility(200): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  TileMap.cpp(456): note: see reference to function template instantiation 'std::pair<int,float>::pair<int,int,void,0>(std::pair<int,int> &&) noexcept' being compiled
+  TileMap.cpp(456): note: see reference to function template instantiation 'std::pair<int,float>::pair<int,int,void,0>(std::pair<int,int> &&) noexcept' being compiled
+SOIL.lib(SOIL.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
+LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Generating code
+  1504 of 1508 functions (99.7%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
+SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
+SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(stb_image_aug.obj)' or at 'D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
+  NES-SMB.vcxproj -> D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\NES-SMB.exe
+  NES-SMB.vcxproj -> D:\VJ\2DGame-FIB\Delivery\Project\NES-SMB\2DGame\NES-SMB\Release\NES-SMB.pdb (Full PDB)

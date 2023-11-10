@@ -1,0 +1,131 @@
+Pol Garrido
+Daniel Muñoz
+
+
+FUNCIONALITATS IMPLEMENTADES
+
+
+PART BÀSICA
+
+
+	Estructura bàsica de 4 pantalles: Menú principal, play game, instructions i credits
+
+	Dos nivells de joc
+
+	Dos tipus d’enemics, els quals es mouen si no els fas res i canvien de sentit en cas de que xoquin amb una col·lisió del mapa o entre
+	un altre enemic:
+
+	- Koopa: Similars als Koopa Troopa del joc original, és a dir, en saltar sobre un Koopa, es transforma en una closca que es pot fer servir
+		 per atacar altres enemics si li dones un cop. A més, si li dones a la closca quan es mou, la pares i li pots donar un altre cop per a moure-la
+	- Goomba: Són com els Goomba originals, és a dir, si li saltes a sobre el mates, sinó fan el seu moviment
+
+	Controls: 
+		- Moure en mario de dreta a esquerra amb la fletxa dreta i esquerra respectivament
+		- Saltar amb l’espai 
+		- Córrer amb el shift
+		- Amb el enter es seleccionarà una de les tres opcions del menú principal segons indiqui el cursor en forma de bolet.
+		- Amb la flexa cap amunt i avall, es podrà seleccionar una opció o una altra
+		- Quan està a la pantalla d'instructions, credits o mentre s'esta jugant, al prèmer la tecla ‘B’, tornarà al menú principal
+
+	Tecles per saltar contingut:
+		- Transformar en Small Mario (‘N’), Super Mario (‘M’) i Star Mario (‘G’).
+		- Poder saltar a pantalles concretes (tecles numèriques ‘1’ o ‘2’).
+
+	Coin: quan es dona a certs interrogants, fan que surti una animació d’una moneda que va cap a munt, després baixa i desapareix
+
+	Power Ups: Hi ha dos tipus de power ups, un bolet que fa que es transformi de small Mario a super Mario i una estrella que fa que
+		   en mario sigui invulnerable durant un temps. A més, durant el temps en el qual en Mario esta invulnerable degut a que
+	   	   ha agafat l’estrella, respecta l’estat d’en Mario, és a dir, si està en small Mario, el manté i si esta en super Mario
+	   	   també el manté.
+
+	Blocs: Hi ha dos tipus de blocs els interrogants que contenen o bé un power up o bé una moneda i els bricks que poden ser destruïts
+	       per en super Mario.
+
+	Interficie
+
+		Aquesta interfície es mostrarà els recomptes que hi ha a la part superior de la pantalla amb el següent:
+
+		- Temps restant que comença a 400 i va disminuint. Si arriba  a 0 fa que en Mario mori.
+
+		- Puntuació: durant el joc, matar enemics, agafar un power up, fer sortir una moneda donant un cop a un bloc interrogant,
+			     etc. donen punts i es van sumant i veient allà.
+
+		- Recompte de monedes
+
+		- Mon i nivell en el que està actualment en Mario
+
+
+	Al final de cada nivell hi ha una bandera, la qual tocar-la amb en Mario donarà més o menys punts depenent de l’altura a la que salti. 
+	Just després apareixerà una animació on en mario i la bandera baixaran. Una vegada estiguin abaix, el mario sortirà de la bandera i
+	desapareixerà. En aquest moment, es farà el recompte de punts disminuint el timer i sumant els punts corresponents per cada unitat de
+	temps restant
+
+	Scroll horitzontal només cap a la dreta.
+
+	Caure per un forat provoca la mort d’en Mario.
+
+	Com que tecles per saltar contingut les hem considerat que son per testejar i fer proves, si es prem la tecla ‘G’, és transformarà amb Star
+	Mario però no tornarà al seu estat inicial després d’un cert temps. S’haurà de treure l’invulnerabilitat si es prem la tecla ‘N’ o ‘M’ 
+	transformant-lo a Small Mario o Super Mario respectivament. 
+
+
+POLISH
+
+	So: Música de fons i efectes especials quan saltes amb super Mario, i un altre per al salt del small Mario, col·lisionar  amb un bloc,
+    	    trencar un bric, fer sortir un power up o un coin, durant l’animació de baixar de la bandera, agafar un power up, ser colpejat per un
+    	    enemic, donar un cop a la closca d’en Koopa, mort d’en Mario, saltar a sobre d’un enemic, quan arriba a 100 unitats de temps sona un 
+    	    warning per avisar que queda poc temps i després sona la música de fons accelerada, música de fons diferent quan Star Mario, so per al
+    	    canvi d’estats del Mario. Al acabar l’animació de la bandera, sonarà una altre so d’acabar el nivell, so de recompte de punts al
+	    final de cada nivell, so de game over. Al final del últim nivell, a la pantalla de Well Done, música de celebració.
+
+
+	Interactivitat de totes les entitats del joc. Cada esdeveniment que es produeix hauria d’anar acompanyat d’una o més animacions.
+	Evitar canvis sobtats i fer ús de transicions entre estats:
+
+		- Animacions de blocs amb interrogant mentre no són impactats.
+
+		- Quan es impactat un bloc es mou lleugerament adalt i abaix fins la seva posició inicial. Amb exepció del brick quan es
+		  impactat pel Super Mario, ja que en aquest cas el trenca directament.
+
+		- Un cop ha donat el power up o moneda, es queda amb una textura diferent i si li xoques ja no es mou.
+
+		- Animació de 4 partícules al fer que en super mario li doni per sota a un brick i eliminació de la seva col·lisió. 
+  		  En cas de que no sigui super Mario, mou el bric lleugerament cap a dalt i abaix fins la seva posició inicial.
+
+		- Animacions de moviment d’en Mario, amb una diferent segons el seu estat, per a moure’s (saltar, caminar, córrer). 
+
+		- Animació de morir pel mario i els enemics
+
+		- Animacions dels enemics, tant per moure’s com en morir. A més, el Goomba té una animació diferent depenent si lis altes a sobre
+  		  o si li mata un Koopa a causa de que està amb closca i li ha donat un cop prèviament.
+
+		- Sprites de puntuació que apareixen en les entitats que aconsegueixen els punts (com en el joc original).
+
+		- Animacions i efectes de so per la transformació d’en Mario entre els seus quatre estats (small Mario, Super Mario i Star Mario 
+		  ((small Mario o super Mario) amb Star Mario)).
+
+		- El moviment d’en Mario és accelerat. Això vol dir que Mario no va sempre a la mateixa velocitat. Guanya velocitat de forma progressiva
+  		quan comença a moure’s i la perd quan el jugador vol parar. 
+
+		- Animació en arribar a la bandera per finalitzar el nivell.  Bonus a la puntuació per temps restant al final del nivell.
+
+		- Animació de power up. En el cas del bolet, quan surt, es desplaça d’esquerra a dreta. En canvi, l’estrella va fent petits salts.
+
+
+EXTRAS
+
+	Recompte de vides.
+
+	Escenes de transició durant el joc: 
+		- transition scene: apareixerà cada cop abans de començar un nivell, per a donar-te informació sobre el nivell, món i vides restants.
+		- Game over: apareix quan el mario es queda sense vides. Després torna al menú principal
+		- Time Up: apareix quan el mario mor a causa de que s’ha a acabat el temps
+
+	Escena felicitant-te quan acabes el segon nivell
+
+	Quan el mario mor durant el joc, si li queden vides, no tornarà al menú principal, sino que reiniciarà el nivell en el que està tornant-lo
+	a començar desde el principi. En cas de que no li quedin vides, anirà a l'escena de Game Over i tornarà al menú principal.
+
+	Animació i petita invulnerabilitat al passar de Super Mario a Small Mario a causa de que en Mario ha sigut impactat per un enemic.
+	
+	Quan en mario impacta sobre el block, si hi ha enemics a sobre, aquests moren.
