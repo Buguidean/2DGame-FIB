@@ -49,7 +49,6 @@ protected:
 	int startY;
 
 	glm::ivec2 tileMapDispl, posEnemy, playerPos, oldEnemy;
-	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 	glm::ivec2 marioSpriteSize;

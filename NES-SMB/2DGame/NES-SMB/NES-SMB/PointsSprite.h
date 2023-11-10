@@ -11,7 +11,7 @@
 class PointsSprite
 {
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int animation);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int animation, Texture& spritesheet);
 	void update(int deltaTime);
 	void setPosition(const glm::vec2 &pos);
 	glm::fvec2 getPosition();
@@ -23,7 +23,6 @@ private:
 	int startY;
 	bool inactive;
 	glm::fvec2 tileMapDispl, posPoints;
-	Texture spritesheet;
 	Sprite *sprite;
 };
 

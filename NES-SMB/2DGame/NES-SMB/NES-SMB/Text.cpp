@@ -12,10 +12,9 @@ enum TextAnims
 };
 
 
-void Text::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Text::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet)
 {
 
-	spritesheet.loadFromFile("images/text_tileset.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.0625f, 0.125f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(10);
 

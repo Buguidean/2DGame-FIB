@@ -11,7 +11,7 @@
 class Particles
 {
 	public:
-		void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, float x_vel, float y_vel, int animation);
+		void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet,  float x_vel, float y_vel, int animation);
 		void update(int deltaTime);
 		void setPosition(const glm::vec2 &pos);
 		void render();
@@ -22,7 +22,6 @@ class Particles
 		int startY;
 		bool inactive;
 		glm::fvec2 tileMapDispl, posParticle;
-		Texture spritesheet;
 		Sprite *sprite;
 };
 

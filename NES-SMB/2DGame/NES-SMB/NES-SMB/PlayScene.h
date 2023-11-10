@@ -110,6 +110,10 @@ private:
 	TileMap *game_over, *time_up, *transition;
 	Player *player;
 	Texture spritesheetM, spritesheetSM, spritesheetSuperStM, spritesheetSmallStM, spritesheetChange, spritesheetCoin, spritesheetStatic, spritesheetClamped, spritesheetAnimatedBlocks;
+	Texture spritesheetCKoopa, spritesheetNKoopa, spritesheetGoomba;
+	Texture spritesheetPower, spritesheetCoins, spritesheetParticles;
+	Texture tilesheetMap, tilesheetMapA1, tilesheetMapA2, tilesheetMapA3;
+	Texture spritesheetText, spritesheetPoints;
 	AnimatedCoin* coinSprite;
 	StaticIface* staticSprite;
 	Flag *flag;

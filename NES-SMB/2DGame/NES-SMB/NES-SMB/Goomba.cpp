@@ -34,14 +34,13 @@ void Goomba::reset()
 	player_murderer = true;
 }
 
-void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Goomba::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetGoomba)
 {
 	flipped = false;
 	jumped = false;
 	counter = 0;
 	vx = -1.f;
-	spritesheet.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheetGoomba, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(GOOMBA_FLIPPED_DEATH, 4);

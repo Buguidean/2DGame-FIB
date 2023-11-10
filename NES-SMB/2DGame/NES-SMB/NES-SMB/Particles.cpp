@@ -11,9 +11,8 @@ enum ParticlesAnims
 };
 
 
-void Particles::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, float x_vel, float y_vel, int animation)
+void Particles::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet, float x_vel, float y_vel, int animation)
 {
-	spritesheet.loadFromFile("images/brick_destruction.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.5f, 0.5f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
 

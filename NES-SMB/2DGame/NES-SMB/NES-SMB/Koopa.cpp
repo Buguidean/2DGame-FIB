@@ -60,14 +60,13 @@ void Koopa::reset()
 	sprite_size = glm::ivec2(32, 64);
 }
 
-void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetNKoopa, Texture &spritesheetCKoopa)
 {
 	shell_hit_side = false;
 	flipped = false;
 	invinc = false;
 	vx = -1.f;
-	spritesheetN.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteN = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.25f, 1.0f), &spritesheetN, &shaderProgram);
+	spriteN = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.25f, 1.0f), &spritesheetNKoopa, &shaderProgram);
 	spriteN->setNumberAnimations(4);
 
 	spriteN->setAnimationSpeed(MOVE_LEFT, 4);
@@ -86,8 +85,7 @@ void Koopa::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 	spriteN->changeAnimation(MOVE_LEFT);
 
-	spritesheetC.loadFromFile("images/koopa_shell.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spriteC = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheetC, &shaderProgram);
+	spriteC = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 0.5f), &spritesheetCKoopa, &shaderProgram);
 	spriteC->setNumberAnimations(3);
 
 	spriteC->setAnimationSpeed(LIVE_SHELL, 1);

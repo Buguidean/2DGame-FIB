@@ -1,7 +1,7 @@
 #include "PowerUps.h"
 
 
-void PowerUps::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) {}
+void PowerUps::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet) {}
 void PowerUps::update(int deltaTime) {}
 void PowerUps::set_render(const bool state) {}
 void PowerUps::set_poping(const bool state) {}

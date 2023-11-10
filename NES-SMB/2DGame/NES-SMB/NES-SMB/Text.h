@@ -12,7 +12,7 @@ class Text
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet);
 	void update(int deltaTime);
 	void render();
 
@@ -23,7 +23,6 @@ public:
 
 private:
 	glm::fvec2 tileMapDispl, posText;
-	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 

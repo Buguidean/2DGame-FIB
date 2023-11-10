@@ -20,6 +20,7 @@ private:
 	
 	void initShaders();
 	TileMap *map;
+	Texture tilesheetMap;
 	ShaderProgram texProgram;
 	glm::mat4 projection;
 };

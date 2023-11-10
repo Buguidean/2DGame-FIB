@@ -834,33 +834,37 @@ void Player::update(int deltaTime)
 
 			//////////////// Collision Left/Right /////////////////////////////////////////////////////////
 			if (vx >= 0.f) {
-				if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
-					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
-						vx = 0.0f;
-						if (sprite->animation() != STAND_LEFT)
-							sprite->changeAnimation(STAND_LEFT);
-					}
-					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
-						vx = 0.0f;
-						if (sprite->animation() != STAND_RIGHT)
-							sprite->changeAnimation(STAND_RIGHT);
+				if (posPlayer.y > 0) {
+					if (map->collisionMoveRight(posPlayer, spriteSize, &posPlayer.x) && !bJumping) {
+						if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+							vx = 0.0f;
+							if (sprite->animation() != STAND_LEFT)
+								sprite->changeAnimation(STAND_LEFT);
+						}
+						else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+							vx = 0.0f;
+							if (sprite->animation() != STAND_RIGHT)
+								sprite->changeAnimation(STAND_RIGHT);
 
+						}
 					}
 				}
 			}
 
 			else {
-				if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic) && !bJumping) {
-					if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
-						vx = 0.0f;
-						if (sprite->animation() != STAND_LEFT)
-							sprite->changeAnimation(STAND_LEFT);
-					}
-					else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
-						vx = 0.0f;
-						if (sprite->animation() != STAND_RIGHT)
-							sprite->changeAnimation(STAND_RIGHT);
+				if (posPlayer.y > 0) {
+					if (map->collisionMoveLeft(posPlayer, spriteSize, &posPlayer.x, marg, ic) && !bJumping) {
+						if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_LEFT) {
+							vx = 0.0f;
+							if (sprite->animation() != STAND_LEFT)
+								sprite->changeAnimation(STAND_LEFT);
+						}
+						else if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT) {
+							vx = 0.0f;
+							if (sprite->animation() != STAND_RIGHT)
+								sprite->changeAnimation(STAND_RIGHT);
 
+						}
 					}
 				}
 			}

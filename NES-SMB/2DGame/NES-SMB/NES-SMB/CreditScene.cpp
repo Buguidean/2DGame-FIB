@@ -20,7 +20,8 @@ CreditScene::~CreditScene()
 void CreditScene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/Screens/credits.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	tilesheetMap.loadFromFile("images/credits.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	map = TileMap::createTileMap("levels/Screens/credits.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
 	
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	//currentTime = 0.0f;

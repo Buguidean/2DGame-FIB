@@ -51,8 +51,10 @@ void MainScene::init()
 	engine = irrklang::createIrrKlangDevice();
 	transition_time = 0.f;
 	initShaders();
-	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	end = TileMap::createTileMap("levels/Screens/end.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	tilesheetMap1.loadFromFile("images/title_screen.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	tilesheetMap2.loadFromFile("images/end.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap1);
+	end = TileMap::createTileMap("levels/Screens/end.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap2);
 	
 	spritesheetArrow.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	spriteArrow = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1.f, 1.f), &spritesheetArrow, &texProgram);

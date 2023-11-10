@@ -125,11 +125,11 @@ void PlayScene::clean_up()
 
 	delete map1;
 	map1 = NULL;
-	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
 
 	delete map2;
 	map2 = NULL;
-	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
 }
 
 void PlayScene::reset()
@@ -178,13 +178,13 @@ void PlayScene::reset()
 	point_counter[4]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	point_counter[5]->setPosition(glm::vec2(8 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
-	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	level = new Text();
-	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
 
@@ -266,21 +266,21 @@ void PlayScene::reset()
 
 				if (map_powerups[j * 211 + i] == 23) {
 					Mush* aux2 = new Mush();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
 				}
 				else if (map_powerups[j * 211 + i] == 24) {
 					Star* aux2 = new Star();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
 				}
 				else if (map_powerups[j * 211 + i] == 25) {
 					Coin* aux2 = new Coin();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoins);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -300,7 +300,7 @@ void PlayScene::reset()
 					aux->set_gift();
 
 					Mush* aux2 = new Mush();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -310,7 +310,7 @@ void PlayScene::reset()
 					aux->set_gift();
 
 					Star* aux2 = new Star();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -320,7 +320,7 @@ void PlayScene::reset()
 			}
 			else if (map_sprites[j * 211 + i] == 17) {
 				Goomba* aux = new Goomba();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetGoomba);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
 				goombas.push_back(aux);
@@ -328,7 +328,7 @@ void PlayScene::reset()
 			}
 			else if (map_sprites[j * 211 + i] == 18) {
 				Koopa* aux = new Koopa();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetNKoopa, spritesheetCKoopa);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), (j - 1) * map->getTileSize()));
 				aux->setTileMap(map);
 				koopas.push_back(aux);
@@ -387,25 +387,48 @@ void PlayScene::init()
 	// ANIMATED BLOCKS TEXTURE
 	spritesheetAnimatedBlocks.loadFromFile("images/block_animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
+	// ENEMIES
+	spritesheetCKoopa.loadFromFile("images/koopa_shell.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetNKoopa.loadFromFile("images/koopa.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetGoomba.loadFromFile("images/goomba.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	back1 = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	sprites1 = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	powerups1 = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	// POWERUPS
+	spritesheetPower.loadFromFile("images/powerups.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheetCoins.loadFromFile("images/dropCoins.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	back2 = TileMap::createTileMap("levels/1-2/1-2b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	sprites2 = TileMap::createTileMap("levels/1-2/1-2s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	powerups2 = TileMap::createTileMap("levels/1-2/1-2p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	// PARTICLES
+	spritesheetParticles.loadFromFile("images/brick_destruction.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	// MAP
+	tilesheetMap.loadFromFile("images/complete_tileset.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	tilesheetMapA1.loadFromFile("images/game_over.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	tilesheetMapA2.loadFromFile("images/transition.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	tilesheetMapA3.loadFromFile("images/time_up.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	// POINTS
+	spritesheetPoints.loadFromFile("images/points.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	// TEXT
+	spritesheetText.loadFromFile("images/text_tileset.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	map1 = TileMap::createTileMap("levels/1-1/1-1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	back1 = TileMap::createTileMap("levels/1-1/1-1b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	sprites1 = TileMap::createTileMap("levels/1-1/1-1s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	powerups1 = TileMap::createTileMap("levels/1-1/1-1p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+
+	map2 = TileMap::createTileMap("levels/1-2/1-2.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	back2 = TileMap::createTileMap("levels/1-2/1-2b.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	sprites2 = TileMap::createTileMap("levels/1-2/1-2s.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
+	powerups2 = TileMap::createTileMap("levels/1-2/1-2p.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMap);
 
 	map = map1;
 	back = back1;
 	sprites = sprites1;
 	powerups = powerups1;
 
-	game_over = TileMap::createTileMap("levels/Screens/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	transition = TileMap::createTileMap("levels/Screens/transition.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	time_up = TileMap::createTileMap("levels/Screens/time_up.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	game_over = TileMap::createTileMap("levels/Screens/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMapA1);
+	transition = TileMap::createTileMap("levels/Screens/transition.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMapA2);
+	time_up = TileMap::createTileMap("levels/Screens/time_up.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram, tilesheetMapA3);
 
 	int* map_sprites = sprites->getMap();
 	int* map_powerups = powerups->getMap();
@@ -420,21 +443,21 @@ void PlayScene::init()
 
 				if (map_powerups[j * 211 + i] == 23) {
 					Mush* aux2 = new Mush();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
 				}
 				else if (map_powerups[j * 211 + i] == 24) {
 					Star* aux2 = new Star();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
 				}
 				else if (map_powerups[j * 211 + i] == 25) {
 					Coin* aux2 = new Coin();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetCoins);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -454,7 +477,7 @@ void PlayScene::init()
 					aux->set_gift();
 
 					Mush* aux2 = new Mush();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -464,7 +487,7 @@ void PlayScene::init()
 					aux->set_gift();
 
 					Star* aux2 = new Star();
-					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+					aux2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetPower);
 					aux2->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 					aux2->setTileMap(map);
 					power_sprites.push_back(aux2);
@@ -474,7 +497,7 @@ void PlayScene::init()
 			}
 			else if (map_sprites[j * 211 + i] == 17) {
 				Goomba* aux = new Goomba();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetGoomba);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), j * map->getTileSize()));
 				aux->setTileMap(map);
 				goombas.push_back(aux);
@@ -482,7 +505,7 @@ void PlayScene::init()
 			}
 			else if (map_sprites[j * 211 + i] == 18) {
 				Koopa* aux = new Koopa();
-				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetNKoopa, spritesheetCKoopa);
 				aux->setPosition(glm::vec2(i * map->getTileSize(), (j-1) * map->getTileSize()));
 				aux->setTileMap(map);
 				koopas.push_back(aux);
@@ -492,27 +515,27 @@ void PlayScene::init()
 	}
 	
 	level = new Text();
-	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	level->setPosition(glm::vec2(21 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	level->setNumber(1);
 
 	world = new Text();
-	world->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	world->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	world->setPosition(glm::vec2(19 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 	world->setNumber(1);
 
 	level_tran = new Text();
-	level_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	level_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	level_tran->setPosition(glm::vec2(314.f, 198.f));
 	level_tran->setNumber(1);
 
 	world_tran = new Text();
-	world_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	world_tran->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	world_tran->setPosition(glm::vec2(278.f, 198.f));
 	world_tran->setNumber(1);
 
 	lives_sp = new Text();
-	lives_sp->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	lives_sp->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	lives_sp->setPosition(glm::vec2(280.f, 260.f));
 	lives_sp->setNumber(lives);
 
@@ -528,37 +551,37 @@ void PlayScene::init()
 		digit = new Text();
 	}
 
-	timer[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	timer[0]->setPosition(glm::vec2(26 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	timer[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	timer[1]->setPosition(glm::vec2(27 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	timer[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	timer[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	timer[2]->setPosition(glm::vec2(28 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	for (auto & digit : point_counter) {
 		digit = new Text();
 	}
 
-	point_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[0]->setPosition(glm::vec2(3 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[1]->setPosition(glm::vec2(4 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[2]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[2]->setPosition(glm::vec2(5 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[3]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[3]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[3]->setPosition(glm::vec2(6 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[4]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[4]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[4]->setPosition(glm::vec2(7 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	point_counter[5]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	point_counter[5]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	point_counter[5]->setPosition(glm::vec2(8 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 	for (auto & digit : coin_counter) {
 		digit = new Text();
 	}
 
-	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[0]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	coin_counter[0]->setPosition(glm::vec2(13 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
-	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	coin_counter[1]->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetText);
 	coin_counter[1]->setPosition(glm::vec2(14 * map->getTileSize() / 2, 2 * map->getTileSize() / 2));
 
 
@@ -674,22 +697,22 @@ void PlayScene::point_counter_update_end(int deltaTime)
 void PlayScene::init_particles(int pos)
 {
 	Particles* p1 = new Particles();
-	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, -2.f, 10.f,1);
+	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetParticles, -2.f, 10.f,1);
 	p1->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x), float(blocks[blocks_in_motion[pos]]->getPosition().y)));
 	particles.push_back(p1);
 
 	Particles* p2 = new Particles();
-	p2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, -1.5f, 8.f,1);
+	p2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetParticles, -1.5f, 8.f,1);
 	p2->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x), float(blocks[blocks_in_motion[pos]]->getPosition().y + 24)));
 	particles.push_back(p2);
 
 	Particles* p3 = new Particles();
-	p3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2.f, 10.f,0);
+	p3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetParticles, 2.f, 10.f,0);
 	p3->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x + 24), float(blocks[blocks_in_motion[pos]]->getPosition().y)));
 	particles.push_back(p3);
 
 	Particles* p4 = new Particles();
-	p4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1.5f, 8.f,0);
+	p4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, spritesheetParticles, 1.5f, 8.f,0);
 	p4->setPosition(glm::fvec2(float(blocks[blocks_in_motion[pos]]->getPosition().x + 24), float(blocks[blocks_in_motion[pos]]->getPosition().y + 24)));
 	particles.push_back(p4);
 }
@@ -713,7 +736,7 @@ void PlayScene::particles_update(int deltaTime)
 void PlayScene::init_pointsSprites(const glm::vec2 &pos, int anim)
 {
 	PointsSprite* p1 = new PointsSprite();
-	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, anim);
+	p1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, anim, spritesheetPoints);
 	p1->setPosition(pos);
 	points_sprites.push_back(p1);
 }
@@ -746,7 +769,7 @@ void PlayScene::animated_blocks_update(int deltaTime)
 	}
 
 	for (int i = blocks.size() - 1; (i >= 0) && !active; --i) {
-		if (blocks[i] != NULL && blocks[i]->check_colision()) {
+		if (blocks[i] != NULL && blocks[i]->check_colision() && !player->being_killed()) {
 			blocks_in_motion.push_back(i);
 			float dist = abs(((blocks[i]->getPosition().x) + 16.f) - ((player->getPosition().x) + 16.f));
 			distances.push_back(dist);

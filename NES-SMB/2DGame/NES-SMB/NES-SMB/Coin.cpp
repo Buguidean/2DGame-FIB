@@ -13,9 +13,9 @@ enum CoinAnims
 };
 
 
-void Coin::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Coin::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet)
 {
-	spritesheet.loadFromFile("images/dropCoins.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	//spritesheet.loadFromFile("images/dropCoins.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(16, 32), glm::vec2(0.5f, 0.5f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);
 

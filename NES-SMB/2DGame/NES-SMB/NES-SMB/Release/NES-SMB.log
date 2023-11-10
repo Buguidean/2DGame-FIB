@@ -1,10 +1,32 @@
-﻿  Player.cpp
+﻿  AnimatedCoin.cpp
+  Brick.cpp
+  Coin.cpp
+Coin.cpp(46): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+  CreditScene.cpp
+  Enemy.cpp
+  Game.cpp
+  InstructionScene.cpp
+  MainScene.cpp
+  Mush.cpp
+  Particles.cpp
+Particles.cpp(39): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+Particles.cpp(45): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  PlayScene.cpp
+  Player.cpp
+  PointsSprite.cpp
+PointsSprite.cpp(59): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+PointsSprite.cpp(65): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Question.cpp
+  Star.cpp
+  StaticIface.cpp
+  Text.cpp
+  main.cpp
 SOIL.lib(SOIL.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
 LINK : warning LNK4098: defaultlib 'MSVCRTD' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  2 of 1508 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+  49 of 1508 functions ( 3.2%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    33 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'D:\VJ\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info
 SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'D:\VJ\2DGame-FIB\NES-SMB\2DGame\NES-SMB\Release\vc100.pdb'; linking object as if no debug info

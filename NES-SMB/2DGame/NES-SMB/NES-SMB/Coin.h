@@ -11,7 +11,7 @@ class Coin :
 	public PowerUps
 {
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheet) override;
 	void update(int deltaTime) override;
 	void set_render(const bool state) override;
 	bool get_render() override;

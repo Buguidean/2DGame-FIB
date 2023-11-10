@@ -9,7 +9,7 @@ class Koopa :
 public:
 	~Koopa();
 	
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetNKoopa, Texture &spritesheetCKoopa);
 	void update(int deltaTime);
 	bool hitted();
 	void disable_hitted();
@@ -35,7 +35,6 @@ private:
 	glm::ivec2 sprite_size;
 	Sprite *spriteN;
 	Sprite *spriteC;
-	Texture spritesheetN, spritesheetC;
 
 	// shieldState = 0: No shield (se usa shield)
 	// shieldState = 1: saltas dentro de Koopa y se pone el caparazon

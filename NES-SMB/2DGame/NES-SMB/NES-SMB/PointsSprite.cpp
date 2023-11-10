@@ -11,9 +11,8 @@ enum PointsAnims
 };
 
 
-void PointsSprite::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int animation)
+void PointsSprite::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, int animation, Texture& spritesheet)
 {
-	spritesheet.loadFromFile("images/points.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(32, 16), glm::vec2(0.125f, 0.25f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(11);
 

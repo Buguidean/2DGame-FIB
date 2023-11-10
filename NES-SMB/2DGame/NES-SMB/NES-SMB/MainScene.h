@@ -35,6 +35,7 @@ private:
 	float centerCam;
 	glm::mat4 projection;
 	Texture spritesheetArrow;
+	Texture tilesheetMap1, tilesheetMap2;
 	Sprite *spriteArrow;
 	irrklang::ISoundEngine* engine;
 

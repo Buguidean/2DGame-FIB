@@ -9,7 +9,7 @@ class Goomba :
 public:
 	~Goomba();
 
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, Texture &spritesheetGoomba);
 	void update(int deltaTime);
 	void reset();
 	void setDying();
