@@ -34,7 +34,7 @@ void MainScene::reset()
 
 void MainScene::set_timer()
 {
-	transition_time = 6.f;
+	transition_time = 15.f;
 }
 
 void MainScene::transition_timer_update(int deltaTime)
@@ -48,6 +48,7 @@ void MainScene::transition_timer_update(int deltaTime)
 
 void MainScene::init()
 {
+	engine = irrklang::createIrrKlangDevice();
 	transition_time = 0.f;
 	initShaders();
 	map = TileMap::createTileMap("levels/Screens/main_screen.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -127,6 +128,9 @@ void MainScene::render()
 		spriteArrow->render();
 	}
 	else {
+		if (!engine->isCurrentlyPlaying("sounds/world_clear_entero.wav")) {
+			engine->play2D("sounds/world_clear_entero.wav", false, false);
+		}
 		end->render();
 	}
 }

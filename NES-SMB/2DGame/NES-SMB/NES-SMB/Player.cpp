@@ -420,6 +420,9 @@ void Player::setBackAnimationSpeed()
 
 void Player::flagTreatment(int deltaTime)
 {
+	if (!(engine->isCurrentlyPlaying("sounds/flagpoleOriginal.wav"))) {
+		engine->play2D("sounds/flagpoleOriginal.wav", false, false, true);
+	}
 	posPlayer.x = 197 * 32 + 18;
 	if (sprite->animation() != DOWN_FLAG)
 		sprite->changeAnimation(DOWN_FLAG);
@@ -430,9 +433,6 @@ void Player::flagTreatment(int deltaTime)
 
 	if (posPlayer.y < maxDown) {
 		//sound
-		if (!(engine->isCurrentlyPlaying("sounds/flagpoleOriginal.wav"))) {
-			engine->play2D("sounds/flagpoleOriginal.wav", false, false, true);
-		}
 
 		posPlayer.y = posPlayer.y + 4;
 		sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));

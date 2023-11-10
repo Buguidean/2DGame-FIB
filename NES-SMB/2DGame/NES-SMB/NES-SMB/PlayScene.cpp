@@ -981,7 +981,12 @@ void PlayScene::goombas_update(int deltaTime)
 				if (goomba->playerKilled()) {
 					player->killAnimation();
 					engine->stopAllSounds();
-					engine->play2D("sounds/mariodie.wav", false, false);
+					if (lives != 1) {
+						engine->play2D("sounds/mariodie.wav", false, false);
+					}
+					else {
+						engine->play2D("sounds/gameover.wav", false, false);
+					}
 					// player = NULL;
 					break;
 				}
@@ -1070,7 +1075,12 @@ void PlayScene::koopas_update(int deltaTime)
 				if (koopa->playerKilled()) {
 					player->killAnimation();
 					engine->stopAllSounds();
-					engine->play2D("sounds/mariodie.wav", false, false);
+					if (lives != 1) {
+						engine->play2D("sounds/mariodie.wav", false, false);
+					}
+					else {
+						engine->play2D("sounds/gameover.wav", false, false);
+					}
 					// player = NULL;
 					break;
 				}
@@ -1395,6 +1405,12 @@ int PlayScene::update(int deltaTime)
 		engine->stopAllSounds();
 		reset();
 	}
+	else if (Game::instance().getKey('b')) {
+		curr_level = 1;
+		transition_time = 6.f;
+		engine->stopAllSounds();
+		return 1;
+	}
 
 	if (transition_time == 0.f) {
 		if (lives==0)
@@ -1428,16 +1444,19 @@ int PlayScene::update(int deltaTime)
 		if (player->being_killed()) {
 			player->update(deltaTime);
 			animated_blocks_update(deltaTime);
+			coinSprite->update(deltaTime);
 		}
 
 		else if (player->get_Growing()) {
 			player->update(deltaTime);
 			animated_blocks_update(deltaTime);
+			coinSprite->update(deltaTime);
 		}
 
 		else if (player->get_Shrinking()) {
 			player->update(deltaTime);
 			animated_blocks_update(deltaTime);
+			coinSprite->update(deltaTime);
 		}
 
 		else if (player->killed()) {
@@ -1454,7 +1473,12 @@ int PlayScene::update(int deltaTime)
 			if (player->getPosition().y > 512 || (ticks == 0.f && player->getPosition().x <= 6528)) {
 				player->killAnimation();
 				engine->stopAllSounds();
-				engine->play2D("sounds/mariodie.wav", false, false);
+				if (lives != 1) {
+					engine->play2D("sounds/mariodie.wav", false, false);
+				}
+				else {
+					engine->play2D("sounds/gameover.wav", false, false);
+				}
 			}
 			else if (!player->get_inFlag() && !player->getFinalAnimation() && !player->isStarMario()){
 				if (!engine->isCurrentlyPlaying("sounds/lvlMusic.wav")) {
@@ -1515,6 +1539,12 @@ int PlayScene::update(int deltaTime)
 				timer_update_end(deltaTime);
 				if (ticks != 0.f) {
 					point_counter_update_end(deltaTime);
+					if (!engine->isCurrentlyPlaying("sounds/score.wav")) {
+						engine->play2D("sounds/score.wav", true);
+					}
+				}
+				else {
+					engine->stopAllSounds();
 				}
 			}
 
@@ -1622,7 +1652,6 @@ void PlayScene::render()
 		}
 	}
 	else if (lives == 0) {
-		//engine->stopAllSounds();
 		game_over->render();
 	}
 	else if (lives != 0 && time_UP) {

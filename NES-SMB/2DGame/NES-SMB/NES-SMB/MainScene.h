@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include <glm/glm.hpp>
 #include "Sprite.h"
+#include <irrklang.h>
 
 class MainScene :
 	protected GameScene
@@ -35,6 +36,7 @@ private:
 	glm::mat4 projection;
 	Texture spritesheetArrow;
 	Sprite *spriteArrow;
+	irrklang::ISoundEngine* engine;
 
 	//
 	int counter;
